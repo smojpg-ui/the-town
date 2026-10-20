@@ -1,0 +1,312 @@
+/* ==========================================================================
+   the doorway (index.html)
+   A napkin: the lake in the top corner, a clock lying down in a blank one,
+   the creek going uphill, one door a crack open, and a road off the bottom.
+   ========================================================================== */
+
+.doorway {
+  --tab: clamp(1.25rem, 4vw, 2.75rem);   /* one tab's worth of indent */
+  overflow-x: hidden;
+}
+
+.napkin {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(4.5rem, 12vh, 8rem) 16px 0;
+  overflow: hidden;
+}
+
+/* --- the room (everything that makes space for you) ------------------- */
+
+.room,
+.road-wrap {
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* run a tab: press it and the whole room indents to make space for you */
+.napkin:has(.door:hover, .door:focus-visible) .room,
+.napkin:has(.door:hover, .door:focus-visible) .road-wrap {
+  transform: translateX(var(--tab));
+}
+
+.room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.2rem + 4.6vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: 0.005em;
+  margin: 0 0 clamp(2rem, 6vh, 3.5rem);
+  /* soft country: nothing stands perfectly upright */
+  transform: rotate(-0.6deg);
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.hill {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(0.75rem, 3vw, 1.75rem);
+  /* the creek sits west of the door, so the door stays on center */
+  margin-left: calc(-1 * clamp(2.5rem, 9vw, 4rem));
+}
+
+/* --- the door ------------------------------------------------------------ */
+
+.door {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+.door:focus-visible { outline-offset: 8px; }
+
+.door-art {
+  width: clamp(112px, 26vw, 150px);
+  height: auto;
+  overflow: visible;
+  transform: rotate(-1.2deg);         /* every roofline leans a hair */
+}
+
+.door-light { fill: var(--light); }
+.door-spill {
+  fill: var(--light);
+  opacity: 0.55;
+  transform-box: view-box;
+  transform-origin: 110px 186px;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.door-panel {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transform: scaleX(0.9);             /* a crack open */
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.door-panel path {
+  fill: var(--bg);
+  stroke: var(--line);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.door-knob { fill: var(--line); }
+
+/* the pen skipped; the skips stayed in (her lighthouse is drawn this way) */
+.door-frame,
+.door-sill {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 52 5 34 4 70 6 26 5 90 4;
+}
+.door-sill { stroke-width: 1.6; stroke-dasharray: 30 6 48 5 20 7; }
+
+.door:hover .door-panel,
+.door:focus-visible .door-panel { transform: scaleX(0.66); }
+.door:hover .door-spill,
+.door:focus-visible .door-spill { transform: scaleX(3); }
+
+.door-label {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.25rem);
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.25em;
+  transition: text-decoration-color 0.4s;
+}
+.door:hover .door-label,
+.door:focus-visible .door-label { text-decoration-color: var(--string); }
+
+/* --- the creek ------------------------------------------------------------ */
+
+.creek {
+  position: relative;
+  width: clamp(2.5rem, 9vw, 4rem);
+  height: clamp(120px, 26vw, 150px);
+  margin-bottom: 2.2rem;               /* sits on the same ground as the door */
+  border-radius: 6px;
+}
+.creek-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.creek-line path {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 18 5 26 4 12 6;
+  opacity: 0.7;
+}
+:root[data-theme="night"] .creek-line path { stroke: #7fa3b5; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="paper"]) .creek-line path { stroke: #7fa3b5; }
+}
+
+.creek-bed {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.do {
+  position: absolute;
+  left: 58%;
+  bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+/* still: three notes resting along the bank */
+.do { transform: translateY(calc(var(--i) * -42px - 18px)); opacity: 0.85; }
+
+/* moving: they drift uphill, slow, and start again at the bottom */
+html[data-motion="on"] .do {
+  opacity: 0;
+  animation: uphill 7.5s linear infinite;
+  animation-delay: calc(var(--i) * -2.5s);
+}
+html[data-motion="on"] .do-extra { animation: uphill-once 3.2s ease-out forwards; }
+
+@keyframes uphill {
+  0%   { transform: translate(0, 0);        opacity: 0; }
+  14%  { opacity: 0.9; }
+  50%  { transform: translate(-7px, -70px); }
+  86%  { opacity: 0.9; }
+  100% { transform: translate(2px, -140px); opacity: 0; }
+}
+@keyframes uphill-once {
+  0%   { transform: translate(0, 0);        opacity: 0; }
+  12%  { opacity: 1; }
+  100% { transform: translate(-4px, -140px); opacity: 0; }
+}
+/* with motion off, a pressed note just shows itself at the bottom of the bank */
+html:not([data-motion="on"]) .do-extra { transform: translateY(6px); color: var(--text); }
+
+/* --- the hint ------------------------------------------------------------- */
+
+.hint {
+  margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
+  min-height: 1.5em;
+}
+.hint-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .hint-keys { display: none; }
+  .hint-touch { display: inline; }
+}
+
+/* --- the road off the bottom edge ---------------------------------------- */
+
+.road-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  width: min(100%, 28rem);
+  min-height: clamp(110px, 22vh, 260px);
+  margin-top: 1rem;
+}
+.road {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.road path {
+  fill: none;
+  stroke: var(--sepia);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 14 9 22 7 9 11;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.7;
+}
+:root[data-theme="night"] .road path { stroke: var(--paper-rim); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="paper"]) .road path { stroke: var(--paper-rim); }
+}
+
+.edge-q {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 28%;
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-soft);
+}
+
+/* --- scenery -------------------------------------------------------------- */
+
+.lake {
+  position: absolute;
+  top: clamp(-90px, -9vw, -50px);
+  right: clamp(-90px, -9vw, -50px);
+  width: clamp(170px, 34vw, 280px);
+  height: auto;
+  pointer-events: none;
+}
+.ring {
+  fill: none;
+  stroke: var(--coffee);
+  stroke-linecap: round;
+}
+.ring-outer { stroke-width: 5;   opacity: 0.30; stroke-dasharray: 220 6 140 3 260 9; }
+.ring-inner { stroke-width: 1.5; opacity: 0.22; }
+.ring-drip  { stroke-width: 3;   opacity: 0.22; }
+
+.clock {
+  position: absolute;
+  left: clamp(14px, 4vw, 40px);
+  bottom: clamp(18px, 4vh, 40px);
+  width: 30px;
+  height: 30px;
+  transform: rotate(-90deg);          /* lying down to rest */
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* --- the desk's own notes (top-left, out of the way) ---------------------- */
+
+.desk-notes {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+@media (max-width: 420px) {
+  .hill { margin-left: calc(-1 * clamp(2rem, 9vw, 3rem)); }
+  .edge-q { right: 0; bottom: 18%; font-size: 1rem; }
+}
+
+/* the creek comes after the door in the page (so the first tab lands on the
+   door) but is drawn west of it, the way the map has it */
+.creek { order: -1; }

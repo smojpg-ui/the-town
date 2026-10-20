@@ -1,0 +1,298 @@
+/* ==========================================================================
+   the reading room (read.html)
+   Plain paper, a readable measure, the red string along the top, and a
+   period at the end that nobody likes.
+   ========================================================================== */
+
+/* --- the red string (reading progress) ---------------------------------- */
+
+.string {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 5;
+  pointer-events: none;
+}
+.string-fill {
+  display: block;
+  height: 100%;
+  background: var(--string);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* --- the lamp (reading settings) ----------------------------------------- */
+
+.lamp summary::before {
+  content: "";
+  width: 0.55rem; height: 0.55rem;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 0 var(--gold-warm);
+  transition: box-shadow 0.4s;
+}
+.lamp[open] summary::before { box-shadow: 0 0 10px 3px var(--gold-warm); }
+
+.lamp-panel { width: min(17rem, calc(100vw - 32px)); }
+.lamp-panel fieldset {
+  border: 0;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.lamp-panel legend {
+  padding: 0;
+  margin-bottom: 0.3rem;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+.lamp-panel label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 34px;
+  cursor: pointer;
+}
+.lamp-panel input { accent-color: var(--string); margin: 0; }
+
+/* --- the chapter ------------------------------------------------------------ */
+
+main { padding: 0 16px clamp(4rem, 12vh, 7rem); }
+main:focus { outline: none; }
+
+.chapter {
+  max-width: 35rem;
+  margin: clamp(2.5rem, 9vh, 5.5rem) auto 0;
+}
+
+.chapter-head { margin-bottom: clamp(2rem, 5vh, 3rem); }
+
+.hand {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--text-red);
+}
+
+.chapter-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.4rem + 3.2vw, 3.4rem);
+  line-height: 1.08;
+  margin: 0;
+  transform: rotate(-0.4deg);
+  transform-origin: left center;
+  text-wrap: balance;
+  min-height: 1.08em;
+}
+
+.chapter-sub {
+  margin: 0.6rem 0 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--text-soft);
+}
+
+/* --- the prose --------------------------------------------------------------- */
+
+.prose {
+  font-family: var(--font-text);
+  font-size: calc(clamp(1.125rem, 1.03rem + 0.4vw, 1.28rem) * var(--text-scale));
+  line-height: 1.72;
+  font-optical-sizing: auto;
+  /* soeverysentencesoundslikethis: the no-breath word only wraps when the
+     screen runs out, and never gets a hyphen, because a hyphen is a breath */
+  overflow-wrap: break-word;
+  hyphens: manual;
+  text-wrap: pretty;
+}
+.prose p { margin: 0 0 1.15em; }
+.prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 2em 0 0.6em;
+}
+.prose h2 { font-size: 1.5em; }
+.prose h3 { font-size: 1.25em; }
+
+/* the yellow highlight: catches the one load-bearing word */
+.prose mark {
+  color: var(--mark-text);
+  background: linear-gradient(
+    176deg,
+    transparent 10%,
+    var(--mark-bg) 12%,
+    var(--mark-bg) 86%,
+    transparent 90%
+  );
+  padding: 0 0.14em;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* a quote gets the red string down its side */
+.prose blockquote {
+  margin: 1.6em 0;
+  padding-left: 1.2em;
+  border-left: 2px solid var(--string);
+}
+
+/* a scene break: three, like the bar nuts (nobody ever finishes a bowl) */
+.prose hr.rest {
+  border: 0;
+  margin: 2.4em 0;
+  text-align: center;
+  overflow: visible;
+}
+.prose hr.rest::after {
+  content: "·  ·  ·";
+  white-space: pre;
+  color: var(--text-soft);
+  font-size: 1.2em;
+}
+
+/* (( )) : a rest, one measure of held nothing */
+.held {
+  font-family: var(--font-display);
+  white-space: nowrap;
+  color: var(--text-soft);
+  letter-spacing: 0.08em;
+  cursor: help;
+}
+.held-line { text-align: center; margin: 1.6em 0; }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* --- placeholders and notices ------------------------------------------------- */
+
+.box {
+  margin: 0 0 1.5em;
+  padding: 1.1rem 1.3rem 0.4rem;
+  border: 1.5px dashed var(--text-soft);
+  border-radius: 6px;
+  font-size: 0.95em;
+}
+.box-title {
+  margin: 0 0 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--text-red);
+}
+
+/* --- the end of the piece ------------------------------------------------------ */
+
+/* last call is only the period */
+.last-call {
+  margin: 2.25rem 0 3rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 4.6rem;
+  line-height: 0.6;
+}
+
+/* art, pinned to the wall and leaning a little */
+.plate { margin: 0 0 3rem; }
+.plate img {
+  width: 100%;
+  border-radius: 2px;
+  transform: rotate(0.6deg);
+  box-shadow: 0 1px 0 var(--bg-rim), 0 18px 36px -22px rgba(0, 0, 0, 0.45);
+}
+.plate figcaption {
+  margin-top: 0.9rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-soft);
+}
+.plate .credit {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.8rem;
+}
+.plate.is-empty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1.5px dashed var(--text-soft);
+  border-radius: 4px;
+}
+.frame-note {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 26rem;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.colophon {
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--text-soft);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+.colophon p { margin: 0 0 0.9rem; }
+.colophon-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  color: var(--text-red);
+}
+
+/* --- onward ------------------------------------------------------------------------ */
+
+.onward {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  flex-wrap: wrap;
+  max-width: 35rem;
+  margin: 3.5rem auto 0;
+}
+.onward a,
+.onward-edge {
+  display: grid;
+  gap: 0.15rem;
+  min-height: 44px;
+  margin: 0;
+  text-decoration: none;
+}
+.onward a[rel="next"],
+.onward-edge { text-align: right; margin-left: auto; }
+.onward-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+}
+.onward a .onward-title {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--string) 55%, transparent);
+  text-underline-offset: 0.2em;
+}
+.onward-edge .onward-title { color: var(--text-soft); }
+
+.noscript {
+  max-width: 35rem;
+  margin: 2rem auto;
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 480px) {
+  .rail .proto-tag { display: none; }
+  .last-call { font-size: 3rem; }
+}

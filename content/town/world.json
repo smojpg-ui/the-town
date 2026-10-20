@@ -1,0 +1,43 @@
+{
+  "id": "town",
+  "title": "the town off the edge",
+
+  "chapters": [
+    {
+      "slug": "the-first-spill",
+      "title": "the first spill",
+      "file": "chapters/the-first-spill.md"
+    },
+    {
+      "slug": "the-opening",
+      "title": "the opening",
+      "file": "chapters/the-opening.md",
+      "status": "placeholder"
+    },
+    {
+      "slug": "format-sample",
+      "title": "format sample",
+      "file": "chapters/_format-sample.md",
+      "status": "sample",
+      "listed": false
+    }
+  ],
+
+  "art": {
+    "lighthouse": {
+      "src": "assets/art/lighthouse.jpg",
+      "alt": "Brush-and-ink drawing on white paper: a tall lighthouse drawn in broken, skipping strokes, standing on rough rocks above one long sweep of shoreline, with a loose cloud drifting to its right.",
+      "caption": "the lighthouse. brush and ink.",
+      "credit": "flor",
+      "permission": "local only. not committed to git until flor says so.",
+      "original": "the-whole-town/02-the-town/the-desk-images/lighthouse.jpeg"
+    }
+  },
+
+  "established": [
+    { "name": "the space bar", "kind": "place",  "canon": "tuning-fork: the space bar",            "on_stage": "named in the first spill, in her words" },
+    { "name": "Flor",          "kind": "person", "canon": "tuning-fork: the map, the letters",      "on_stage": "credited as the hand; not yet a character on the page" },
+    { "name": "Grey",          "kind": "person", "canon": "tuning-fork: the map, the letters",      "on_stage": "not yet" },
+    { "name": "Pelagius",      "kind": "name",   "canon": "tuning-fork: the space bar, the back room (the alcove)", "on_stage": "not yet. source and form are flor's call; see docs/APPROVALS.md" }
+  ]
+}

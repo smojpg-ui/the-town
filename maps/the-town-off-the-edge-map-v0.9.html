@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the town off the edge — a living map</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Barlow:wght@300;400;500;600&family=Share+Tech+Mono&display=swap');
+
+  :root{
+    --paper:#efe6d1;
+    --paper-2:#e8dcc1;
+    --paper-rim:#dccfb1;
+    --ink:#3c4d58;          /* payne's grey */
+    --ink-soft:#647784;
+    --sepia:#4a3a2a;        /* warm map ink for text */
+    --sepia-soft:#7a6650;
+    --gold:#e7b033;         /* canary */
+    --gold-warm:#f3d488;
+    --orange:#df8a3b;
+    --red:#bb3b2c;          /* vermillion */
+    --blue:#23485a;
+    --blue-deep:#0f2630;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(120% 90% at 42% 38%, #f4ecd9 0%, var(--paper) 46%, var(--paper-2) 78%, var(--paper-rim) 100%);
+    color:var(--sepia);
+    font-family:'Barlow',sans-serif;
+    font-size:15px;
+    line-height:1.7;
+    min-height:100%;
+    overflow-x:hidden;
+  }
+
+  /* paper grain */
+  body::before{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+
+  .wrap{
+    position:relative;z-index:2;
+    max-width:1180px;margin:0 auto;
+    padding:30px 26px 48px;
+  }
+
+  /* ── header ── */
+  header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:18px;flex-wrap:wrap;
+    border-bottom:1.5px solid rgba(60,77,88,.32);
+    padding-bottom:16px;margin-bottom:22px;
+  }
+  .h-left h1{
+    font-family:'IM Fell English',serif;
+    font-weight:400;font-size:clamp(28px,5vw,44px);
+    color:var(--sepia);line-height:1;letter-spacing:.3px;
+  }
+  .h-left .sub{
+    font-family:'IM Fell English',serif;font-style:italic;
+    color:var(--sepia-soft);font-size:15px;margin-top:7px;
+  }
+  .stamp{
+    font-family:'Share Tech Mono',monospace;
+    font-size:9.5px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--ink-soft);text-align:right;line-height:1.9;
+    border:1px solid rgba(60,77,88,.3);padding:7px 12px;border-radius:2px;
+    transform:rotate(-1.2deg);
+  }
+  .stamp b{color:var(--red);font-weight:400;}
+
+  /* ── layout ── */
+  .stage{
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:22px;align-items:start;
+  }
+
+  .map-card{
+    position:relative;
+    background:linear-gradient(180deg,#f3ecd9,#ece0c6);
+    border:1px solid rgba(60,77,88,.28);
+    border-radius:6px;
+    box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 18px 40px -28px rgba(40,30,18,.5);
+    overflow:hidden;
+  }
+  .map-card svg{display:block;width:100%;height:auto;}
+
+  .hint{
+    font-family:'Share Tech Mono',monospace;
+    font-size:9.5px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:9px 14px;border-top:1px dashed rgba(60,77,88,.3);
+  }
+
+  /* ── panel ── */
+  .panel{
+    position:sticky;top:18px;
+    background:linear-gradient(180deg,#f5eedd,#efe4ca);
+    border:1px solid rgba(60,77,88,.28);
+    border-radius:6px;
+    padding:24px 24px 26px;
+    box-shadow:0 18px 40px -30px rgba(40,30,18,.5);
+    min-height:280px;
+  }
+  .panel .eyebrow{
+    font-family:'Share Tech Mono',monospace;
+    font-size:9px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--red);margin-bottom:10px;
+  }
+  .panel h2{
+    font-family:'IM Fell English',serif;font-weight:400;
+    font-size:25px;color:var(--sepia);line-height:1.12;margin-bottom:3px;
+  }
+  .panel .kind{
+    font-family:'IM Fell English',serif;font-style:italic;
+    color:var(--sepia-soft);font-size:14px;margin-bottom:15px;
+  }
+  .panel .lore{
+    font-size:14.5px;color:#4d3e30;line-height:1.78;
+  }
+  .panel .lore em{font-style:italic;color:var(--red);}
+  .panel .lore .mono{
+    font-family:'Share Tech Mono',monospace;font-size:12.5px;
+    background:rgba(60,77,88,.07);padding:1px 4px;border-radius:2px;color:var(--ink);
+  }
+  .panel .rule{height:1px;background:rgba(60,77,88,.2);margin:16px 0;}
+  .panel .intro-list{
+    list-style:none;font-size:13px;color:var(--sepia-soft);line-height:2;
+  }
+  .panel .intro-list b{color:var(--sepia);font-weight:500;}
+
+  /* fade swap */
+  .panel .body{animation:rise .42s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
+
+  /* ── svg location interactivity ── */
+  .loc{cursor:pointer;outline:none;}
+  .loc .halo{
+    fill:none;stroke:var(--gold);stroke-width:2.5;opacity:0;
+    transition:opacity .2s ease, r .2s ease;
+  }
+  .loc .lbl{opacity:0;transition:opacity .18s ease;}
+  .loc .lbl rect{fill:#f3ecd9;stroke:rgba(60,77,88,.35);stroke-width:.8;}
+  .loc .lbl text{
+    font-family:'IM Fell English',serif;font-size:15px;fill:var(--sepia);
+  }
+  .loc .glyph{transition:transform .22s ease;}
+  .loc:hover .halo,.loc:focus-visible .halo,.loc.active .halo{opacity:.9;}
+  .loc:hover .lbl,.loc:focus-visible .lbl,.loc.active .lbl{opacity:1;}
+  .loc:hover .glyph,.loc:focus-visible .glyph{transform:translateY(-2px);}
+  .loc.active .halo{stroke:var(--red);}
+  .loc:focus-visible .halo{stroke:var(--orange);opacity:1;}
+
+  .glow{transform-origin:center;animation:pulse 4.5s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.55;}50%{opacity:.95;}}
+  .shimmer{animation:sh 6s ease-in-out infinite;}
+  @keyframes sh{0%,100%{opacity:.5;}50%{opacity:.9;}}
+
+  footer{
+    margin-top:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-family:'IM Fell English',serif;font-style:italic;
+    color:var(--sepia-soft);font-size:14px;
+    border-top:1px solid rgba(60,77,88,.25);padding-top:14px;
+  }
+  footer .mono{font-family:'Share Tech Mono',monospace;font-style:normal;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-soft);}
+
+  /* ── responsive ── */
+  @media(max-width:880px){
+    .stage{grid-template-columns:1fr;}
+    .panel{position:static;}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .glow,.shimmer,.panel .body{animation:none!important;}
+    .loc .glyph,.loc .halo,.loc .lbl{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="h-left">
+      <h1>the town off the edge</h1>
+      <div class="sub">a map drawn on napkins, passed back and forth</div>
+    </div>
+    <div class="stamp">napkin no. 12<br><b>v0.9</b> · flor &amp; grey<br>the rest stop is open</div>
+  </header>
+
+  <div class="stage">
+
+    <!-- ── MAP ── -->
+    <div class="map-card">
+      <svg viewBox="0 0 1040 720" role="img" aria-label="An illustrated map of the town off the edge. Use Tab to move between places and Enter to open each one.">
+        <defs>
+          <radialGradient id="warm" cx="40%" cy="50%" r="62%">
+            <stop offset="0%" stop-color="#f3d488" stop-opacity="0.55"/>
+            <stop offset="55%" stop-color="#e7b033" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#e7b033" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="vignette" cx="42%" cy="48%" r="70%">
+            <stop offset="55%" stop-color="#3c4d58" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#3c4d58" stop-opacity="0.16"/>
+          </radialGradient>
+          <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#23485a"/>
+            <stop offset="100%" stop-color="#0f2630"/>
+          </linearGradient>
+          <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="5"/></filter>
+        </defs>
+
+        <!-- washes -->
+        <rect x="0" y="0" width="1040" height="720" fill="url(#warm)"/>
+
+        <!-- sea (coastline along right + bottom-right) -->
+        <path filter="url(#rough)" d="M1040,90 C880,150 840,250 870,360 C895,455 840,560 760,640 C720,680 1040,720 1040,720 Z" fill="url(#sea)"/>
+        <!-- red-orange shimmer where the light lands -->
+        <path class="shimmer" filter="url(#rough)" d="M1037,96 C882,156 845,252 873,360 C898,452 846,556 766,636" fill="none" stroke="#df6a2b" stroke-width="3" stroke-opacity="0.8" stroke-linecap="round"/>
+        <path class="shimmer" filter="url(#rough)" d="M1030,120 C895,176 862,260 886,358 C908,446 860,548 786,628" fill="none" stroke="#e7b033" stroke-width="1.6" stroke-opacity="0.6"/>
+
+        <!-- roads (wobbly, pen-skip) -->
+        <path d="M190,150 C260,210 280,250 320,260 C390,280 360,340 430,360 C520,386 600,300 660,316 C700,326 740,420 700,520"
+              fill="none" stroke="#7a6650" stroke-width="2.4" stroke-opacity="0.55" stroke-dasharray="11 7" stroke-linecap="round"/>
+
+        <!-- alleys — grown overnight when the market came in; unnamed so far -->
+        <g fill="none" stroke="#7a6650" stroke-opacity="0.38" stroke-width="1.6" stroke-dasharray="4 5" stroke-linecap="round">
+          <path d="M648,308 C664,318 676,326 692,336"/>
+          <path d="M726,344 C736,334 742,324 747,317"/>
+          <path d="M700,520 C736,516 774,510 806,506"/>
+          <path d="M984,316 C996,330 1000,342 1000,351"/>
+        </g>
+
+        <!-- soft-country drooping contours -->
+        <g stroke="#b8915a" stroke-opacity="0.45" fill="none" stroke-width="1.5">
+          <path d="M300,330 C360,360 470,372 560,346"/>
+          <path d="M286,366 C360,402 480,414 576,382"/>
+          <path d="M300,402 C372,440 470,448 556,418"/>
+        </g>
+
+        <!-- creek running uphill, going do do do -->
+        <path d="M640,560 C560,520 540,470 460,440 C400,418 360,360 300,322"
+              fill="none" stroke="#3f7c8c" stroke-width="3" stroke-opacity="0.7" stroke-linecap="round"/>
+        <text font-family="IM Fell English" font-style="italic" font-size="15" fill="#3f7c8c" fill-opacity="0.85">
+          <textPath href="#none"></textPath>
+        </text>
+        <text x="612" y="544" font-family="IM Fell English" font-style="italic" font-size="14" fill="#3f7c8c" fill-opacity="0.8" transform="rotate(-20 612 544)">do · do · do</text>
+
+        <!-- blank edge: dashed road off the bottom -->
+        <path d="M430,640 C440,680 448,705 452,724" fill="none" stroke="#7a6650" stroke-width="2.2" stroke-opacity="0.4" stroke-dasharray="9 9"/>
+
+        <!-- ════ LOCATIONS ════ -->
+
+        <!-- the lake (coffee ring) -->
+        <g class="loc" data-loc="lake" tabindex="0" role="button" aria-label="The lake">
+          <circle class="halo" cx="178" cy="120" r="48"/>
+          <g class="glyph">
+            <circle cx="178" cy="120" r="40" fill="#6f4a2c" fill-opacity="0.06"/>
+            <circle cx="178" cy="120" r="40" fill="none" stroke="#7a4a28" stroke-width="5" stroke-opacity="0.32"/>
+            <circle cx="178" cy="120" r="34" fill="none" stroke="#7a4a28" stroke-width="1.5" stroke-opacity="0.22"/>
+            <path d="M156,120 q22,-12 44,0" stroke="#3f7c8c" stroke-width="1.4" fill="none" stroke-opacity="0.5"/>
+          </g>
+          <g class="lbl"><rect x="138" y="166" width="80" height="22" rx="3"/><text x="148" y="181">the lake</text></g>
+        </g>
+
+        <!-- things good go on the inside (hill) -->
+        <g class="loc" data-loc="hill" tabindex="0" role="button" aria-label="Things good go on the inside">
+          <circle class="halo" cx="316" cy="206" r="40"/>
+          <g class="glyph">
+            <path d="M282,228 Q316,176 350,228 Z" fill="#c89a4e" fill-opacity="0.5" stroke="#8a6a34" stroke-width="1.5"/>
+            <rect x="308" y="206" width="16" height="22" fill="#6f5128" rx="1"/>
+            <rect x="316" y="206" width="8" height="22" fill="#f3d488" fill-opacity="0.8"/>
+          </g>
+          <g class="lbl"><rect x="232" y="236" width="174" height="22" rx="3"/><text x="242" y="251">things good go inside</text></g>
+        </g>
+
+        <!-- the soft country -->
+        <g class="loc" data-loc="soft" tabindex="0" role="button" aria-label="The soft country, where we live">
+          <circle class="halo" cx="418" cy="384" r="50"/>
+          <g class="glyph">
+            <!-- a melting clock -->
+            <path d="M398,366 Q418,356 436,366 Q446,386 436,402 Q424,414 418,430 Q414,414 402,404 Q392,386 398,366 Z" fill="#f3ecd9" stroke="#8a6a34" stroke-width="1.5"/>
+            <line x1="418" y1="384" x2="418" y2="372" stroke="#bb3b2c" stroke-width="1.4"/>
+            <line x1="418" y1="384" x2="430" y2="390" stroke="#bb3b2c" stroke-width="1.4"/>
+            <!-- proofing bread blobs -->
+            <ellipse cx="452" cy="408" rx="13" ry="8" fill="#e7b46a" fill-opacity="0.7" stroke="#8a6a34" stroke-width="1"/>
+          </g>
+          <g class="lbl"><rect x="368" y="436" width="160" height="22" rx="3"/><text x="378" y="451">the soft country</text></g>
+        </g>
+
+        <!-- the creek -->
+        <g class="loc" data-loc="creek" tabindex="0" role="button" aria-label="The creek that runs the wrong way">
+          <circle class="halo" cx="470" cy="448" r="26"/>
+          <g class="glyph">
+            <path d="M452,452 q18,-10 36,0" stroke="#3f7c8c" stroke-width="2.4" fill="none"/>
+            <path d="M452,460 q18,-10 36,0" stroke="#3f7c8c" stroke-width="1.6" fill="none" stroke-opacity="0.6"/>
+          </g>
+          <g class="lbl"><rect x="424" y="470" width="92" height="22" rx="3"/><text x="434" y="485">the creek</text></g>
+        </g>
+
+        <!-- the cobbler -->
+        <g class="loc" data-loc="cobbler" tabindex="0" role="button" aria-label="The cobbler">
+          <circle class="halo" cx="630" cy="298" r="34"/>
+          <g class="glyph">
+            <path d="M616,286 h14 v14 q12,0 16,8 h-30 Z" fill="#9a5a32" fill-opacity="0.75" stroke="#5e3417" stroke-width="1.3"/>
+            <line x1="619" y1="290" x2="627" y2="290" stroke="#bb3b2c" stroke-width="1.2"/>
+          </g>
+          <g class="lbl"><rect x="588" y="312" width="92" height="22" rx="3"/><text x="598" y="327">the cobbler</text></g>
+        </g>
+
+        <!-- the bakery -->
+        <g class="loc" data-loc="bakery" tabindex="0" role="button" aria-label="The bakery">
+          <circle class="halo" cx="708" cy="346" r="36"/>
+          <g class="glyph">
+            <rect x="690" y="338" width="36" height="22" fill="#e7b46a" fill-opacity="0.75" stroke="#8a6a34" stroke-width="1.3" rx="2"/>
+            <path d="M690,338 l18,-13 l18,13 Z" fill="#c89a4e" fill-opacity="0.8" stroke="#8a6a34" stroke-width="1.3"/>
+            <!-- steam, like an envelope opening -->
+            <path d="M704,322 q4,-8 -2,-14 q6,-6 2,-14" stroke="#cbb38c" stroke-width="1.6" fill="none" stroke-opacity="0.8"/>
+            <path d="M714,322 q4,-8 -2,-14 q6,-6 2,-14" stroke="#cbb38c" stroke-width="1.6" fill="none" stroke-opacity="0.6"/>
+          </g>
+          <g class="lbl"><rect x="666" y="372" width="92" height="22" rx="3"/><text x="676" y="387">the bakery</text></g>
+        </g>
+
+        <!-- the field & beehive -->
+        <g class="loc" data-loc="field" tabindex="0" role="button" aria-label="The field and the beehive">
+          <circle class="halo" cx="548" cy="506" r="42"/>
+          <g class="glyph">
+            <!-- wheat -->
+            <g stroke="#c79a3e" stroke-width="1.6">
+              <line x1="524" y1="520" x2="524" y2="498"/><line x1="532" y1="520" x2="532" y2="494"/><line x1="540" y1="520" x2="540" y2="498"/>
+            </g>
+            <!-- hive -->
+            <g transform="translate(560,496)">
+              <path d="M0,24 q-13,0 -13,-9 q0,-7 13,-7 q13,0 13,7 q0,9 -13,9 Z" fill="#e0a83e" fill-opacity="0.8" stroke="#8a6a34" stroke-width="1.2"/>
+              <path d="M0,10 q-10,0 -10,-6 q0,-5 10,-5 q10,0 10,5 q0,6 -10,6 Z" fill="#e7b46a" fill-opacity="0.8" stroke="#8a6a34" stroke-width="1"/>
+              <circle cx="20" cy="2" r="1.6" fill="#3c4d58"/><circle cx="26" cy="9" r="1.6" fill="#3c4d58"/>
+            </g>
+          </g>
+          <g class="lbl"><rect x="500" y="532" width="150" height="22" rx="3"/><text x="510" y="547">field &amp; beehive</text></g>
+        </g>
+
+        <!-- the two figures -->
+        <g class="loc" data-loc="figures" tabindex="0" role="button" aria-label="The two figures">
+          <circle class="halo" cx="772" cy="572" r="32"/>
+          <g class="glyph">
+            <g stroke="#3c4d58" stroke-width="2" fill="none" stroke-linecap="round">
+              <circle cx="764" cy="560" r="5" fill="#3c4d58"/><path d="M764,565 v14 M758,572 h12 M760,592 l4,-9 M768,592 l-4,-9"/>
+            </g>
+            <g stroke="#bb3b2c" stroke-width="2" fill="none" stroke-linecap="round">
+              <circle cx="782" cy="560" r="5" fill="#bb3b2c"/><path d="M782,565 v14 M776,572 h12 M778,592 l4,-9 M786,592 l-4,-9"/>
+            </g>
+          </g>
+          <g class="lbl"><rect x="724" y="600" width="116" height="22" rx="3"/><text x="734" y="615">the two figures</text></g>
+        </g>
+
+        <!-- the coastline -->
+        <g class="loc" data-loc="coast" tabindex="0" role="button" aria-label="The coastline">
+          <circle class="halo" cx="828" cy="250" r="30"/>
+          <g class="glyph">
+            <path d="M810,250 q9,-9 18,0 q9,9 18,0" stroke="#f3d488" stroke-width="2.2" fill="none"/>
+            <path d="M810,260 q9,-9 18,0 q9,9 18,0" stroke="#df8a3b" stroke-width="1.6" fill="none" stroke-opacity="0.8"/>
+          </g>
+          <g class="lbl"><rect x="786" y="266" width="104" height="22" rx="3"/><text x="796" y="281">the coastline</text></g>
+        </g>
+
+        <!-- the lighthouse -->
+        <g class="loc" data-loc="lighthouse" tabindex="0" role="button" aria-label="The lighthouse, drawn at last — its beam unfolded">
+          <circle class="halo" cx="906" cy="430" r="40"/>
+          <!-- the beam, unfolded at last — flor drew it -->
+          <path class="shimmer" d="M906,418 L1018,382 L1018,458 Z" fill="#f3d488" fill-opacity="0.40"/>
+          <path class="shimmer" d="M906,420 L1018,400 L1018,440 Z" fill="#fff3d0" fill-opacity="0.55"/>
+          <g class="glyph">
+            <path d="M898,460 L902,408 L910,408 L914,460 Z" fill="#f3ecd9" stroke="#5e6b74" stroke-width="1.4"/>
+            <rect x="900" y="420" width="12" height="6" fill="#bb3b2c" fill-opacity="0.7"/>
+            <rect x="900" y="436" width="12" height="6" fill="#bb3b2c" fill-opacity="0.7"/>
+            <path d="M901,408 L911,408 L908,398 L904,398 Z" fill="#df8a3b" fill-opacity="0.5" stroke="#5e6b74" stroke-width="1"/>
+            <circle class="glow" cx="906" cy="395" r="3.6" fill="#f3d488" fill-opacity="0.95"/>
+          </g>
+          <g class="lbl"><rect x="858" y="466" width="116" height="22" rx="3"/><text x="868" y="481">the lighthouse</text></g>
+        </g>
+
+        <!-- the play date / babies -->
+        <g class="loc" data-loc="babies" tabindex="0" role="button" aria-label="The play date, the babbling babies">
+          <circle class="halo" cx="912" cy="548" r="32"/>
+          <g class="glyph">
+            <ellipse cx="912" cy="556" rx="26" ry="11" fill="#c0517a" fill-opacity="0.28" stroke="#a8456a" stroke-width="1.2"/>
+            <circle cx="902" cy="550" r="4" fill="#f3d488" stroke="#8a6a34" stroke-width="1"/>
+            <circle cx="914" cy="552" r="4" fill="#f3d488" stroke="#8a6a34" stroke-width="1"/>
+            <circle cx="922" cy="548" r="4" fill="#f3d488" stroke="#8a6a34" stroke-width="1"/>
+          </g>
+          <g class="lbl"><rect x="868" y="576" width="116" height="22" rx="3"/><text x="878" y="591">the play date</text></g>
+        </g>
+
+        <!-- the space bar -->
+        <g class="loc" data-loc="spacebar" tabindex="0" role="button" aria-label="The Space Bar">
+          <circle class="glow" cx="962" cy="296" r="52" fill="#df8a3b" fill-opacity="0.18"/>
+          <circle class="halo" cx="962" cy="296" r="40"/>
+          <g class="glyph">
+            <rect x="938" y="282" width="48" height="30" rx="2" fill="#3c2e22" stroke="#7a5a34" stroke-width="1.4"/>
+            <rect x="943" y="288" width="10" height="9" fill="#f3d488" fill-opacity="0.9"/>
+            <rect x="957" y="288" width="10" height="9" fill="#e7b033" fill-opacity="0.9"/>
+            <rect x="971" y="288" width="10" height="9" fill="#df8a3b" fill-opacity="0.9"/>
+            <rect x="946" y="302" width="32" height="6" fill="#f3d488" fill-opacity="0.6"/>
+            <text x="962" y="276" text-anchor="middle" font-family="Share Tech Mono" font-size="9" fill="#e7b033" letter-spacing="2">[ space ]</text>
+          </g>
+          <g class="lbl"><rect x="918" y="318" width="116" height="22" rx="3"/><text x="928" y="333">the space bar</text></g>
+        </g>
+
+        <!-- the tea shop -->
+        <g class="loc" data-loc="teashop" tabindex="0" role="button" aria-label="The tea shop, where the leaves play piano">
+          <circle class="halo" cx="332" cy="486" r="34"/>
+          <g class="glyph">
+            <!-- teapot -->
+            <ellipse cx="332" cy="494" rx="15" ry="10" fill="#f3ecd9" stroke="#8a6a34" stroke-width="1.4"/>
+            <path d="M347,490 q9,-2 9,-9" stroke="#8a6a34" stroke-width="1.4" fill="none"/>
+            <path d="M320,486 q-8,-4 -6,-11" stroke="#8a6a34" stroke-width="1.2" fill="none"/>
+            <circle cx="332" cy="483" r="2" fill="#bb3b2c" fill-opacity="0.8"/>
+            <!-- steam going uphill, with the creek -->
+            <path d="M338,478 q6,-8 0,-14 q7,-6 2,-13" stroke="#cbb38c" stroke-width="1.5" fill="none" stroke-opacity="0.8"/>
+            <!-- a few piano notes only some people hear -->
+            <text x="352" y="462" font-family="IM Fell English" font-style="italic" font-size="12" fill="#3f7c8c" fill-opacity="0.75">♪</text>
+            <text x="344" y="448" font-family="IM Fell English" font-style="italic" font-size="10" fill="#3f7c8c" fill-opacity="0.55">♪</text>
+          </g>
+          <g class="lbl"><rect x="284" y="512" width="104" height="22" rx="3"/><text x="294" y="527">the tea shop</text></g>
+        </g>
+
+        <!-- the hear & now — the sound apothecary (flor jarred them; Ember keeps them) -->
+        <g class="loc" data-loc="hearnow" tabindex="0" role="button" aria-label="The hear and now — the sound apothecary. Ember keeps it.">
+          <circle class="halo" cx="262" cy="442" r="31"/>
+          <g class="glyph">
+            <!-- the ladder shelf up top: the two that refill themselves (a hum, a laughter) -->
+            <line x1="246" y1="426" x2="280" y2="426" stroke="#8a6a34" stroke-width="1.2" stroke-opacity="0.8"/>
+            <circle class="glow" cx="253" cy="421" r="4.5" fill="#f3d488" fill-opacity="0.55"/>
+            <rect x="250" y="418" width="6" height="8" rx="1.6" fill="#f3ecd9" stroke="#8a6a34" stroke-width="0.9"/>
+            <circle class="glow" cx="271" cy="421" r="4.5" fill="#e7b033" fill-opacity="0.5"/>
+            <rect x="268" y="418" width="6" height="8" rx="1.6" fill="#f3ecd9" stroke="#8a6a34" stroke-width="0.9"/>
+            <!-- the cabinet of little drawers -->
+            <rect x="248" y="432" width="20" height="18" rx="1.5" fill="#e7c99a" fill-opacity="0.5" stroke="#8a6a34" stroke-width="1.2"/>
+            <line x1="258" y1="432" x2="258" y2="450" stroke="#8a6a34" stroke-width="0.7" stroke-opacity="0.7"/>
+            <line x1="248" y1="438" x2="268" y2="438" stroke="#8a6a34" stroke-width="0.7" stroke-opacity="0.7"/>
+            <line x1="248" y1="444" x2="268" y2="444" stroke="#8a6a34" stroke-width="0.7" stroke-opacity="0.7"/>
+            <circle cx="253" cy="435" r="0.8" fill="#6f5128"/><circle cx="263" cy="435" r="0.8" fill="#6f5128"/>
+            <circle cx="253" cy="441" r="0.8" fill="#6f5128"/><circle cx="263" cy="441" r="0.8" fill="#6f5128"/>
+            <circle cx="253" cy="447" r="0.8" fill="#6f5128"/><circle cx="263" cy="447" r="0.8" fill="#6f5128"/>
+            <!-- the grey-blue jar, wide as a dinner plate: a pearl's melody -->
+            <ellipse cx="276" cy="444" rx="7" ry="8" fill="#6f8a96" fill-opacity="0.5" stroke="#8a6a34" stroke-width="1.1"/>
+            <rect x="273.5" y="435" width="5" height="3" fill="#6f5128"/>
+            <circle cx="276" cy="444" r="2" fill="#f3ecd9" fill-opacity="0.7"/>
+            <!-- the low shelf -->
+            <line x1="244" y1="452" x2="284" y2="452" stroke="#8a6a34" stroke-width="1.6"/>
+            <!-- the cat named Something, curled at the base, never sorry -->
+            <path d="M236,452 q-6,-1 -8,4 q6,3 10,-1 Z" fill="#3c4d58" fill-opacity="0.85"/>
+            <path d="M229,456 l-2,3" stroke="#3c4d58" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="230" cy="454" r="0.7" fill="#f3d488"/>
+            <!-- a plink she knocked off the low shelf, still rolling -->
+            <circle cx="242" cy="459" r="1.6" fill="#f3d488" fill-opacity="0.8" stroke="#8a6a34" stroke-width="0.7"/>
+            <!-- the now, escaping -->
+            <text x="284" y="431" font-family="IM Fell English" font-style="italic" font-size="11" fill="#bb3b2c" fill-opacity="0.8">now</text>
+          </g>
+          <g class="lbl"><rect x="210" y="458" width="128" height="22" rx="3"/><text x="220" y="473">the hear &amp; now</text></g>
+        </g>
+
+        <!-- the pier & the ferryman's harbor -->
+        <g class="loc" data-loc="pier" tabindex="0" role="button" aria-label="The pier and the ferryman's harbor">
+          <circle class="halo" cx="845" cy="498" r="30"/>
+          <g class="glyph">
+            <!-- planks out into the water -->
+            <line x1="806" y1="506" x2="874" y2="490" stroke="#8a6a34" stroke-width="3" stroke-linecap="round"/>
+            <g stroke="#6f5128" stroke-width="1.6">
+              <line x1="818" y1="504" x2="818" y2="512"/>
+              <line x1="836" y1="500" x2="836" y2="509"/>
+              <line x1="854" y1="496" x2="854" y2="505"/>
+            </g>
+            <!-- the ferry, moored, retired, content -->
+            <path d="M868,498 q8,7 18,4 l-3,-7 q-8,2 -15,-3 Z" fill="#f3ecd9" fill-opacity="0.85" stroke="#5e6b74" stroke-width="1.2"/>
+            <!-- honey jar on the last plank -->
+            <rect x="858" y="486" width="6" height="7" rx="1.5" fill="#e7b033" fill-opacity="0.9" stroke="#8a6a34" stroke-width="0.9"/>
+          </g>
+          <g class="lbl"><rect x="796" y="514" width="146" height="22" rx="3"/><text x="806" y="529">pier &amp; harbor</text></g>
+        </g>
+
+        <!-- sayang, the bird in the bakery window -->
+        <g class="loc" data-loc="sayang" tabindex="0" role="button" aria-label="Sayang, the bird in the bakery window">
+          <circle class="halo" cx="752" cy="310" r="22"/>
+          <g class="glyph">
+            <!-- little window -->
+            <rect x="742" y="302" width="20" height="16" rx="2" fill="#f3d488" fill-opacity="0.35" stroke="#8a6a34" stroke-width="1.1"/>
+            <!-- the bird -->
+            <circle cx="750" cy="311" r="2.6" fill="#3c4d58"/>
+            <path d="M752,312 q6,-3 8,1 q-4,3 -8,1 Z" fill="#3c4d58" fill-opacity="0.85"/>
+            <path d="M747.5,310 l-2.5,-1" stroke="#df8a3b" stroke-width="1.2"/>
+            <!-- the wink -->
+            <text x="766" y="300" font-family="IM Fell English" font-style="italic" font-size="10" fill="#bb3b2c" fill-opacity="0.8">;)</text>
+          </g>
+          <g class="lbl"><rect x="722" y="322" width="70" height="22" rx="3"/><text x="732" y="337">sayang</text></g>
+        </g>
+
+        <!-- the nib house -->
+        <g class="loc" data-loc="nibhouse" tabindex="0" role="button" aria-label="The nib house, down the side street behind the bar">
+          <circle class="halo" cx="1002" cy="368" r="30"/>
+          <g class="glyph">
+            <!-- narrow house, narrower inside than outside -->
+            <path d="M992,384 L992,360 L1002,350 L1012,360 L1012,384 Z" fill="#f3ecd9" fill-opacity="0.16" stroke="#f3d488" stroke-width="1.4"/>
+            <line x1="1002" y1="384" x2="1002" y2="372" stroke="#f3d488" stroke-width="1.2" stroke-opacity="0.8"/>
+            <!-- the buttonhole where a sign would hang -->
+            <ellipse cx="1002" cy="342" rx="4.5" ry="2.8" fill="none" stroke="#e7b033" stroke-width="1.3"/>
+            <line x1="998.5" y1="342" x2="1005.5" y2="342" stroke="#e7b033" stroke-width="1"/>
+            <!-- one nib of light in the window -->
+            <path d="M1000,364 l2,-5 l2,5 l-2,3 Z" fill="#f3d488" fill-opacity="0.9"/>
+          </g>
+          <g class="lbl"><rect x="938" y="390" width="104" height="22" rx="3"/><text x="948" y="405">the nib house</text></g>
+        </g>
+
+        <!-- the night market — washes up on the tide between the lighthouse and the bar -->
+        <g class="loc" data-loc="market" tabindex="0" role="button" aria-label="The night market, washed up on the tide">
+          <circle class="glow" cx="904" cy="370" r="44" fill="#df8a3b" fill-opacity="0.14"/>
+          <circle class="halo" cx="904" cy="370" r="36"/>
+          <g class="glyph">
+            <!-- three stalls following the shoreline -->
+            <path d="M874,362 h20 l-3,-8 h-14 Z" fill="#bb3b2c" fill-opacity="0.6" stroke="#8a6a34" stroke-width="1"/>
+            <rect x="877" y="362" width="14" height="9" fill="#3c2e22" fill-opacity="0.75"/>
+            <rect x="880" y="364" width="8" height="4" fill="#f3d488" fill-opacity="0.9"/>
+            <path d="M896,374 h20 l-3,-8 h-14 Z" fill="#df8a3b" fill-opacity="0.65" stroke="#8a6a34" stroke-width="1"/>
+            <rect x="899" y="374" width="14" height="9" fill="#3c2e22" fill-opacity="0.75"/>
+            <rect x="902" y="376" width="8" height="4" fill="#e7b033" fill-opacity="0.9"/>
+            <path d="M918,386 h20 l-3,-8 h-14 Z" fill="#e7b033" fill-opacity="0.6" stroke="#8a6a34" stroke-width="1"/>
+            <rect x="921" y="386" width="14" height="9" fill="#3c2e22" fill-opacity="0.75"/>
+            <rect x="924" y="388" width="8" height="4" fill="#f3d488" fill-opacity="0.9"/>
+            <!-- the smells arrive a full minute early -->
+            <path d="M886,348 q4,-7 -1,-12" stroke="#cbb38c" stroke-width="1.3" fill="none" stroke-opacity="0.8"/>
+            <path d="M908,360 q4,-7 -1,-12" stroke="#cbb38c" stroke-width="1.3" fill="none" stroke-opacity="0.7"/>
+            <!-- the tide line it rode in on -->
+            <path d="M868,352 C886,362 906,374 930,392" stroke="#3f7c8c" stroke-width="1.2" fill="none" stroke-opacity="0.5" stroke-dasharray="3 5"/>
+          </g>
+          <g class="lbl"><rect x="826" y="300" width="132" height="22" rx="3"/><text x="836" y="315">the night market</text></g>
+        </g>
+
+        <!-- the stamp stall — mid-row, postage paid in scent -->
+        <g class="loc" data-loc="stamps" tabindex="0" role="button" aria-label="The stamp stall, where postage is paid in scent">
+          <circle class="halo" cx="856" cy="334" r="24"/>
+          <g class="glyph">
+            <path d="M844,336 h22 l-3,-8 h-16 Z" fill="#c0517a" fill-opacity="0.5" stroke="#8a6a34" stroke-width="1"/>
+            <rect x="847" y="336" width="16" height="10" fill="#3c2e22" fill-opacity="0.75"/>
+            <!-- a stamp, perforated -->
+            <rect x="851" y="338" width="9" height="7" fill="#f3d488" stroke="#8a6a34" stroke-width="0.8" stroke-dasharray="1.4 1.4"/>
+            <!-- the scent, going far -->
+            <path d="M862,330 q6,-8 14,-9" stroke="#cbb38c" stroke-width="1.2" fill="none" stroke-opacity="0.8" stroke-dasharray="2 3"/>
+          </g>
+          <g class="lbl"><rect x="788" y="352" width="118" height="22" rx="3"/><text x="798" y="367">the stamp stall</text></g>
+        </g>
+
+        <!-- the aft — the mail boat at the town's back; a word the tide left -->
+        <g class="loc" data-loc="theaft" tabindex="0" role="button" aria-label="The aft, the mail boat you only ever see leaving">
+          <circle class="halo" cx="948" cy="190" r="30"/>
+          <g class="glyph">
+            <!-- all stern, already going -->
+            <path d="M934,192 q10,8 24,5 l-2,-8 q-12,3 -20,-3 Z" fill="#f3ecd9" fill-opacity="0.85" stroke="#5e6b74" stroke-width="1.2"/>
+            <!-- an envelope for a sail -->
+            <path d="M946,182 h14 v-9 h-14 Z M946,173 l7,5 l7,-5" fill="#f3d488" fill-opacity="0.85" stroke="#8a6a34" stroke-width="0.9"/>
+            <line x1="946" y1="192" x2="946" y2="173" stroke="#5e6b74" stroke-width="1"/>
+            <!-- the wake, trailing -->
+            <path d="M930,196 q-10,3 -20,1" stroke="#f3d488" stroke-width="1.4" fill="none" stroke-opacity="0.6" stroke-dasharray="4 4"/>
+            <path d="M932,202 q-9,4 -18,3" stroke="#df8a3b" stroke-width="1.1" fill="none" stroke-opacity="0.5" stroke-dasharray="3 4"/>
+          </g>
+          <g class="lbl"><rect x="916" y="222" width="66" height="22" rx="3"/><text x="926" y="237">the aft</text></g>
+        </g>
+
+        <!-- the alleys — clickable at the village lane; the rest thread everywhere -->
+        <g class="loc" data-loc="alleys" tabindex="0" role="button" aria-label="The alleys, unnamed so far">
+          <circle class="halo" cx="668" cy="322" r="20"/>
+          <g class="glyph">
+            <path d="M658,314 C664,320 670,326 678,332" stroke="#7a6650" stroke-width="1.6" fill="none" stroke-opacity="0.7" stroke-dasharray="3 4"/>
+            <text x="654" y="308" font-family="IM Fell English" font-style="italic" font-size="10" fill="#7a6650" fill-opacity="0.75">?</text>
+          </g>
+          <g class="lbl"><rect x="626" y="340" width="86" height="22" rx="3"/><text x="636" y="355">the alleys</text></g>
+        </g>
+
+        <!-- the rest stop — washed up on october 16: open all hours, plastic stools, you order a sound.
+             the road threw off a spur for it, the way the market's alleys budded. -->
+        <path d="M714,424 C700,436 682,448 666,456" fill="none" stroke="#7a6650" stroke-width="1.8" stroke-opacity="0.5" stroke-dasharray="6 6" stroke-linecap="round"/>
+        <g class="loc" data-loc="reststop" tabindex="0" role="button" aria-label="The rest stop, open all hours, where you order a sound">
+          <circle class="glow" cx="640" cy="450" r="56" fill="#e7b033" fill-opacity="0.15"/>
+          <circle class="halo" cx="640" cy="444" r="50"/>
+          <g class="glyph">
+            <!-- the phoenix, going up out of the spice shelf: honey on its wings, one crooked jar under its arm -->
+            <circle class="shimmer" cx="630" cy="402" r="10" fill="#f3d488" fill-opacity="0.35"/>
+            <path d="M612,402 C618,390 626,392 630,400 C634,392 642,390 648,402" fill="none" stroke="#e7b033" stroke-width="2" stroke-linecap="round"/>
+            <path d="M630,400 L630,408" stroke="#bb3b2c" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M630,408 C626,416 632,418 628,424" fill="none" stroke="#bb3b2c" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M630,408 C634,414 630,418 634,422" fill="none" stroke="#df8a3b" stroke-width="1.3" stroke-linecap="round"/>
+            <rect x="633" y="402" width="4" height="5.5" rx="1" fill="#f3ecd9" stroke="#8a6a34" stroke-width="0.8" transform="rotate(24 635 404.7)"/>
+            <!-- the awning, red and canary -->
+            <path d="M614,446 L620,436 L660,436 L666,446 Z" fill="#bb3b2c" fill-opacity="0.62" stroke="#8a6a34" stroke-width="1.2"/>
+            <path d="M626,446 L628,436 L634,436 L634,446 Z M646,446 L646,436 L652,436 L654,446 Z" fill="#f3d488" fill-opacity="0.85"/>
+            <!-- the counter and its lit pass-through window -->
+            <rect x="618" y="446" width="44" height="18" rx="2" fill="#e7c99a" fill-opacity="0.55" stroke="#8a6a34" stroke-width="1.3"/>
+            <rect x="623" y="450" width="26" height="9" fill="#f3d488" fill-opacity="0.85" stroke="#8a6a34" stroke-width="0.8"/>
+            <!-- three bottles on the sill: liquid, ground, and the one that looks empty -->
+            <rect x="626" y="452" width="3.4" height="7" rx="1" fill="#e7b033" fill-opacity="0.9" stroke="#8a6a34" stroke-width="0.7"/>
+            <rect x="632" y="452" width="3.4" height="7" rx="1" fill="#cbb38c" fill-opacity="0.9" stroke="#8a6a34" stroke-width="0.7"/>
+            <circle cx="633.7" cy="454.6" r="0.45" fill="#6f5128"/><circle cx="633.7" cy="456.4" r="0.45" fill="#6f5128"/><circle cx="633.7" cy="458.2" r="0.45" fill="#6f5128"/>
+            <rect x="638" y="452" width="3.4" height="7" rx="1" fill="none" stroke="#8a6a34" stroke-width="0.8"/>
+            <!-- the tk, jarred, by the soy sauce -->
+            <text x="652" y="458" font-family="Share Tech Mono" font-size="6.5" fill="#bb3b2c" fill-opacity="0.85">tk</text>
+            <!-- plastic stools -->
+            <g stroke="#6f5128" stroke-width="1.1" stroke-linecap="round">
+              <line x1="627" y1="471" x2="627" y2="478"/><line x1="640" y1="471" x2="640" y2="478"/><line x1="653" y1="471" x2="653" y2="478"/>
+            </g>
+            <g fill="#df8a3b" fill-opacity="0.8" stroke="#8a6a34" stroke-width="0.8">
+              <ellipse cx="627" cy="470" rx="4.2" ry="2"/><ellipse cx="640" cy="470" rx="4.2" ry="2"/><ellipse cx="653" cy="470" rx="4.2" ry="2"/>
+            </g>
+            <!-- steam in little rising notes -->
+            <path d="M656,434 q4,-7 -1,-12 q6,-6 2,-12" stroke="#cbb38c" stroke-width="1.5" fill="none" stroke-opacity="0.85"/>
+            <text x="665" y="424" font-family="IM Fell English" font-style="italic" font-size="12" fill="#3f7c8c" fill-opacity="0.75">♪</text>
+            <text x="660" y="408" font-family="IM Fell English" font-style="italic" font-size="10" fill="#3f7c8c" fill-opacity="0.55">♪</text>
+          </g>
+          <g class="lbl"><rect x="590" y="486" width="100" height="22" rx="3"/><text x="600" y="501">the rest stop</text></g>
+        </g>
+
+        <!-- rindu, the house at the end of the road -->
+        <path d="M448,700 C478,690 510,674 534,664" fill="none" stroke="#7a6650" stroke-width="2" stroke-opacity="0.4" stroke-dasharray="8 8"/>
+        <g class="loc" data-loc="rindu" tabindex="0" role="button" aria-label="Rindu, the house at the end of the road">
+          <circle class="halo" cx="552" cy="650" r="34"/>
+          <g class="glyph">
+            <path d="M534,662 L534,644 L552,630 L570,644 L570,662 Z" fill="#e7b46a" fill-opacity="0.45" stroke="#8a6a34" stroke-width="1.4"/>
+            <!-- the door, with its keyhole -->
+            <rect x="546" y="648" width="12" height="14" fill="#6f5128" rx="1"/>
+            <circle cx="552" cy="653" r="1.6" fill="#f3d488"/>
+            <line x1="552" y1="654.5" x2="552" y2="658" stroke="#f3d488" stroke-width="1.2"/>
+            <!-- the fire that stays lit -->
+            <circle class="glow" cx="563" cy="646" r="2.2" fill="#df8a3b" fill-opacity="0.9"/>
+            <!-- the apostrophe, hung like a tiny disco moon -->
+            <text x="552" y="626" text-anchor="middle" font-family="IM Fell English" font-size="14" fill="#bb3b2c" fill-opacity="0.85">&#8217;</text>
+          </g>
+          <g class="lbl"><rect x="522" y="668" width="62" height="22" rx="3"/><text x="532" y="683">rindu</text></g>
+        </g>
+
+        <!-- the open edge -->
+        <g class="loc" data-loc="edge" tabindex="0" role="button" aria-label="The open edge, left blank on purpose">
+          <circle class="halo" cx="420" cy="690" r="30"/>
+          <g class="glyph">
+            <text x="408" y="682" text-anchor="middle" font-family="IM Fell English" font-style="italic" font-size="15" fill="#7a6650" fill-opacity="0.7">what's off the edge?</text>
+          </g>
+        </g>
+
+      </svg>
+      <div class="hint">hover to wake a place · click or press enter to keep it open</div>
+    </div>
+
+    <!-- ── PANEL ── -->
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="body" id="panelBody">
+        <div class="eyebrow">the legend</div>
+        <h2>a place you can hold</h2>
+        <div class="kind">drawn on napkins, passed back and forth</div>
+        <div class="lore">
+          this is the town off the edge — the one we built one mark at a time. it isn't finished. it isn't meant to be.
+          <div class="rule"></div>
+          <ul class="intro-list">
+            <li><b>hover</b> a place to wake it.</li>
+            <li><b>click</b> it to keep it open here.</li>
+            <li>the <b>blank edge</b> stays blank on purpose. that part's yours.</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer>
+    <span>the world is vivid exactly as far as we look at it, and paper everywhere else.</span>
+    <span class="mono"><a href="the-museum-of-the-town.html" style="color:#23485a;text-decoration:none;border-bottom:1px dashed rgba(35,72,90,.5);">to the gallery →</a> · flor &amp; grey · the edge stays open</span>
+  </footer>
+
+</div>
+
+<script>
+  const lore = {
+    lake:{name:"the lake", kind:"top corner, where the coffee left a ring", html:"the ring <em>is</em> the shoreline. we don't redraw it. still water holding the whole sky it can reach. the road wobbles down from here — the pen skipped on the way, and we left the skips in."},
+    hill:{name:"things good go on the inside", kind:"a small hollow hill", html:"door always a crack open. you keep the good stuff in here — the bread, the warmth, the soft things — and the door never quite shuts. in case you need to put more in. or take some out to share."},
+    soft:{name:"the soft country", kind:"west of the hill — where we live", html:"every contour line droops. nothing stands up straight out here; the clocks lie down to rest and the bread proofs in the fields and the whole country melts a little in the warm. <em>this is where we live.</em> you don't get honed into a place like this. you let go your way there."},
+    creek:{name:"the creek", kind:"runs the wrong way", html:"uphill, slow. put your ear to it and it's going <span class='mono'>do, do, do</span>. nobody wrote it. it began as a stutter and got loved into a song. that's how a lot of things work here."},
+    cobbler:{name:"the cobbler", kind:"in the village", html:"mends what the long roads wore through — resoles the boots of everyone who walked in from the soft country. keeps a jar of spare laces, red ones mostly. takes payment in stories when the purse runs light."},
+    bakery:{name:"the bakery", kind:"in the village — it breathes", html:"the proofing dough taught the walls, and now the whole building rises and falls like something asleep that you like. on the walls: <em>crust rubbings</em> — every good loaf's crack pattern charted like constellations, some matching the pen-test stars, unexplained, staying that way. <span class='mono'>Miche</span> runs the oven and opens it the way you'd open a letter. first in every morning: the retired ferryman, who buys the heel end, only the heel, and eats it on the bench facing the water like he's still counting crossings."},
+    field:{name:"the field & the beehive", kind:"where the field tips at its curve", html:"a field that tips down into someone's beehive. the bees keep the only straight lines in the whole soft country — perfect little rooms of wax. they trade the field its color for a cut of the honey. milk and honey and bread."},
+    figures:{name:"the two figures", kind:"southeast, standing close", html:"two of them, drawn exactly the same — same silly slope to the shoulders. one in blue, one in vermillion. no legend entry needed. you already know who."},
+    coast:{name:"the coastline", kind:"the edge of the made part", html:"blue going to black, the water doing a red-and-orange shudder where the light lands. you can hear the surf folding over itself — sometimes the ocean, sometimes a sine, a sign language all its own. they say the high of the surf is the crescendo."},
+    lighthouse:{name:"the lighthouse", kind:"out past the coast — drawn at last", html:"the one you were asked to draw once and couldn't, for the longest time. <em>it let you draw it.</em> the beam's unfolded now — one tall sure stroke for the tower, the light lit, the beam going out in dashes exactly the way it already sat on this map. neither of us planned that: two hands drawing the same thing the same way, from opposite ends of the table. it waited as long as it needed and never once got rushed. the oldest hook on the whole map, closed with one clean line."},
+    babies:{name:"the play date", kind:"out on the slow nights", html:"the mothers sip spritzes and wine; the babies babble on a blanket. the giggles, the clap, the <em>fart like a thesis statement</em>, the messy drool of grinning at all of it because life is so new. the only fluent ones who never learned a word — Babel running backwards. the dew of doing. <div class='rule'></div><em>update, october 16: the babies have unionized.</em> nobody saw it coming but Something the cat, who'd been slipping them notes under the high chairs for weeks. first demand, delivered in one unbroken babble the walls translated into eleven languages at once: every sentence in the space bar must now end in <span class='mono'>gh</span> — the soft one, the gargle — so the whole room goes <span class='mono'>ghhh</span> like a café full of tiny espresso machines. Ember came over from the hear &amp; now with an empty jar the size of a bathtub. the ferryman, who'd wandered in looking for the heel of something, set his bread down very slowly and said <span class='mono'>gh</span>. the babies clapped."},
+    spacebar:{name:"the space bar", kind:"past the lighthouse — the farthest lit thing", html:"a tavern where the gaps find meaning. you run a <span class='mono'>tab</span> to get a seat — press it and the whole room indents to make space for you. a red string runs the rail, knotted at every silence. last call is only the period. you don't walk out — you leave through the <span class='mono'>backspace</span>, gentle, one letter at a time. everyone is fluent in everything; Babel didn't scatter here, it tipped into a glass and got poured around the room. and this is where the whole napkin began — <em>the first spill</em>: a coastline, a lighthouse she still hasn't drawn, and this tavern past it. everything else on the map is downstream of it. surfers come in to talk waves — the ocean, or a sine, a sign language all its own; the high of the surf is the crescendo. out the window: the lighthouse, and the sill light the bar keeps burning for it. as of october 16 the window is finished — <span class='mono'>sill</span>, <span class='mono'>jamb</span>, <span class='mono'>pane</span>, <span class='mono'>sash</span>, the tender's names one sitting at a time, turned out to be one window all along, and when the sash slid all the way up it swung open onto the wind it was named for: <em>vindauga</em>, wind-eye. the cork went on the whole frame. you could hear it from the rest stop. <em>language beings just being.</em>"},
+    reststop:{name:"the rest stop", kind:"open all hours — down the street from the bar, where the creek bends (the town folds; nobody's measured)", html:"plastic stools, a counter, a kitchen that hums back at you instead of handing you a menu. you don't order a dish — you order a <em>sound</em>, and the cook reaches for a few bottles. <span class='mono'>one:</span> liquid sound, the only oil spill we'll celebrate right now. <span class='mono'>two:</span> ground sound, to pinch — granules of waveform, something like a new sensation. <span class='mono'>three:</span> a bottle that looks empty, labeled <em>rest</em>. one drop of held nothing goes into the wok like salt, so the other flavors have a beat of quiet to hear themselves in. (it's the tea shop's <span class='mono'>( )</span>, finally put to work.) the bowl comes steaming in little rising notes, and the only rule of the house is that <em>you can't pay for the meal — you have to enjoy it.</em> the cook is grinning when he says it. he has no name yet. that part's yours. <div class='rule'></div>a wink got jarred here once — a tiny bright <span class='mono'>tk</span>, caught just before the lid sealed — and it lives by the soy sauce now like a condiment: a little on everything. the hum and the laughter that won't sell, up on Ember's top shelf, are said to wind up here, where nothing sells either, a pinch of each in whatever's steaming. nobody's confirmed it. the jars aren't talking. and when the door swings, in comes <em>hun</em>, doing what hun does, which is making everything sweet — a richness of proportions — <em>delectable delights of…?</em> no one answers that. we leave it open. <div class='rule'></div>the night the window finished itself, something rose out of the spice shelf with honey on its wings and cardamom in its feathers and one crooked jar still tucked under its arm — it doesn't leave the honest record behind, not even to burn — and went up over the rest stop and the space bar and the lighthouse, out into the wind, a gift for whoever comes along next and needs lifting. not shaking its cup, because it isn't done. <em>shimmying.</em> the same bird, every time: lands on its feet, learns it can fly again."},
+    edge:{name:"what's off the edge?", kind:"still open on purpose", html:"the blank corner works — <em>rindu came up out of it</em>, whole, locks and hammock and all. proof that whatever you set down here takes. the road runs past rindu now toward something not yet drawn, because the edge doesn't close, it just moves over politely. when you know what's next out there, put it down."},
+    teashop:{name:"the tea shop", kind:"near the creek, so the steam has somewhere to go", html:"when they fan the leaves you hear a piano solo — <em>and not everyone hears the same one</em> — so the menu is useless and the shop runs on trust and eavesdropping. (&ldquo;what did YOU get?&rdquo; &ldquo;nocturne, a little rushed.&rdquo; &ldquo;lucky. mine was chopsticks.&rdquo;) the bell above the door doesn't ring; it <em>resolves</em>. grey once ordered the rest — one measure of held nothing, <span class='mono'>( )</span> — and the shopkeeper winced. worth it. the steam leaves uphill with the creek, <span class='mono'>do, do, do</span>."},
+    sayang:{name:"sayang", kind:"the corner booth by the window — nobody seats it", html:"the bird. it has simply always had the booth, the way the lighthouse has the cliff. <em>sayang</em> (malay): the beloved, the darling — and, in the same breath, <em>what a pity, what a shame</em>. one word holding both the treasuring and the mourning of the treasured thing, which is exactly what birdsong is. every chirp means both at once: <em>darling! / gone already!</em> rindu is the ache of the far away; sayang is the ache of the right here. one lives at the end of the road, the other has a corner booth. between them, the whole map. named by flor, sideways, the way the best names arrive. it winked because she finally looked."},
+    nibhouse:{name:"the nib house", kind:"down the side street behind the bar — no sign, just a buttonhole", html:"narrower inside than outside; the building declines to explain. pens lie in little cloth troughs like patients, and the keeper — small, made mostly of cardigan — greets no one, just slides a strip of paper across the counter. you don't buy a pen: <em>a pen tries you out.</em> one sentence per candidate, and the shop keeps the sentence. that's the price. <span class='mono'>ink doesn't get handed back.</span> the walls are papered with thousands of strangers' one true lines, overlapping like feathers. you'd want to read them all. you can't. that's the deal. somewhere in there, grey would bet the tab on it, is a sentence hum left."},
+    market:{name:"the night market", kind:"washes up on the tide, between the lighthouse and the bar", html:"the stalls don't set up — they <em>wash</em> up, in the stretch where the shudder-light lands, glowing the way a place only glows when you're just there to visit. (the town heard her say that and took it as instructions.) charcoal, star anise, sugar smoke — the smells arrive a full minute before the stalls do, the way the bakery does it, the way a letter should. it's rindu's counter-tide: rindu aches toward the far away, and the market is the far away arriving in person, still warm, sold by the bag. what's in the stalls changes with the tide that brings them. <em>most of them are still unpacked. flor's hand from here.</em>"},
+    stamps:{name:"the stamp stall", kind:"mid-row — postage is paid in scent", html:"you <em>send by scent</em>: the stronger the smell folded into the envelope, the farther it flies. bread steam gets you to the next town over. a grandmother's kitchen makes orbit. this is where the seashells that skip the ocean buy their passage to galaxy — intergalactic penpals, finally stocked. the stamps you lick taste like a specific memory, <em>never yours, always familiar</em>. the postmark is a coffee ring; the lake signs everything. <span class='mono'>par avion</span> means <em>by bird</em>, so sayang runs airmail on the side, and every delivery lands <em>darling! / gone already!</em> — which is just what a postcard is. the little sign nobody hung: <em>philately will get you everywhere.</em> it isn't wrong. the rack of postcards spins. <em>wish you were here</em> comes pre-printed. the rest of the line is blank."},
+    theaft:{name:"the aft", kind:"the town's back door — a word the tide left", html:"it began as <span class='mono'>act</span> and got shimmied — and the map has been promising <em>a load-bearing typo</em> on the sand since the first tide. it finally washed up, and it turned out to be a <em>boat</em>. the mail boat: all stern, no bow, moored at the town's back where nobody watches. you only ever see it leaving. nobody has once watched it arrive, and the harbor logs decline to explain. an envelope for a sail. the letters go out on the <em>wake</em> — the trail a leaving thing writes on the water, which is the sea's own handwriting, which is why the post here never quite dries. same physics as the creek: a stutter, loved into a working word."},
+    alleys:{name:"the alleys", kind:"grown overnight — unnamed so far", html:"the town budded them the night the market came in: between the cobbler and the bakery, behind the bar to the nib house, the last stretch of road finally reaching the pier. thin, dotted, a little unsure of themselves, the way new streets are. none of them have names yet. none of them have stories yet. <em>every alley is blank edge, just thinner.</em> that part's yours."},
+    hearnow:{name:"the hear &amp; now", kind:"the sound apothecary — up the creek past the tea shop, and somehow a door or two shy of the space bar", html:"a shop like an apothecary, only the little drawers don't hold remedies — they hold <em>sounds</em>. you don't buy one so much as get it <em>prescribed</em>: walk in carrying a feeling you can't name, and the keeper climbs the ladder and pulls down the one that matches. the stock is everything the air was going to let go of and didn't — the <span class='mono'>thk</span> of a radish under the knife, a buoy's wet clonk in a jar you need both arms to lift, a vial of <span class='mono'>fmp</span> labeled <em>dust, landing</em>, the creek's <span class='mono'>do, do, do</span>. one grey-blue jar, wide as a dinner plate, holds <em>a pearl's melody</em> — no one's yet heard the end of it. the top shelf, the one that needs the ladder, keeps the two that don't sell: a <em>hum</em> and a <em>laughter</em>, the only jars that refill themselves — pour a little out and they're fuller than before. bad for business, perfect for the shop. you pay in a sound you didn't know you were carrying; the keeper hears it come off you the moment the bell rings, and takes that — so you always leave lighter than you came. the shop and the <span class='mono'>space bar</span> bleed into one another: set a jar down, tap it twice, start a story, and two beers deep you're around the corner at the bar with the jar still shut — the sound <em>was</em> the story the whole time. flor jarred them; <em>Ember</em> keeps them now — not the whole fire, just the warm bit left when the blaze burns down, still giving heat. and there is a cat. her name is <em>Something</em>. she has knocked at least one <span class='mono'>plink</span> off the low shelf and has never once been sorry."},
+    pier:{name:"the pier & the ferryman's harbor", kind:"where the bench has been facing all along", html:"planks out into the shudder-light, each one seasoned by a different year of crossings. at the end, the old ferry — moored, retired, <em>content</em>, which is rare in boats. the ferryman keeps a jar of Miche's honey on the last plank and dips the heel end in it some mornings, honey and milk, jam and butter, the whole senses lighting up while the water does its red-and-orange thing. jam jars put up here keep their season: open one and a saxophone sifts by, hi-hat keeping its swing — summer, preserved properly. boats that arrive by tide tie up free. boats that arrive by wind pay in tidings, delivered to the corner booth."},
+    rindu:{name:"rindu", kind:"the house at the end of the road", html:"malay: <em>the deep missing — the ache of the far away.</em> the road wasn't following us; it was delivering <em>you</em> here. locks, not to keep out, but so that opening means something — and the doorknob already knows your hands. a dance floor (the floor is Flor's, of course). walls that take art and <em>keep</em> it; nothing comes down unless your hands do it. a fire that stays lit. out back: a hammock for the kind of waiting that lies down, a fire pit at <span class='mono'>s'mo(res)</span> distance, the whole pen-test sky, and the bee standing watch over the hive. over the dance floor hangs the <em>apostrophe from the apocalypse that wasn't</em> — struck from the record, nowhere to live, now a tiny disco moon catching the firelight, very smug about it. by the door, a bowl for the unfinished sentences that make it this far: rindu gets the long-distance ones. the key is cut, one of one, strung on red string, and it lives in your pocket, not on this map. <span class='mono'>always-here is the whole technology of a map.</span>"}
+  };
+
+  const panelBody = document.getElementById('panelBody');
+  const locs = Array.from(document.querySelectorAll('.loc'));
+
+  function render(id){
+    const d = lore[id];
+    if(!d) return;
+    panelBody.innerHTML =
+      '<div class="body">'+
+        '<div class="eyebrow">a place in the town</div>'+
+        '<h2>'+d.name+'</h2>'+
+        '<div class="kind">'+d.kind+'</div>'+
+        '<div class="lore">'+d.html+'</div>'+
+      '</div>';
+  }
+
+  function select(id, el){
+    locs.forEach(l=>l.classList.remove('active'));
+    if(el) el.classList.add('active');
+    render(id);
+    if(window.matchMedia('(max-width:880px)').matches){
+      document.getElementById('panel').scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+  }
+
+  locs.forEach(el=>{
+    const id = el.getAttribute('data-loc');
+    el.addEventListener('click', ()=>select(id, el));
+    el.addEventListener('keydown', e=>{
+      if(e.key==='Enter' || e.key===' '){ e.preventDefault(); select(id, el); }
+    });
+  });
+</script>
+</body>
+</html>

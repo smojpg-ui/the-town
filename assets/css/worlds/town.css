@@ -1,0 +1,83 @@
+/* ==========================================================================
+   the town off the edge: world tokens
+   --------------------------------------------------------------------------
+   Every color here is taken from the napkin map (v0.9.15), so the stage and
+   the map read as one place. One world per file: a future world (GLITCH)
+   gets its own file and never borrows these.
+
+   Text colors are contrast-checked against their backgrounds (WCAG AA,
+   4.5:1 or better). The map's own --ink-soft (#647784) and --red (#bb3b2c)
+   fall just short of that on paper, so text uses the deeper --text-soft and
+   --text-red; the originals stay for strokes and decoration.
+   ========================================================================== */
+
+:root {
+  /* the napkin palette */
+  --paper:       #efe6d1;
+  --paper-rim:   #dccfb1;
+  --ink:         #3c4d58;   /* 7.06:1 on paper */
+  --ink-soft:    #647784;   /* decoration only */
+  --blue:        #23485a;
+  --blue-deep:   #0f2630;
+  --red:         #bb3b2c;   /* strokes; the red string */
+  --orange:      #df8a3b;
+  --gold:        #e7b033;   /* the yellow highlight */
+  --gold-warm:   #f3d488;
+  --sepia:       #4a3a2a;
+  --coffee:      #8a6a34;   /* the lake: a coffee ring */
+
+  /* roles (what the components use) */
+  --bg:          var(--paper);
+  --bg-rim:      var(--paper-rim);
+  --text:        var(--ink);
+  --text-soft:   #56656f;   /* 4.85:1 on paper */
+  --text-red:    #9e3123;   /* 5.8:1 on paper */
+  --line:        var(--ink);
+  --string:      var(--red);
+  --mark-bg:     var(--gold-warm);
+  --mark-text:   #2b3a44;   /* 8.1:1 on gold-warm */
+  --light:       var(--gold-warm);  /* light through a door left open */
+  --focus:       var(--gold);
+  --vignette:    rgba(100, 119, 132, 0.16); /* where paper thins toward Payne's grey */
+
+  /* type */
+  --font-display: "IM Fell English", "Iowan Old Style", Georgia, serif;
+  --font-text:    "Literata", "Iowan Old Style", Georgia, serif;
+  --font-mono:    "Share Tech Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* night: the coast, blue going to black */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="paper"]) {
+    --bg:        var(--blue-deep);
+    --bg-rim:    #0a1a21;
+    --text:      #efe6d1;  /* 12.6:1 */
+    --text-soft: #b8c4ca;  /* 8.8:1 */
+    --text-red:  #ef9a86;
+    --line:      #c9d2d6;
+    --string:    #d9604c;
+    --mark-bg:   var(--gold);
+    --mark-text: var(--blue-deep);
+    --light:     var(--gold);
+    --focus:     var(--gold-warm);
+    --vignette:  rgba(0, 0, 0, 0.35);
+    --coffee:    #b8945a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="night"] {
+  --bg:        var(--blue-deep);
+  --bg-rim:    #0a1a21;
+  --text:      #efe6d1;
+  --text-soft: #b8c4ca;
+  --text-red:  #ef9a86;
+  --line:      #c9d2d6;
+  --string:    #d9604c;
+  --mark-bg:   var(--gold);
+  --mark-text: var(--blue-deep);
+  --light:     var(--gold);
+  --focus:     var(--gold-warm);
+  --vignette:  rgba(0, 0, 0, 0.35);
+  --coffee:    #b8945a;
+  color-scheme: dark;
+}

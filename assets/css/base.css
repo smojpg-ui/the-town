@@ -1,0 +1,224 @@
+/* ==========================================================================
+   base: shared by every page, every world
+   Colors and fonts come from the world file (assets/css/worlds/*.css).
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  --text-scale: 1;
+}
+html[data-size="smaller"] { --text-scale: 0.9; }
+html[data-size="larger"]  { --text-scale: 1.15; }
+html[data-size="largest"] { --text-scale: 1.3; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.6;
+  /* the edges go to Payne's grey where the world thins toward paper */
+  box-shadow: inset 0 0 clamp(60px, 12vw, 160px) var(--vignette);
+  background-attachment: fixed;
+}
+
+img, svg { display: block; max-width: 100%; }
+img { height: auto; }
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-color: var(--string); }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--text-soft);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem; top: -4rem;
+  z-index: 10;
+  padding: 0.5rem 0.9rem;
+  background: var(--bg);
+  border: 1px solid var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+.skip:focus { top: 1rem; }
+
+/* small machine-voice labels: hints, controls, the desk's own notes */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--text-soft);
+}
+
+/* a toggle that reads as text: "motion: on" */
+.toggle {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  padding: 0.5rem 0.25rem;      /* 44px-ish touch target with line-height */
+  min-height: 44px;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+}
+.toggle:hover { color: var(--text); }
+
+/* --------------------------------------------------------------------------
+   motion
+   Pages set html[data-motion="on" | "off"] before first paint (see the
+   inline script in each page's <head>). Without JavaScript, the OS setting
+   decides.
+   -------------------------------------------------------------------------- */
+html[data-motion="off"] *,
+html[data-motion="off"] *::before,
+html[data-motion="off"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="on"]) *,
+  html:not([data-motion="on"]) *::before,
+  html:not([data-motion="on"]) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* a soft crossfade between pages, in browsers that support it */
+@view-transition { navigation: auto; }
+html[data-motion="off"]::view-transition-group(*),
+html[data-motion="off"]::view-transition-old(*),
+html[data-motion="off"]::view-transition-new(*) { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="on"])::view-transition-group(*),
+  html:not([data-motion="on"])::view-transition-old(*),
+  html:not([data-motion="on"])::view-transition-new(*) { animation: none !important; }
+}
+
+/* the "prototype" tag: so a copy that wanders off the desk says what it is */
+.proto-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  border: 1px dashed currentColor;
+  padding: 0.1rem 0.45rem;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   the rail: the thin bar along the top of every inner room
+   -------------------------------------------------------------------------- */
+.rail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: max(10px, env(safe-area-inset-top)) 16px 10px;
+}
+.rail-right {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  position: relative;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.back:hover { color: var(--text); }
+
+/* a <details> that opens a small panel under the rail */
+.pop summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+.pop summary::-webkit-details-marker { display: none; }
+.pop[open] summary { color: var(--text); }
+.pop-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 6;
+  padding: 1rem 1.1rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--text-soft);
+  border-radius: 6px;
+  box-shadow: 0 14px 40px -20px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+/* the cursor left blinking where you stood (see backspace.js) */
+.is-erasing::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-left: 3px;
+  vertical-align: -0.06em;
+  background: currentColor;
+  animation: blink 0.9s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }

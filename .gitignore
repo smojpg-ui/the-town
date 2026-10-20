@@ -1,0 +1,14 @@
+# --- art stays local until its artist says it can go in the repo -------------
+# Flor's drawings are copied into assets/art/ so the prototype looks right on
+# this computer, but they are NOT committed. Committing puts them in git
+# history for good, and pushing to a public repo publishes them.
+# When she says yes to a piece, add a line like:  !assets/art/lighthouse.jpg
+assets/art/*
+!assets/art/README.md
+
+# --- the usual ----------------------------------------------------------------
+.DS_Store
+*.swp
+.vscode/
+.idea/
+node_modules/

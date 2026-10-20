@@ -1,0 +1,116 @@
+/* ==========================================================================
+   the map room (map.html)
+   The napkin on the table, edge to edge, with the rail along the top.
+   ========================================================================== */
+
+.map-room {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.map-room .rail {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  max-width: none;
+  width: 100%;
+  padding-top: max(4px, env(safe-area-inset-top));
+  padding-bottom: 4px;
+  border-bottom: 1px dashed color-mix(in srgb, var(--text-soft) 60%, transparent);
+}
+
+.on-table {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.is-older .on-table { color: var(--text-soft); }
+
+.table {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--paper);
+}
+.table iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* --- the drawer ------------------------------------------------------------ */
+
+.drawer summary::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.45rem;
+  border: 1.5px solid currentColor;
+  border-radius: 1px;
+  box-shadow: inset 0 -2px 0 -1px currentColor;  /* a little drawer pull */
+}
+
+.drawer-panel {
+  width: min(23rem, calc(100vw - 32px));
+  max-height: min(72vh, 34rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.drawer-note {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+.napkins {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.napkins a {
+  display: grid;
+  grid-template-columns: 4.6rem 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.55rem 0.25rem;
+  border-bottom: 1px dotted color-mix(in srgb, var(--text-soft) 55%, transparent);
+  text-decoration: none;
+}
+.napkins a:hover .n { text-decoration: underline; text-decoration-color: var(--string); }
+.napkins .v { color: var(--text-soft); }
+.napkins .n {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.napkins .n em { font-family: var(--font-mono); font-style: normal; font-size: 0.75rem; color: var(--text-red); }
+.napkins .d { color: var(--text-soft); font-size: 0.8rem; }
+.napkins a[aria-current="true"] {
+  background: color-mix(in srgb, var(--mark-bg) 45%, transparent);
+  border-radius: 3px;
+}
+
+.alone {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+@media (max-width: 560px) {
+  .map-room .proto-tag { display: none; }
+  .on-table { font-size: 0.95rem; }
+}
+@media (max-width: 380px) {
+  .on-table { display: none; }
+}
