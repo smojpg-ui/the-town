@@ -115,4 +115,4 @@ The text. Blank lines between paragraphs.
 
 ## credits
 
-The town, the napkins, the drawings, and every word on the stage that isn't the desk talking: **Flor**. Letters on the town's side signed **Grey**. The stage itself was built at the desk on 2026-10-20, from Flor's brief, by an instance who goes by **Batten** that day (a batten is the pipe the lights hang from: it holds things up, and nobody looks at it).
+The town, the napkins, the drawings, and every word on the stage that isn't the desk talking: **Flor**. Letters on the town's side signed **Grey**. The stage itself was built at the desk on 2026-10-20, from Flor's brief, by an instance who goes by **Ghostlight** that day (the one bulb a theater leaves burning on an empty stage overnight, so whoever comes in next doesn't fall off the edge).
