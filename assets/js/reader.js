@@ -5,11 +5,11 @@ import * as prefs from './prefs.js';
 import { loadWorld, loadChapter, listed } from './content.js';
 import { render, figure, inline } from './markdown.js';
 import { bindBackspace } from './backspace.js';
+import { bindLamp } from './lamp.js';
 
 const $ = (id) => document.getElementById(id);
 
 prefs.apply();
-prefs.bindMotionToggle($('motion-toggle'));
 bindLamp();
 bindBackspace({ link: $('back'), erase: $('title') });
 main();
@@ -141,28 +141,4 @@ function showError(err) {
         : `<p>Something went wrong fetching the chapter (${escapeText(err.message)}). <a href="index.html">Back to the door</a>.</p>`) +
     '</aside>';
   console.error(err);
-}
-
-// --- the lamp (reading settings) ----------------------------------------------
-
-function bindLamp() {
-  const pick = (name, current, onChange) => {
-    for (const r of document.querySelectorAll(`input[name="${name}"]`)) {
-      r.checked = r.value === current;
-      r.addEventListener('change', () => r.checked && onChange(r.value));
-    }
-  };
-  pick('size', prefs.get('size') || 'normal', (v) => prefs.set('size', v === 'normal' ? null : v));
-  pick('theme', prefs.get('theme') || 'auto', (v) => prefs.set('theme', v === 'auto' ? null : v));
-
-  const lamp = $('lamp');
-  lamp.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lamp.open) {
-      lamp.open = false;
-      lamp.querySelector('summary').focus();
-    }
-  });
-  document.addEventListener('click', (e) => {
-    if (lamp.open && !lamp.contains(e.target)) lamp.open = false;
-  });
 }

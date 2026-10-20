@@ -6,6 +6,7 @@
 import * as prefs from './prefs.js';
 import { WORLD } from './content.js';
 import { bindBackspace } from './backspace.js';
+import { bindLamp } from './lamp.js';
 
 const $ = (id) => document.getElementById(id);
 const frame = $('napkin');
@@ -13,6 +14,7 @@ const onTable = $('on-table');
 const drawer = $('drawer');
 
 prefs.apply();
+bindLamp();
 bindBackspace({ link: $('back'), erase: onTable });
 main();
 

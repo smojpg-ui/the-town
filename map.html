@@ -41,6 +41,20 @@
     <div class="rail-right">
       <span class="proto-tag">prototype · local only</span>
 
+      <details class="lamp pop" id="lamp">
+        <summary>lamp<span class="sr-only"> (light and motion)</span></summary>
+        <div class="lamp-panel pop-panel">
+          <p class="lamp-note">the napkin keeps its own light and its own motion. the lamp is for the rest of the stage.</p>
+          <fieldset>
+            <legend>light</legend>
+            <label><input type="radio" name="theme" value="auto"> follow my device</label>
+            <label><input type="radio" name="theme" value="paper"> paper</label>
+            <label><input type="radio" name="theme" value="night"> night</label>
+          </fieldset>
+          <button class="toggle" type="button" id="motion-toggle">motion: on</button>
+        </div>
+      </details>
+
       <!-- behind the rail there's a drawer of half-drawn napkin maps -->
       <details class="drawer pop" id="drawer">
         <summary>the drawer<span class="sr-only"> (every napkin, newest first)</span></summary>

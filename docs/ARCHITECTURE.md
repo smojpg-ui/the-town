@@ -27,6 +27,7 @@ A static site: plain HTML, CSS, and a few small ES modules. No framework, no bui
 | `content.js` | fetches `content/<world>/world.json` and chapter files |
 | `markdown.js` | a small, safe Markdown subset (everything is escaped first; no raw HTML) |
 | `backspace.js` | leaving a room: the ⌫ link or the Backspace key erases a line letter by letter, then goes |
+| `lamp.js` | the lamp in every room: light, text size (where there's reading), motion |
 | `doorway.js`, `map.js`, `reader.js` | one per room |
 
 ## the map room

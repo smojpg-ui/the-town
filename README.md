@@ -27,7 +27,7 @@ Then open **http://localhost:8737**. Stop the server with `ctrl-c`.
 | **the map room** | `map.html` | The current napkin (no. 18, v0.9.15), edge to edge. The rail along the top has **⌫ backspace** (back to the door, one letter at a time) and **the drawer**, which holds every napkin back to v0.9. `map.html?v=0.9.7` opens one directly. |
 | **the reading room** | `read.html` | **Built, and closed.** No door leads here yet; the book comes later. It works (`read.html?c=the-first-spill`), so the stage is ready when Flor opens it. |
 
-Each page has a **motion** switch. Reduced-motion settings are honored automatically. The reading room's **lamp** has text size and paper or night.
+Every room has a **lamp** (top corner): light (*follow my device*, *paper*, or *night*) and a motion switch, plus text size in the reading room. The choice carries from room to room. The napkins keep their own light, since they're Flor's files. Reduced-motion settings are honored automatically.
 
 ## where things live
 

@@ -2,14 +2,16 @@
 // Everything here is optional; with JavaScript off the door still opens.
 
 import * as prefs from './prefs.js';
+import { bindLamp } from './lamp.js';
 
 prefs.apply();
-prefs.bindMotionToggle(document.getElementById('motion-toggle'));
+bindLamp();
 
 // drawn fresh every visit: the pen skips somewhere new each time the door is
 // opened, the way a hand never draws the same line twice. (Her lighthouse is
 // brushed like this.) The lake is the one exception: nobody redraws the lake.
 // Without JavaScript, the strokes keep the fixed skips set in doorway.css.
+//
 // gaps are measured end to end, and round brush-ends eat about one stroke-width
 // of each, so every gap starts a little wider than it looks
 const HANDS = [

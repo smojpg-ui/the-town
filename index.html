@@ -101,7 +101,18 @@
   <!-- after the door in the tab order on purpose: the first tab lands on the door -->
   <aside class="desk-notes" aria-label="about this page">
     <span class="proto-tag">prototype · local only</span>
-    <button class="toggle" type="button" id="motion-toggle">motion: on</button>
+    <details class="lamp pop" id="lamp">
+      <summary>lamp<span class="sr-only"> (light and motion)</span></summary>
+      <div class="lamp-panel pop-panel from-left">
+        <fieldset>
+          <legend>light</legend>
+          <label><input type="radio" name="theme" value="auto"> follow my device</label>
+          <label><input type="radio" name="theme" value="paper"> paper</label>
+          <label><input type="radio" name="theme" value="night"> night</label>
+        </fieldset>
+        <button class="toggle" type="button" id="motion-toggle">motion: on</button>
+      </div>
+    </details>
   </aside>
 
 </body>
