@@ -7,9 +7,12 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 ## the doorway
 
 1. **Which door.** The doorway is the hollow hill's door, labeled *things good go on the inside*, a crack open with gold light behind it. Other candidates: the space bar's door, rindu's, or no label at all.
+   - **flor, 2026-10-20:** *"the door is gorgeous"*
 2. **Tab to run a tab.** Pressing Tab lands on the door and the whole room indents one tab-width to make space for you (from the space bar: *press it and the whole room indents*). The hint line reads `tab to run a tab · enter to go in` (`tap the door` on phones).
+   - **open (asked 2026-10-20):** she said *"we should just start with …wow. how do i walk in here?"* Was that the first line? If so: the first look says nothing but the door and her line, and the hint arrives only after you've stood there a few breaths (screen readers get it at once). Not built; it's her line.
 3. **The scenery.** A coffee-ring lake in the top-right corner; the creek west of the door going uphill with *do, do, do* (press it and one more goes up); a clock lying down in the bottom-left corner; a dashed road running off the bottom edge, with *what's off the edge?* beside it. All from the napkin's canon; the placement is a guess.
 4. **Lines with gaps.** The door, road, and creek are drawn with skipping strokes, taken from the way her lighthouse drawing is brushed (the lines break and your eye ties them). Proposed as part of the stage's visual identity.
+   - **flor, 2026-10-20:** *"you did draw it like the lighthouse and i'm about to lose my mind"*. And yes to the follow-up: **the skips are redrawn on every visit** (`doorway.js`, `HANDS`), so no two first looks are drawn the same. The lake is never redrawn.
 5. **Type.** IM Fell English for titles and Share Tech Mono for small labels (both already on the napkin), plus **Literata** for reading text, which is new and chosen for long reads on screens.
 6. **The title**, lowercase: *the town off the edge*.
 
