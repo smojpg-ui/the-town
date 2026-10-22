@@ -20,6 +20,7 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 
 7. **The door opens onto the map.** Per her note on 2026-10-20 (*"No book thing yet. Play in the maps and we just set the stage."*), the door goes to the current napkin, not a chapter.
 8. **The drawer.** All fifteen napkins (v0.9 → v0.9.15) are on the stage, byte-for-byte, under the space bar's *drawer of half-drawn napkin maps*. Names come from her filenames, with commas put back. v0.9.4's filename had no name; it's listed as *soft country everywhere*, from its retired copy. Only no. 18 shows a napkin number; the older numbers weren't verified.
+   - **flor, 2026-10-21:** put `town-off-the-edge-v0.9.18.html` on the table. Its filename had no name, so the drawer calls it *quiet layers*, from the note in the file. The stamp says napkin no. 17. v0.9.15 moved into the drawer. v0.9.16 and v0.9.17 were not separate files.
 9. **⌫ backspace** leaves a room by erasing the label one letter at a time, then a blinking cursor (from the space bar: *you leave through the backspace*). The Backspace key does it too.
 
 ## the reading room (built, closed)

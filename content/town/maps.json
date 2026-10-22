@@ -2,10 +2,17 @@
   "_about": "the drawer of napkin maps. newest first; the first one is the one on the table. files are byte-for-byte copies of flor's napkins, never edited here. to add a napkin: drop its html in maps/, rename the old current one to -vX.Y.Z, and add a line at the top.",
   "napkins": [
     {
+      "version": "0.9.18",
+      "napkin": 17,
+      "name": "quiet layers",
+      "file": "maps/the-town-off-the-edge-map.html",
+      "date": "2026-10-21"
+    },
+    {
       "version": "0.9.15",
       "napkin": 18,
       "name": "the page holds things",
-      "file": "maps/the-town-off-the-edge-map.html",
+      "file": "maps/the-town-off-the-edge-map-v0.9.15.html",
       "date": "2026-10-17"
     },
     {
