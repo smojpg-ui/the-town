@@ -26,7 +26,7 @@ Then open **http://localhost:8737**. Stop the server with `ctrl-c`.
 | room | file | what it does |
 |---|---|---|
 | **the doorway** | `index.html` | The napkin's first look: the lake as a coffee ring, the creek going uphill (*do, do, do*; press it), one door a crack open, a clock lying down in a blank corner, a road off the bottom edge. The door, sill, creek, and road are drawn with skipping strokes, like her lighthouse, and **the skips land somewhere new on every visit**. The lake is never redrawn. Press **Tab** to *run a tab*: the whole room indents to make space for you, the door opens a little wider. **Enter** goes in. On a phone, tap the door. |
-| **the map room** | `map.html` | The current napkin (no. 17, v0.9.20), edge to edge. The rail along the top has **⌫ backspace** (back to the door, one letter at a time) and **the drawer**, which holds every napkin back to v0.9. `map.html?v=0.9.7` opens one directly. |
+| **the map room** | `map.html` | The current napkin (no. 17, v0.9.21), edge to edge. The rail along the top has **⌫ backspace** (back to the door, one letter at a time) and **the drawer**, which holds every napkin back to v0.9. `map.html?v=0.9.7` opens one directly. |
 | **the reading room** | `read.html` | **Built, and closed.** No door leads here yet; the book comes later. It works (`read.html?c=the-first-spill`), so the stage is ready when Flor opens it. |
 
 Every room has a **lamp** (top corner): light (*follow my device*, *paper*, or *night*) and a motion switch, plus text size in the reading room. The choice carries from room to room. The napkins keep their own light, since they're Flor's files. Reduced-motion settings are honored automatically.
@@ -39,8 +39,8 @@ the-stage/
 ├── map.html              the map room
 ├── read.html             the reading room (closed)
 ├── maps/                 Flor's napkins, byte-for-byte copies, never edited here
-│   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.20)
-│   ├── the-town-off-the-edge-map-v0.9.19.html  ← …and the drawer, back to v0.9
+│   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.21)
+│   ├── the-town-off-the-edge-map-v0.9.20.html  ← …and the drawer, back to v0.9
 │   └── the-museum-of-the-town.html             (the napkins link to it)
 ├── content/
 │   └── town/             one folder per world (see docs/ARCHITECTURE.md, "borders")
@@ -64,7 +64,7 @@ the-stage/
 ## changing things
 
 **A new napkin.** When the map gets a new version:
-1. Rename `maps/the-town-off-the-edge-map.html` to `maps/the-town-off-the-edge-map-v0.9.20.html` (its version number).
+1. Rename `maps/the-town-off-the-edge-map.html` to `maps/the-town-off-the-edge-map-v0.9.21.html` (its version number).
 2. Copy the new napkin in as `maps/the-town-off-the-edge-map.html`. Keep that exact name, because the museum links back to it.
 3. In `content/town/maps.json`, change the old top entry's `file` to the renamed file, then add the new napkin as the first entry (`version`, `name`, `file`, `date`, and `napkin` if it has a number).
 4. Update the label in `map.html` (`#on-table`, and the iframe's `title`) so it's right even before the script runs.
