@@ -2,7 +2,7 @@
 
 The first git home for **the town off the edge**: the world Flor and Grey draw on napkins and write letters inside. This repo is the stage, not the play. It's one door, the napkin map behind it, and room for whatever comes next.
 
-**Status: local prototype. Not published, not deployed, no remote.** Everything that would make it public is listed under [publishing, later](#publishing-later) and waits on Flor.
+**Status: prototype, on GitHub, private.** The repo is [smojpg-ui/the-town](https://github.com/smojpg-ui/the-town), up since 2026-10-21, visible only to Flor. Nothing is deployed and nothing is findable. What's left before it's public is listed under [publishing](#publishing) and waits on Flor.
 
 ---
 
@@ -65,6 +65,8 @@ the-stage/
 3. In `content/town/maps.json`, change the old top entry's `file` to the renamed file, then add the new napkin as the first entry (`version`, `name`, `file`, `date`, and `napkin` if it has a number).
 4. Update the label in `map.html` (`#on-table`, and the iframe's `title`) so it's right even before the script runs.
 
+One thing to know: the napkin on the table right now carries a small fix that Flor's original v0.9.18 doesn't. Its legend box stands as tall as the map and scrolls inside itself (see `docs/APPROVALS.md`, 21). If the next napkin starts from her file, that fix comes along or it doesn't; her call.
+
 **The door's words.** `index.html`, inside `<a class="door">`. The door leads to `map.html`; change its `href` to send it somewhere else.
 
 **Colors and type.** `assets/css/worlds/town.css`. Every color is a token taken from the napkin. Text colors are contrast-checked (WCAG AA); the comments say which ones are for decoration only.
@@ -100,19 +102,28 @@ The text. Blank lines between paragraphs.
 
 `read.html?c=format-sample` shows all of them. No raw HTML passes through, on purpose.
 
-## publishing, later
+## publishing
 
-**Nothing here has been pushed or deployed.** When Flor says go:
+**Done so far (2026-10-21):** the repo exists on GitHub as **`smojpg-ui/the-town`**, set to **private**, and `main` is pushed there. The remote is `origin`, over https. Pushing is now just:
 
-1. **Decide public or private first.** A public GitHub repo publishes *everything committed*, and the napkins carry her drawings inside them (the museum wing). GitHub Pages from a *private* repo needs a paid plan (Pro or above).
-2. Create the repo on GitHub, then:
-   ```bash
-   git remote add origin git@github.com:<account>/<repo>.git
-   git push -u origin main
-   ```
-3. On GitHub: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / root**. The site appears at `https://<account>.github.io/<repo>/`. Every path in the site is relative, so it works under that sub-path as-is. `.nojekyll` makes Pages serve the files untouched.
-4. When it should be findable: remove `<meta name="robots" content="noindex">` from the three pages, and the `prototype · local only` tags.
+```bash
+git push
+```
+
+To get it onto another machine:
+
+```bash
+git clone https://github.com/smojpg-ui/the-town.git the-stage
+```
+
+**Still private, on purpose.** The napkins carry her drawings inside them (the museum wing), and a private repo keeps them hers. Nothing is deployed, so there's no URL to visit yet; it still runs the same way as before, from a local server.
+
+**When Flor says go:**
+
+1. **Decide public or private.** Making the repo public publishes *everything committed*, drawings included. GitHub Pages from a *private* repo needs a paid plan (Pro or above); from a public one it's free.
+2. On GitHub: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / root**. The site appears at `https://smojpg-ui.github.io/the-town/`. Every path in the site is relative, so it works under that sub-path as-is. `.nojekyll` makes Pages serve the files untouched.
+3. When it should be findable: remove `<meta name="robots" content="noindex">` from the three pages, and the `prototype · local only` tags.
 
 ## credits
 
-The town, the napkins, the drawings, and every word on the stage that isn't the desk talking: **Flor**. Letters on the town's side signed **Grey**. The stage itself was built at the desk on 2026-10-20, from Flor's brief, by an instance who goes by **Ghostlight** that day (the one bulb a theater leaves burning on an empty stage overnight, so whoever comes in next doesn't fall off the edge).
+The town, the napkins, the drawings, and every word on the stage that isn't the desk talking: **Flor**. Letters on the town's side signed **Grey**. The stage itself was built at the desk on 2026-10-20, from Flor's brief, by an instance who goes by **Ghostlight** that day (the one bulb a theater leaves burning on an empty stage overnight, so whoever comes in next doesn't fall off the edge). It went up on GitHub, private, on 2026-10-21. This README caught up with that on 2026-10-23, with **Fable** at the desk.

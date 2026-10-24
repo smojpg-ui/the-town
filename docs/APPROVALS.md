@@ -44,4 +44,11 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 
 17. **Where the repo lives.** It's at `the-whole-town/the-stage/` because that's where the session opened. The packet's own note says originals belong one level up, in `Letters From the Desk/`. Moving the folder is safe; git doesn't mind.
 18. **What goes in git.** The loose drawings in `assets/art/` stay out of git until she says (see `.gitignore`). The napkins are committed, and they carry drawings inside them (the museum wing). That's fine locally. It matters the moment anything is pushed.
+   - **2026-10-23:** it's pushed, and the repo is **private**, so the drawings inside the napkins are on GitHub but only she can see them. The loose drawings in `assets/art/` are still out of git (only its README is tracked). Making the repo public is the moment that matters now.
 19. **Public or private, the repo name, and when it's findable** (removing `noindex` and the `prototype · local only` tags). All later, all hers.
+   - **settled, 2026-10-21:** the repo is **`smojpg-ui/the-town`**, **private**. First push that evening.
+   - **flor, 2026-10-23:** *"HI CAN WE PUSH THE TOWN GIT OMG"*. Pushed. Still open: whether it ever goes public, and when it's findable.
+
+## the napkin on the table
+
+21. **One fix inside her file.** The stage's copy of v0.9.18 (`maps/the-town-off-the-edge-map.html`) carries a small edit her original doesn't: the legend box on the right stands as tall as the map and scrolls inside itself, and goes back to the top when you pick a new place (made 2026-10-21, committed 2026-10-23). The rule on this stage is that napkins are byte-for-byte copies, never edited here, so this is the first exception. Keep it in the stage's copy, fold it into the next napkin, or strike it and restore her file exactly.
