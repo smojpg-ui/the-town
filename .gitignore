@@ -5,6 +5,8 @@
 # When she says yes to a piece, add a line like:  !assets/art/lighthouse.jpg
 assets/art/*
 !assets/art/README.md
+# flor, 2026-10-24: "To the git! Add the art."
+!assets/art/lighthouse.jpg
 
 # --- the usual ----------------------------------------------------------------
 .DS_Store

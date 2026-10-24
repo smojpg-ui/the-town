@@ -53,7 +53,9 @@ the-stage/
 │   │   ├── base.css          shared by every page and every world
 │   │   └── doorway.css, map.css, reader.css
 │   ├── js/               small ES modules, no libraries
-│   └── art/              drawings; kept OUT of git until the artist says (see its README)
+│   └── art/              drawings, in git piece by piece as the artist says (see its README)
+├── tools/
+│   └── jpeg-strip.py     drops camera, date and location data from a photo before it's committed
 └── docs/
     ├── ARCHITECTURE.md   how it fits together, and the room left for later
     └── APPROVALS.md      every creative call made here that Flor should say yes or no to
@@ -73,7 +75,7 @@ the-stage/
 
 **Motion.** Ambient animation runs only under `html[data-motion="on"]`, so anything new goes behind that selector and stays still otherwise. See the creek in `doorway.css`.
 
-**Art.** See `assets/art/README.md`. Short version: web-size it, register it in `world.json` with alt text, a credit, and a permission line, and keep it out of git until the artist says yes.
+**Art.** See `assets/art/README.md`. Short version: web-size it, strip it with `tools/jpeg-strip.py`, register it in `world.json` with alt text, a credit, and a permission line, and keep it out of git until the artist says yes. Everything drawn so far has her yes (2026-10-24).
 
 **A chapter (when the reading room opens).** Add a line to `chapters` in `content/town/world.json` (`slug`, `title`, `file`; `"listed": false` keeps it out of the reading order), then write `content/town/chapters/<slug>.md`:
 
@@ -109,7 +111,8 @@ The text. Blank lines between paragraphs.
 How it got there:
 
 - **2026-10-21:** the repo went up, private.
-- **2026-10-24:** Flor said go. The repo went public, Pages turned on, and the `noindex` meta and the `prototype · local only` tags came off the three pages. The drawings inside the napkins (the museum wing) are public with them. The loose drawings in `assets/art/` are still out of git, so the reading room's lighthouse shows an empty, labeled frame until she says (see `docs/APPROVALS.md`, 22).
+- **2026-10-24:** Flor said go. The repo went public, Pages turned on, and the `noindex` meta and the `prototype · local only` tags came off the three pages. The drawings inside the napkins (the museum wing) are public with them.
+- **2026-10-24, later:** Flor: *"To the git! Add the art."* The five gallery drawings went up beside the museum page in `maps/`, and the lighthouse into `assets/art/`, web-sized and stripped of camera, date and location data (`tools/jpeg-strip.py`).
 
 Day to day:
 

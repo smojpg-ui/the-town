@@ -29,7 +29,35 @@
       "alt": "Brush-and-ink drawing on white paper: a tall lighthouse drawn in broken, skipping strokes, standing on rough rocks above one long sweep of shoreline, with a loose cloud drifting to its right.",
       "caption": "the lighthouse. brush and ink.",
       "credit": "flor",
-      "permission": "local only. not committed to git until flor says so."
+      "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped."
+    },
+    "house-band": {
+      "src": "maps/house-band.jpeg",
+      "alt": "Brush-and-ink sketch: two heads face each other over a snare drum. The left one is round and calm with a pointed nose; the right one has a spiky shock of hair like a crash cymbal, with a cymbal stand between them. Black strokes on white paper.",
+      "caption": "the house band. brush and ink.",
+      "credit": "flor",
+      "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped. lives beside the museum page, which looks for it there."
+    },
+    "the-pour": {
+      "src": "maps/the-pour.jpeg",
+      "alt": "Coloured-pencil drawing on a sketchbook page: a coupe glass outlined twice, once in yellow and once in red, filled with loose brown scribble, standing a little off-plumb on a wide foot. Faint earlier drawings show through the paper.",
+      "caption": "the pour. coloured pencil.",
+      "credit": "flor",
+      "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped. lives beside the museum page, which looks for it there."
+    },
+    "back-room": {
+      "src": "maps/back-room.jpeg",
+      "alt": "Brush-and-ink sketch of a crammed room: a fireplace with a grate at the left under shelves of books and bottles, a tall window at the right with trees and a path outside, a teapot on a stand in the middle, and a low table drawn in the foreground. Quick black strokes on white paper.",
+      "caption": "the back room. brush and ink.",
+      "credit": "flor",
+      "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped. lives beside the museum page, which looks for it there."
+    },
+    "two-lilies": {
+      "src": "maps/two-lilies.jpeg",
+      "alt": "Coloured-pencil drawing: a white lily outlined in blue and violet with orange stamens, on a long green stem with a closed bud and one leaf, standing in a squat bottle scribbled orange, green and blue. A second lily, smaller and lower, opens at the right edge of the page.",
+      "caption": "two lilies. coloured pencil.",
+      "credit": "flor",
+      "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped. lives beside the museum page, which looks for it there."
     }
   },
 
