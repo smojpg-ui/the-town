@@ -257,6 +257,5 @@ main:focus { outline: none; }
 }
 
 @media (max-width: 480px) {
-  .rail .proto-tag { display: none; }
   .last-call { font-size: 3rem; }
 }

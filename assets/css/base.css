@@ -136,17 +136,6 @@ html[data-motion="off"]::view-transition-new(*) { animation: none !important; }
   html:not([data-motion="on"])::view-transition-new(*) { animation: none !important; }
 }
 
-/* the "prototype" tag: so a copy that wanders off the desk says what it is */
-.proto-tag {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-soft);
-  border: 1px dashed currentColor;
-  padding: 0.1rem 0.45rem;
-  border-radius: 3px;
-  white-space: nowrap;
-}
-
 /* --------------------------------------------------------------------------
    the rail: the thin bar along the top of every inner room
    -------------------------------------------------------------------------- */
