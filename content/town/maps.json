@@ -2,10 +2,17 @@
   "_about": "the drawer of napkin maps. newest first; the first one is the one on the table. files are byte-for-byte copies of flor's napkins, never edited here. to add a napkin: drop its html in maps/, rename the old current one to -vX.Y.Z, and add a line at the top.",
   "napkins": [
     {
+      "version": "0.9.22",
+      "napkin": 17,
+      "name": "the lilies' secrets",
+      "file": "maps/the-town-off-the-edge-map.html",
+      "date": "2026-10-24"
+    },
+    {
       "version": "0.9.21",
       "napkin": 17,
       "name": "the hear & now, the first dance, the wing",
-      "file": "maps/the-town-off-the-edge-map.html",
+      "file": "maps/the-town-off-the-edge-map-v0.9.21.html",
       "date": "2026-10-24"
     },
     {
