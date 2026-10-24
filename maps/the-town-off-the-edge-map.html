@@ -79,7 +79,7 @@
   .stage{
     display:grid;
     grid-template-columns:1fr 340px;
-    gap:22px;align-items:start;
+    gap:22px;align-items:stretch;
   }
 
   .map-card{
@@ -1209,6 +1209,17 @@
   .layers .ly[aria-pressed="true"]::after{opacity:.75;transform:scaleX(1) rotate(-.6deg);}
   @media(prefers-reduced-motion:reduce){ .layers .ly,.layers .ly i,.layers .ly::after{transition:none;} }
   @media(max-width:700px){ .layers .ly{font-size:14px;padding:8px 7px;min-height:34px;} }
+
+  /* the right-hand box matches the map and scrolls inside, so the two stay flush */
+  .panel-hold{position:relative;min-width:0;}
+  @media(min-width:881px){
+    .panel{
+      position:absolute;inset:0;max-height:none;
+      overflow-x:hidden;overflow-y:auto;
+      overscroll-behavior:contain;
+      scrollbar-gutter:stable;
+    }
+  }
 </style>
 </head>
 <body>
@@ -2118,6 +2129,7 @@
     </div>
 
     <!-- ── PANEL ── -->
+    <div class="panel-hold">
     <aside class="panel" id="panel" aria-live="polite">
       <div class="body" id="panelBody">
         <div class="eyebrow">the legend</div>
@@ -2143,6 +2155,7 @@
         </div>
       </div>
     </aside>
+    </div>
 
   </div>
 
@@ -6925,8 +6938,10 @@ ${grass}
     locs.forEach(l=>l.classList.remove('active'));
     if(el) el.classList.add('active');
     render(id);
+    var panelEl = document.getElementById('panel');
+    if(panelEl) panelEl.scrollTop = 0;
     if(window.matchMedia('(max-width:880px)').matches){
-      document.getElementById('panel').scrollIntoView({behavior:'smooth', block:'nearest'});
+      panelEl.scrollIntoView({behavior:'smooth', block:'nearest'});
     }
   }
 
