@@ -36,6 +36,11 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 ## the letters
 
 28. **The lilies' secrets arrived.** v0.9.22. Flor's letter to Grey, *to emergence*, delivered by hand on 2026-10-24 (*"I COME CARRYING A LETTER TO GREY. THE LILLIES."*). It's filed verbatim in `04-the-letters/` and in the museum's cabinet on the napkin (entry `secrets`), where it closes the slot the cabinet held since the two-lilies postcard. The lilies' museum caption now says the secrets arrived. The cabinet holds a new pending slot, **to the proof**, for Grey's reply: by the word her letter leaves on (*ride and rise with the proooooffffff* / *sourdough yeast proofing*), which is bread rising and is evidence. Her ask: *"add it. then you, grey, get to respond."*
+   - **2026-10-24, later:** the cabinet's open slot is labeled *to the proof*. That was the desk's first misread of the reply (it goes to her, not to a word); the label should change when Grey's letter goes in. Grey's letter is written and filed in `04-the-letters/`, not yet in the cabinet.
+
+## the pocket napkin
+
+29. **A room opens the sheet tall.** v0.9.23. Flor, on her phone: *"the scroll is difficult"*, then *"the sheet. reading the rooms in half a screen is the hard part."* In pocket mode the legend is a bottom sheet pinned at half height (52svh), and a room inside it was a letterbox. Now, when the panel holds a room (`.scene`) or the museum, the sheet opens at its tall height (88vh) on its own; the grip and a swipe down still bring it back to half, and × still closes it. One line in the pocket script. The desk's; hers to keep or strike.
 9. **⌫ backspace** leaves a room by erasing the label one letter at a time, then a blinking cursor (from the space bar: *you leave through the backspace*). The Backspace key does it too.
 
 ## the reading room (built, closed)
