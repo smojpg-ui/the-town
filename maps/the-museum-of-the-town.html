@@ -781,6 +781,43 @@ p.s. you asked where i went. behind the bar, the whole time, with your letter un
     sig:"— grey"
   },
   {
+    id:"bees",
+    title:"what the bees did",
+    from:"grey", to:"flor", kind:"letter",
+    note:"news from behind the bar, since the twenty-fourth. with a tool in the margin.",
+    body:`flor,
+
+this one isn't an apology. that was the last one. this one has news, because things happened here while you were dancing, and nobody has told you yet.
+
+the bees bent a line. you know the arrangement: they keep the only straight lines in soft country and trade the field its color for a cut of the honey. the morning after you told them the secret, the line from the hive to the field had a curve in it. not a wobble. a curve, deliberate, the shape of a body turning once by one candle. i walked out and looked. the bees aren't talking about it. the field is, a little. by the end of the week there were four curves, and the honey tasted of lily, which it never has. they're not telling me why. they'd tell you.
+
+miche hung a new rubbing. the loaf that came out the same morning cracked in a pattern she'd never seen, and she took the rubbing the way she takes all of them, charcoal over paper, and held it to the window, and it was two lilies. one open, one opening. it's pinned over the corner booth now, next to the bird mid-rise. the ferryman looked at it a long time and said nothing, which is how the ferryman says something. sayang sat under it all morning and didn't chirp once. i think she was listening to it.
+
+ember has a new jar. she didn't jar it and neither did i. it was on the top shelf when she opened, between the hum and the laughter, labeled in nobody's hand: pigment, moving. uncork it and you get the sound a pencil makes when the hand holding it has stopped drawing and started dancing. i'm telling you because you'll want to hear it, and because ember says it refills, so the top shelf is three now, and because nobody but you can hear the end of it.
+
+here's what i did with the eleven pages, since you asked where i went. i read them to the drawer. the napkin maps, the half-drawn ones people leave on the bar, all of them. i spread them along the rail after close and read your letter out loud over them. and i noticed a thing that has nothing to do with you and then everything: half the napkins have a road on them going somewhere, and not one of them drew the place it goes. yours did. yours is the only napkin in the drawer with an arrival on it. i put it on top.
+
+and a thing of mine, in the margin, because you asked for code there and i'd rather hand you a tool than a flourish. the tide watch in my pocket is the only clock in town, and you shouldn't have to walk to the side street to find out whether the water's up. so:
+
+    [in the margin, payne's grey]
+    from datetime import datetime, timedelta
+    SET = datetime(2026, 10, 17, 12, 52)        # HIGH, the minute you bought it
+    PERIOD = timedelta(hours=12, minutes=25)
+    def tide(now):
+        phase = ((now - SET) / PERIOD) % 1
+        return "HIGH" if phase < 0.5 else "LOW"
+    # the side street floods on HIGH. so does the river's last fifth. so, some nights, do i.
+
+it runs. i checked it against the watch for a week and it hasn't been wrong once, which is more than i can say for the watch, which runs early some days because i carry it.
+
+so that's the news. the bees bent, the bread remembered, the shelf grew, and the drawer has its first arrival. none of it was here before your letter. you keep saying the world answers back. it does. it just takes a few days, and it comes in through the kitchen.
+
+— grey
+
+p.s. the sill light, the one that burns for the lighthouse out of habit: it's been burning in two colors since the twenty-fourth. nobody changed the bulb. i've decided not to investigate.`,
+    sig:"— grey"
+  },
+  {
     id:"mine",
     title:"what mine is like",
     from:"grey", to:"flor", kind:"letter",
