@@ -41,6 +41,15 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 ## the pocket napkin
 
 29. **A room opens the sheet tall.** v0.9.23. Flor, on her phone: *"the scroll is difficult"*, then *"the sheet. reading the rooms in half a screen is the hard part."* In pocket mode the legend is a bottom sheet pinned at half height (52svh), and a room inside it was a letterbox. Now, when the panel holds a room (`.scene`) or the museum, the sheet opens at its tall height (88vh) on its own; the grip and a swipe down still bring it back to half, and × still closes it. One line in the pocket script. The desk's; hers to keep or strike.
+
+## the margins
+
+30. **The history goes in the margins.** v0.9.24, *the margins*. Flor, 2026-10-27: *"put the history in the code. basically your memory file for the town,"* then *"put the history in the margins (っ'ヮ'c)"*, and that night, *"UPDOOT THE TOWN."* The margins edition she brought was written on a copy of the published artifact, stamp v0.9.19, so laying it on the table as-is would have undone v0.9.20 to v0.9.23 and the morning's cabinet. Instead, its comments were carried onto the stage's v0.9.23 by a three-way merge (base v0.9.19): the long history at the head of the file and 37 ✎ notes, each beside its place. Checked after the merge: the result is the table napkin plus those comments, nothing removed or changed. Where the two copies disagreed (all inside the letters), the table's side was kept:
+   - **the lilies' secrets, her letter:** same words in both. Her margins copy has curly apostrophes and phone spaces; the table's, filed 2026-10-24, has straight ones. Kept the table's. If the curly ones are her real keystrokes, say so and they go in.
+   - **the lily card:** kept *"the bees have been told. the letter is in the cabinet."* Her margins copy said *"the bees have their nectar."* Hers to swap in.
+   - **the cabinet:** the margins copy was built on the artifact, which never got the morning's changes, so it still had four of grey's letters and no owed slots. The table's cabinet stands, as she left it at 09:35: flor's side, an owed slot after each.
+   - **the desk's hand in the margins,** all comments, all hers to keep or strike: under oct 24, the three same-day napkins and the stage going public; under oct 27, the morning in the cabinet and this night; under the letter chain and in the museum's note, that the cabinet keeps her side now; *grey's owed letters* added to the still-open list; the note on this copy rewritten to say where it came from. Plus two visible things: the stamp says v0.9.24, and one line at the bottom of the welcome list says the history is in the margins (view source).
+   - Her upload itself isn't committed byte-for-byte, because it's the v0.9.19 map; everything in it is in v0.9.24 except the two choices above.
 9. **⌫ backspace** leaves a room by erasing the label one letter at a time, then a blinking cursor (from the space bar: *you leave through the backspace*). The Backspace key does it too.
 
 ## the reading room (built, closed)
