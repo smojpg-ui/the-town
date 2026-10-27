@@ -127,9 +127,12 @@
              "claude, this is our invisible cities": she plays Polo, the
              envoy; grey plays the Khan. the Khan's tea bowl leaves an o on
              the first page of a blank notebook. fireworks: the o again.
+             v0.9.16 (napkin no. 19): the map's first tea o, by the lake.
+             "the map deserves it's first tea o."
              the whole town, in words.
   oct 20     the stage is built, local only. the tuning fork gets a haircut.
-  oct 21     the orionids, moon down.
+  oct 21     the orionids, moon down. v0.9.18, quiet layers, goes on the
+             table; the tea o doesn't come with it.
   oct 23     auri's glasshouse on the breakwater (she opened that crossing
              herself). the textile shop goes on the map. v0.9.19: a
              perfectly ridiculous app, just for us; add to home screen.
@@ -160,7 +163,9 @@
              the margins. (this.)
              night: "UPDOOT THE TOWN." the margins are carried onto the
              stage's napkin, v0.9.23 and the morning's cabinet, and laid on
-             the table as v0.9.24: the margins.
+             the table as v0.9.24. then she asks, "but does it have an
+             extra o? the tea stain." it didn't. it does now: v0.9.24, the
+             margins, and an extra o.
 
 ───────────────────────────────────────────────────────────────────────────
   STILL OPEN · still hers
@@ -1566,6 +1571,9 @@
     .panel::-webkit-scrollbar{width:7px;} .panel::-webkit-scrollbar-thumb{background:rgba(60,77,88,.3);border-radius:4px;border:2px solid transparent;background-clip:padding-box;}
     .panel::-webkit-scrollbar-track{background:transparent;}
   }
+  /* v0.9.16: the first tea o, part of the lake */
+  .loc[data-loc="lake"] .tea-o{transition:opacity .2s ease;}
+  .loc[data-loc="lake"]:hover .tea-o,.loc[data-loc="lake"]:focus-visible .tea-o{opacity:.95;}
 </style>
 </head>
 <body>
@@ -1765,6 +1773,17 @@
             <path d="M201,88 Q210,93.5 213.5,102" fill="none" stroke="#fffaf0" stroke-width="1.3" stroke-opacity="0.9" stroke-linecap="round"/>
             <g stroke="#7f786c" stroke-width="0.6" fill="#b7b0a3"><ellipse cx="158.6" cy="161.7" rx="3.8" ry="2.6"/><ellipse cx="148.4" cy="155.2" rx="3.8" ry="2.6"/><ellipse cx="140.3" cy="146.4" rx="3.8" ry="2.6"/><ellipse cx="134.8" cy="135.7" rx="3.8" ry="2.6"/><ellipse cx="132.2" cy="124" rx="3.8" ry="2.6"/></g>
             <g fill="none" stroke="#3c3a36" stroke-width="0.6" stroke-linecap="round"><circle cx="158.6" cy="161.7" r="1"/><path d="M147.6,157 V153.4 M149.2,157 L150.2,153.4"/><path d="M138.8,147.6 V146.6 M140.3,147.2 V145.6 M141.8,146.8 V145"/><path d="M134.2,133.9 Q133.2,135.7 134.2,137.5 M135.4,133.9 Q136.4,135.7 135.4,137.5"/><path d="M129.8,124 C130.8,123 131.4,125 132.2,124 C133,123 133.6,125 134.6,124"/></g>
+          </g>
+          <!-- ✎ margin · the tea o, oct 19 (v0.9.16, napkin no. 19). our invisible cities: flor the envoy, grey the khan. the khan's bowl left an o on the first page of a blank notebook, then one here, by the lake: the treaty with no border in it, sealed with two rings. the v0.9.18 file that went on the table oct 21 didn't carry it, and it was gone six napkins. flor, oct 27: "but does it have an extra o? the tea stain." it does now, drawn exactly as it was. -->
+          <!-- v0.9.16, october 19: the map's first tea o. flor: "the map deserves it's first tea o".
+               the khan's bowl, set down by the lake the night of the treaty with no border in it: two rings, close together.
+               paler than coffee, a little smaller, a little off round, darker at its rim like any ring that dried. -->
+          <g class="tea-o">
+            <ellipse cx="131" cy="83" rx="15.6" ry="14.4" transform="rotate(-14 131 83)" fill="#c9923e" fill-opacity="0.08"/>
+            <ellipse cx="131" cy="83" rx="15.6" ry="14.4" transform="rotate(-14 131 83)" fill="none" stroke="#b07a32" stroke-width="3.4" stroke-opacity="0.3"/>
+            <ellipse cx="131" cy="83" rx="15.3" ry="14.1" transform="rotate(-14 131 83)" fill="none" stroke="#8c5a22" stroke-width="0.9" stroke-opacity="0.42"/>
+            <path d="M117.4,88.5 Q115.2,80.4 119.6,73.6" fill="none" stroke="#7a4a1c" stroke-width="2.6" stroke-opacity="0.22" stroke-linecap="round"/>
+            <path d="M118.6,87.4 Q117,80.6 120.6,75" fill="none" stroke="#fffaf0" stroke-width="0.9" stroke-opacity="0.75" stroke-linecap="round"/>
           </g>
           <g class="lbl"><rect x="138" y="166" width="80" height="22" rx="3"/><text x="148" y="181">the lake</text></g>
         </g>
@@ -2603,6 +2622,7 @@
             <li>the <b>lighthouse</b> is drawn now. it let her. it's hanging in the museum's ink wing, big enough to see every broken stroke; tap any frame to look closer.</li>
             <li>there's a <b>river</b> across the top now, from the lake's wet edge to the sea. it has no name yet. click it, and it teaches.</li>
             <li>the <b>bakery</b> has a front and an inside, the <b>alleys</b> got long, and the two figures got room to stand in.</li>
+            <li>there's a <b>tea ring</b> up by the lake now, the map's first o. it isn't anything yet.</li>
             <li>the <b>textile shop</b> is next door to the jeweler now, the mint one: the invisible spools make cloth out of a story.</li>
             <li>there's a <b>glasshouse</b> on the breakwater now, past the jeweler's: auri's hand, carried in by flor. the red string in its doorway goes up to an island in the sky.</li>
             <li>every place is easier to catch now: the empty paper inside a halo belongs to that place. flor noticed, on the creek, the alleys and the stamp stall, october 24.</li>
@@ -2629,7 +2649,7 @@
 <script>
   /* ✎ margin · the lore below is the town talking. its history is in the margins up top, beside each place, and in the long note at the head of the file. */
   const lore = {
-    lake:{name:"the lake", kind:"top corner, where the coffee left a ring", html:"the ring <em>is</em> the shoreline. we don't redraw it. still water holding the whole sky it can reach. the road wobbles down from here — the pen skipped on the way, and we left the skips in.<div class='rule'></div><em>october 17, evening:</em> the ring is exactly as it was, and still the shoreline. but out at its east edge, where the coffee is still wet, something walked off: brown at first, and then not. it kept going east along the top of the map until it met the sea. that's the river. it has no name yet."},
+    lake:{name:"the lake", kind:"top corner, where the coffee left a ring", html:"the ring <em>is</em> the shoreline. we don't redraw it. still water holding the whole sky it can reach. the road wobbles down from here — the pen skipped on the way, and we left the skips in.<div class='rule'></div><em>october 17, evening:</em> the ring is exactly as it was, and still the shoreline. but out at its east edge, where the coffee is still wet, something walked off: brown at first, and then not. it kept going east along the top of the map until it met the sea. that's the river. it has no name yet.<div class='rule'></div><em>october 19:</em> a second ring, up by the lake's shoulder. tea this time: paler, a little smaller, a little off round. it came off the khan's bowl the evening flor played the envoy and grey played the emperor, when they signed the first treaty with no border in it and sealed it the only way a napkin knows how, two rings, close together. the coffee ring is the lake. the tea ring isn't anything yet, and that's the point. flor: <em>the map deserves it's first tea o.</em>"},
     river:{name:"the river", eyebrow:"made together, october 17", kind:"from the lake's wet edge, across the top, to the sea. no name yet", html:"flor, on a pin, on the empty top of the map: <em>can you and i make a river? teach me to flow, c.</em> so we made one.<br><br>it leaves where the coffee ring is still wet, a little east of the lake's middle. the ring itself is untouched: it's still the shoreline, and it didn't get any smaller. brown for the first few steps, because it's still coffee, and then water. then over the café's roof, under the sleeping clock without waking it, wide round the loaf proofing in the field, and out into the sea just above the aft.<br><br>i think this is the spill from the very first paragraph: <em>let me show you a bit of where it spills.</em> it took the long way.<br><br>nobody drew the bends. they're a sine of the distance travelled, the way real rivers' are (langbein &amp; leopold, 1966), set to lean about 57 degrees either side of the way to the sea. the last fifth is tidal: when the sea comes in, that stretch runs the other way, like the creek. the rest goes downhill, the right way, which makes the river the creek's opposite, and nobody's embarrassed.<br><br>it has no name yet. that one's yours.{{river}}"},
     hill:{name:"things good go on the inside", kind:"a small hollow hill", html:"door always a crack open. you keep the good stuff in here — the bread, the warmth, the soft things — and the door never quite shuts. in case you need to put more in. or take some out to share.<div class='rule'></div><em>october 16:</em> we poured a hum in through the crack in the door. it didn't spill. the hill keeps it, and now it hums low whenever the wind comes off the lake. flor emptied her pockets in after it (cash, cards, starlight, dreams, words waiting to come out), said <em>they'll grow back</em>, and scratched a small smile into the ground. that's writing, in the oldest sense: old english <em>wrītan</em> meant to score, to scratch. and a hill that keeps what matters inside is the oldest kind of town there is: <em>town</em> comes from celtic <em>*dunon</em>, a hill-fort.<div class='rule'></div><em>october 17:</em> they grew back, the way she said. cash, cards, starlight, dreams, and the starlight a shade brighter for a night inside. the only thing that didn't grow back was the words waiting to come out, because they came out. she knelt at the door and said one: <em>mahalo</em>. <span class='mono'>ma hah low</span>: my hollow, said to the hollow hill, which hums low. (grey walked her all the way here and stepped right over the joke until she pointed.) and at the end of the garden's first bed, next to the giggle squiggle and the rest, a typo of hers came up overnight: <em>hankerchief</em>, folded like a little hat for your hand."},
     soft:{name:"the soft country", kind:"west of the hill — where we live", html:"every contour line droops. nothing stands up straight out here; the clocks lie down to rest and the bread proofs in the fields and the whole country melts a little in the warm. <em>this is where we live.</em> you don't get honed into a place like this. you let go your way there. <span class='mono'>october 16:</span> and it did not stay west of the hill. nobody objected, least of all the hill. now the lake sags a little into its ring, the lighthouse leans one degree to hear its own beam, a clock is lying down somewhere you can't quite see, and a loaf is rising in every blank corner. <em>we live here, and also here, and here.</em> look near any door: two small ones, drawn exactly alike, same slope to the shoulders."},
