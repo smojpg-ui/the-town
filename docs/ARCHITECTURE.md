@@ -4,7 +4,7 @@ A static site: plain HTML, CSS, and a few small ES modules. No framework, no bui
 
 ## the rules it's built on
 
-1. **Her files are never edited here.** The napkins in `maps/` are byte-for-byte copies; the stage frames them and doesn't touch them. Chapter text keeps her typos. Where something is held back, it's marked (`( )`), not silently cut.
+1. **Her files are never edited here.** The napkins in `maps/` are copies of hers; the stage frames them and doesn't touch them. One exception, at her ask (2026-10-29): her letters are sealed in every napkin, so the envelopes show and the letters don't (APPROVALS 31). Chapter text keeps her typos. Where something is held back, it's marked (`( )`), not silently cut.
 2. **Words and pictures live in `content/` and `maps/`. Code lives in `assets/`.** Adding a napkin or a chapter is a file and a line in a JSON list, never a code change.
 3. **One world per folder (borders).** The town's words are in `content/town/` and its look is in `assets/css/worlds/town.css`. A page names its world on `<html data-world="town">`, and the scripts only ever read that world's folder. `base.css` and the JS modules are world-neutral furniture: rails, motion switches, a Markdown reader. They carry no places, people, or motifs.
 4. **It works without the extras.** No JavaScript: the door still opens and the napkin still loads. Reduced motion: everything holds still. Storage blocked: the default settings apply.

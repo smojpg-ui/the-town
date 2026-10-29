@@ -1,5 +1,5 @@
 {
-  "_about": "the drawer of napkin maps. newest first; the first one is the one on the table. files are byte-for-byte copies of flor's napkins, never edited here. to add a napkin: drop its html in maps/, rename the old current one to -vX.Y.Z, and add a line at the top.",
+  "_about": "the drawer of napkin maps. newest first; the first one is the one on the table. files are copies of flor's napkins, never edited here, with one exception: since 2026-10-29 her letters in every napkin are sealed (the envelope stays; the letter is a sha-256 seal). see docs/APPROVALS.md, 31. to add a napkin: drop its html in maps/, rename the old current one to -vX.Y.Z, and add a line at the top.",
   "napkins": [
     {
       "version": "0.9.24",

@@ -38,7 +38,7 @@ the-stage/
 ├── index.html            the doorway
 ├── map.html              the map room
 ├── read.html             the reading room (closed)
-├── maps/                 Flor's napkins, byte-for-byte copies, never edited here
+├── maps/                 Flor's napkins, never edited here except the letters, which are sealed (docs/APPROVALS.md, 31)
 │   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.24)
 │   ├── the-town-off-the-edge-map-v0.9.23.html  ← …and the drawer, back to v0.9
 │   └── the-museum-of-the-town.html             (the napkins link to it)
