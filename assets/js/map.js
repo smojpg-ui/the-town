@@ -31,22 +31,26 @@ async function main() {
     return;
   }
 
-  const wanted = new URLSearchParams(location.search).get('v');
+  // two napkins can share a version number (flor's branch and the stage's
+  // both have a v0.9.20), so ?v= may carry &n=<napkin no.> to tell them apart
+  const params = new URLSearchParams(location.search);
+  const wanted = params.get('v');
+  const wantedNo = params.get('n');
   const current = napkins[0];
-  const start = napkins.find((n) => n.version === wanted) || current;
+  const start = napkins.find((n) => n.version === wanted && (!wantedNo || String(n.napkin) === wantedNo)) || current;
 
-  $('napkins').innerHTML = napkins.map((n) =>
-    `<li><a href="map.html?v=${encodeURIComponent(n.version)}" data-v="${n.version}">` +
+  $('napkins').innerHTML = napkins.map((n, i) =>
+    `<li><a href="${linkTo(n)}" data-i="${i}">` +
     `<span class="v">v${n.version}</span>` +
     `<span class="n">${escape(n.name || 'untitled')}${n === current ? ' <em>(on the table)</em>' : ''}</span>` +
     `<span class="d">${shortDate(n.date)}</span>` +
     `</a></li>`).join('');
 
   $('napkins').addEventListener('click', (e) => {
-    const a = e.target.closest('a[data-v]');
+    const a = e.target.closest('a[data-i]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
-    lay(napkins.find((n) => n.version === a.dataset.v), current);
+    lay(napkins[Number(a.dataset.i)], current);
     drawer.open = false;
     drawer.querySelector('summary').focus();
   });
@@ -74,16 +78,21 @@ function lay(n, current, { replace = false } = {}) {
   document.body.classList.toggle('is-older', n !== current);
 
   for (const a of document.querySelectorAll('#napkins a')) {
-    if (a.dataset.v === n.version) a.setAttribute('aria-current', 'true');
+    if (a.getAttribute('href') === linkTo(n)) a.setAttribute('aria-current', 'true');
     else a.removeAttribute('aria-current');
   }
 
-  const url = n === current ? 'map.html' : `map.html?v=${encodeURIComponent(n.version)}`;
+  const url = n === current ? 'map.html' : linkTo(n);
   if (replace) history.replaceState(null, '', url + location.hash);
   else history.pushState(null, '', url);
 }
 
 addEventListener('popstate', () => location.reload());
+
+// the drawer's link to a napkin: by version, plus its number when it has one
+function linkTo(n) {
+  return `map.html?v=${encodeURIComponent(n.version)}${n.napkin ? `&n=${n.napkin}` : ''}`;
+}
 
 function shortDate(iso) {
   if (!iso) return '';
