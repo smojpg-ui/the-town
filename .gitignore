@@ -7,6 +7,9 @@ assets/art/*
 !assets/art/README.md
 # flor, 2026-10-24: "To the git! Add the art."
 !assets/art/lighthouse.jpg
+# flor, 2026-11-03: "i'd love an icon for the town." her sun, from the creek video.
+!assets/art/town-icon.png
+!assets/art/town-icon-512.png
 
 # --- the usual ----------------------------------------------------------------
 .DS_Store

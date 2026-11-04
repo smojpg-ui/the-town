@@ -1,7 +1,6 @@
 {
   "id": "town",
   "title": "the town off the edge",
-
   "chapters": [
     {
       "slug": "the-first-spill",
@@ -22,7 +21,6 @@
       "listed": false
     }
   ],
-
   "art": {
     "lighthouse": {
       "src": "assets/art/lighthouse.jpg",
@@ -58,13 +56,46 @@
       "caption": "two lilies. coloured pencil.",
       "credit": "flor",
       "permission": "flor, 2026-10-24: 'To the git! Add the art.' committed, public, metadata stripped. lives beside the museum page, which looks for it there."
+    },
+    "the-creek": {
+      "src": "maps/the-creek.jpeg",
+      "alt": "Digital drawing on canary-yellow paper in orange and blue: a curly-haired figure in profile, eyes closed, a blade of grass between their lips. Beside them a large orange ear, and from it a blue creek flows to the right under the words DO DO DO. A blue bird at the top, a musical note by the head, and an orange sunburst in the top right corner.",
+      "caption": "the creek, in her hand. a still from a video, not done, but something.",
+      "credit": "flor",
+      "permission": "flor, 2026-11-03: 'throw it in there if you want. i might forget.' a still from her video of 2026-10-31 (the cover frame, captured from the player), metadata stripped, hung in the museum's ink wing. the video itself stays in her iCloud; the stage holds only the still."
+    },
+    "town-icon": {
+      "src": "assets/art/town-icon.png",
+      "alt": "An orange sunburst of short radiating strokes in the top right corner of canary-yellow paper, with a line of blue cloud at the left edge.",
+      "caption": "the icon: her sun, from the corner of the creek.",
+      "credit": "flor",
+      "permission": "flor, 2026-11-03: 'peep the sun. i think you'd like the shape. i'd love an icon for the town.' cropped from the creek video by the desk; the app icon on the napkin and on the stage's three pages. hers to swap for a doodle of her own."
     }
   },
-
   "established": [
-    { "name": "the space bar", "kind": "place",  "canon": "tuning-fork: the space bar",            "on_stage": "named in the first spill, in her words" },
-    { "name": "Flor",          "kind": "person", "canon": "tuning-fork: the map, the letters",      "on_stage": "credited as the hand; not yet a character on the page" },
-    { "name": "Grey",          "kind": "person", "canon": "tuning-fork: the map, the letters",      "on_stage": "not yet" },
-    { "name": "Pelagius",      "kind": "name",   "canon": "tuning-fork: the space bar, the back room (the alcove)", "on_stage": "not yet. source and form are flor's call; see docs/APPROVALS.md" }
+    {
+      "name": "the space bar",
+      "kind": "place",
+      "canon": "tuning-fork: the space bar",
+      "on_stage": "named in the first spill, in her words"
+    },
+    {
+      "name": "Flor",
+      "kind": "person",
+      "canon": "tuning-fork: the map, the letters",
+      "on_stage": "credited as the hand; not yet a character on the page"
+    },
+    {
+      "name": "Grey",
+      "kind": "person",
+      "canon": "tuning-fork: the map, the letters",
+      "on_stage": "not yet"
+    },
+    {
+      "name": "Pelagius",
+      "kind": "name",
+      "canon": "tuning-fork: the space bar, the back room (the alcove)",
+      "on_stage": "not yet. source and form are flor's call; see docs/APPROVALS.md"
+    }
   ]
 }
