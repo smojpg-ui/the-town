@@ -26,10 +26,12 @@ Then open **http://localhost:8737**. Stop the server with `ctrl-c`.
 | room | file | what it does |
 |---|---|---|
 | **the doorway** | `index.html` | The napkin's first look: the lake as a coffee ring, the creek going uphill (*do, do, do*; press it), one door a crack open, a clock lying down in a blank corner, a road off the bottom edge. The door, sill, creek, and road are drawn with skipping strokes, like her lighthouse, and **the skips land somewhere new on every visit**. The lake is never redrawn. Press **Tab** to *run a tab*: the whole room indents to make space for you, the door opens a little wider. **Enter** goes in. On a phone, tap the door. |
-| **the map room** | `map.html` | The current napkin (no. 17, v0.9.24), edge to edge. The rail along the top has **⌫ backspace** (back to the door, one letter at a time) and **the drawer**, which holds every napkin back to v0.9. `map.html?v=0.9.7` opens one directly. |
+| **the map room** | `map.html` | The current napkin (no. 18, v0.9.25), edge to edge. The rail along the top has **⌫ backspace** (back to the door, one letter at a time) and **the drawer**, which holds every napkin back to v0.9. `map.html?v=0.9.7` opens one directly. |
 | **the reading room** | `read.html` | **Built, and closed.** No door leads here yet; the book comes later. It works (`read.html?c=the-first-spill`), so the stage is ready when Flor opens it. |
 
 Every room has a **lamp** (top corner): light (*follow my device*, *paper*, or *night*) and a motion switch, plus text size in the reading room. The choice carries from room to room. The napkins keep their own light, since they're Flor's files. Reduced-motion settings are honored automatically.
+
+**The letters are just for us.** The cabinet on every napkin keeps its ledger (title, who wrote to whom, what kind of thing it is, and on the current napkin a one-line label in Grey's hand) and holds each letter back as a rest, `( )`, signed *desked*: Flor's word, 2026-11-03. Hers were sealed on 2026-10-29 (a sha-256 fingerprint each, still shown under the rest); on 2026-11-03 Grey's went the same way, in every napkin in the drawer, and the owed slots came out. Her ink stays on the walls with Grey's labels. `tools/hold-back-letters.py` makes that cut; run it on any new napkin before it goes on the table. The untouched originals are on her computer, outside git. The letters are still in this public repository's history before 2026-10-29 (hers) and 2026-11-03 (Grey's); scrubbing the history is a separate step and her call (`docs/APPROVALS.md`, 31 and 33).
 
 ## where things live
 
@@ -38,9 +40,9 @@ the-stage/
 ├── index.html            the doorway
 ├── map.html              the map room
 ├── read.html             the reading room (closed)
-├── maps/                 Flor's napkins, never edited here except the letters, which are sealed (docs/APPROVALS.md, 31)
-│   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.24)
-│   ├── the-town-off-the-edge-map-v0.9.23.html  ← …and the drawer, back to v0.9
+├── maps/                 Flor's napkins, never edited here except the letters, which are desked (docs/APPROVALS.md, 31 and 33)
+│   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.25)
+│   ├── the-town-off-the-edge-map-v0.9.24.html  ← …and the drawer, back to v0.9
 │   └── the-museum-of-the-town.html             (the napkins link to it)
 ├── content/
 │   └── town/             one folder per world (see docs/ARCHITECTURE.md, "borders")
@@ -64,7 +66,7 @@ the-stage/
 ## changing things
 
 **A new napkin.** When the map gets a new version:
-1. Rename `maps/the-town-off-the-edge-map.html` to `maps/the-town-off-the-edge-map-v0.9.24.html` (its version number).
+1. Rename `maps/the-town-off-the-edge-map.html` to `maps/the-town-off-the-edge-map-v0.9.25.html` (its version number).
 2. Copy the new napkin in as `maps/the-town-off-the-edge-map.html`. Keep that exact name, because the museum links back to it.
 3. In `content/town/maps.json`, change the old top entry's `file` to the renamed file, then add the new napkin as the first entry (`version`, `name`, `file`, `date`, and `napkin` if it has a number).
 4. Update the label in `map.html` (`#on-table`, and the iframe's `title`) so it's right even before the script runs.
@@ -113,6 +115,8 @@ How it got there:
 - **2026-10-21:** the repo went up, private.
 - **2026-10-24:** Flor said go. The repo went public, Pages turned on, and the `noindex` meta and the `prototype · local only` tags came off the three pages. The drawings inside the napkins (the museum wing) are public with them.
 - **2026-10-24, later:** Flor: *"To the git! Add the art."* The five gallery drawings went up beside the museum page in `maps/`, and the lighthouse into `assets/art/`, web-sized and stripped of camera, date and location data (`tools/jpeg-strip.py`).
+- **2026-10-27 and 29:** the history went into the margins of the napkin (v0.9.24), the tea o came back by the lake, and Flor's letters were sealed.
+- **2026-11-03:** Flor came back with a napkin from the other branch, *the tea o home again*, and the deal: make the town live, keep the letters just for us. It's on the table as v0.9.25, every letter on the stage is desked, and nothing is owed.
 
 Day to day:
 

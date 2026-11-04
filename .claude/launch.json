@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "the-stage",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8737", "--bind", "127.0.0.1", "--directory", "/Users/sherrymoore/Claude/Projects/Letters From the Desk/the-whole-town/the-stage"],
+      "port": 8737
+    }
+  ]
+}
