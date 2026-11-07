@@ -69,7 +69,7 @@ function lay(n, current, { replace = false } = {}) {
   const label = [n.napkin && `napkin no. ${n.napkin}`, `v${n.version}`, n.name].filter(Boolean).join(' · ');
   onTable.textContent = label;
   frame.title = `the napkin map, v${n.version}${n.name ? `: ${n.name}` : ''}`;
-  if (!frame.src.endsWith(n.file)) frame.src = n.file;
+  if (!frame.src.split('#')[0].endsWith(n.file)) frame.src = n.file + location.hash;   // v0.9.28: a place in the address goes in with the napkin
   $('alone').href = n.file;
   document.body.classList.toggle('is-older', n !== current);
 
@@ -84,6 +84,18 @@ function lay(n, current, { replace = false } = {}) {
 }
 
 addEventListener('popstate', () => location.reload());
+
+// v0.9.28: the napkin says where you are (a town:place event, #spacebar in its own address), and the address here
+// follows, so a link to map.html#spacebar opens the napkin at the space bar, and the one you copy carries the place.
+frame.addEventListener('load', () => {
+  try {
+    frame.contentWindow.addEventListener('town:place', (e) => {
+      const id = e.detail && e.detail.id;
+      const want = id ? `#${id}` : '';
+      if (location.hash !== want) history.replaceState(null, '', location.pathname + location.search + want);
+    });
+  } catch (err) { /* no napkin, or not ours: the address just stays as it is */ }
+});
 
 function shortDate(iso) {
   if (!iso) return '';

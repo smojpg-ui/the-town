@@ -209,6 +209,21 @@
              her letters or only the notes? the desk read them all, then
              answered: wanted. desked. glitch things
              next, she says; it might be a while. the door's open.
+  nov 6      easier to play: the napkin's own turn, three weeks after the
+             terminal walk got the same (oct 16). a playtest had found six
+             things, and three were still true on v0.9.27. the night
+             market's glow sat over the lighthouse's lamp and took the
+             click; every name hid until you hovered, and a phone can't
+             hover; every room sat under two hundred words of its own
+             entry. so: a glow is light, not a handle. a pencil note under
+             the napkin turns the names on (a phone starts with them on),
+             and the legend lists every place under "where to?", on a
+             phone too. every room has a "step inside" at the top. the
+             napkin remembers the place you had open (the address ends in
+             #spacebar) and what you've found in its rooms. the arrow keys
+             wander, esc steps back, and the one thing in the wing that
+             only a mouse could reach now takes a keyboard once it's
+             there. nothing drawn, nothing named: v0.9.28.
 
 ───────────────────────────────────────────────────────────────────────────
   STILL OPEN · still hers
@@ -410,8 +425,14 @@
   .loc.hover .duo .a{transform:rotate(7deg);}
   .loc.hover .duo .b{transform:rotate(-7deg);}
   .map-card svg.layering .loc.inlayer.hover .halo{stroke-dasharray:none;opacity:1;}
-  /* a label you can't see shouldn't catch the pointer: soft country's was sitting over the creek */
-  .loc:not(:hover):not(.hover):not(.active) .lbl{pointer-events:none;}
+  /* a label you can't see shouldn't catch the pointer: soft country's was sitting over the creek.
+     v0.9.28: a label you can see is a handle, and a glow never is. a glow is light: the night market's sat over the lighthouse's lamp, and a click on the lamp opened the market */
+  .loc .lbl{pointer-events:none;}
+  .loc:hover .lbl,.loc.hover .lbl,.loc.active .lbl,.map-card svg.names .loc .lbl{pointer-events:all;}
+  .loc > .glow{pointer-events:none;}
+  /* v0.9.28: names. a pencil note under the napkin, and every place says what it is. a phone starts with them on, since there's nothing to hover */
+  .map-card svg.names .loc .lbl{opacity:1;}
+  .map-card svg.names .loc .lbl rect{fill-opacity:.8;}
 
   .glow{transform-origin:center;animation:pulse 4.5s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:.55;}50%{opacity:.95;}}
@@ -1623,6 +1644,24 @@
   /* v0.9.25: a letter held back shows as a rest; a seal is its fingerprint */
   .mu-body.kept{text-align:center;font-size:24px;letter-spacing:.35em;color:var(--sepia-soft);padding:14px 0 4px;}
   .mu-seal{margin-top:8px;font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:1px;color:var(--ink-soft);word-break:break-all;opacity:.8;}
+
+  /* ── v0.9.28: easier to play. names you can tap, a way into every room, a napkin that remembers, and keys that go somewhere ── */
+  .layers .ly-sep{flex:0 0 auto;width:0;height:14px;border-left:1px dotted rgba(60,77,88,.45);margin:0 8px 0 4px;align-self:center;}
+  .inside{display:inline-block;margin:-2px 0 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--red);background:none;border:0;border-bottom:1px dashed rgba(187,59,44,.55);padding:0 0 1px;cursor:pointer;}
+  .inside:hover,.inside:focus-visible{color:#8a2a1e;border-bottom-style:solid;outline:none;}
+  .whereto{margin:2px 0 0;}
+  .whereto .wt-k{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:7px;}
+  .whereto .wt-list{display:flex;flex-wrap:wrap;gap:5px 6px;}
+  .whereto .wt-list button{font-family:'IM Fell English',serif;font-size:14.5px;line-height:1.2;color:var(--sepia);background:rgba(255,250,235,.5);border:1px solid rgba(60,77,88,.3);border-radius:3px;padding:3px 9px;min-height:28px;cursor:pointer;}
+  .whereto .wt-list button:hover,.whereto .wt-list button:focus-visible{background:#f3d488;border-color:#8a6a34;outline:none;}
+  html.pocket .whereto .wt-list button{min-height:38px;font-size:16px;padding:6px 11px;}
+  /* between a phone and a desk (701–880px) the legend sits under the napkin; a sticky note at its top takes you back up */
+  .panel .up-map{display:none;}
+  @media(min-width:701px) and (max-width:880px){
+    .panel .up-map{display:block;position:sticky;top:0;z-index:3;margin:-24px -24px 12px;padding:9px 14px 7px;text-align:right;background:linear-gradient(180deg,#f5eedd 72%,rgba(245,238,221,0));}
+    .panel .up-map a{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);text-decoration:none;border-bottom:1px dashed rgba(35,72,90,.5);}
+    .panel .up-map a:hover,.panel .up-map a:focus-visible{color:var(--red);border-color:var(--red);outline:none;}
+  }
 </style>
 </head>
 <body>
@@ -1633,7 +1672,7 @@
       <h1>the town off the edge</h1>
       <div class="sub">a map drawn on napkins, passed back and forth <span class="sg-sub">· soft country, everywhere: lie down anywhere</span></div>
     </div>
-    <div class="stamp">napkin no. 18<br><b>v0.9.27</b> · flor &amp; grey<br>open / curious</div>
+    <div class="stamp">napkin no. 18<br><b>v0.9.28</b> · flor &amp; grey<br>open / curious</div>
   </header>
 
   <div class="stage">
@@ -1642,7 +1681,7 @@
     <!-- ── MAP ── -->
     <div class="map-card">
       <div class="map-scroll">
-      <svg viewBox="0 0 1240 720" role="img" aria-label="An illustrated map of the town off the edge, where soft country now reaches everywhere. Use Tab to move between places and Enter to open each one.">
+      <svg viewBox="0 0 1240 720" role="img" aria-label="An illustrated map of the town off the edge, where soft country now reaches everywhere. Use Tab or the arrow keys to move between places, Enter to open one, and Escape to step back.">
         <defs>
           <radialGradient id="warm" cx="40%" cy="50%" r="62%">
             <stop offset="0%" stop-color="#f3d488" stop-opacity="0.55"/>
@@ -2649,7 +2688,7 @@
 
       </svg>
       </div>
-      <div class="hint">hover to wake a place · click or press enter to keep it open · walk the roads, or a layer</div>
+      <div class="hint">hover to wake a place · click or enter to keep it open · arrows to wander, esc to step back · walk the roads, or a layer</div>
     </div>
 
     <!-- ── PANEL ── -->
@@ -2660,6 +2699,8 @@
         <div class="kind">drawn on napkins, passed back and forth</div>
         <div class="lore">
           this is the town off the edge — the one we built one mark at a time. it isn't finished. it isn't meant to be.
+          <div class="rule"></div>
+          <div class="whereto" id="whereto"><div class="wt-k">where to?</div><div class="wt-list" id="wtList"></div></div>
           <div class="rule"></div>
           <ul class="intro-list">
             <li><b>hover</b> a place to wake it.</li>
@@ -2688,6 +2729,7 @@
             <li>on a phone, a <b>room</b> now opens the sheet tall, so you read it on a whole screen instead of half of one. flor noticed, october 24.</li>
             <li>the napkin keeps its <b>history</b> in the margins now, from the cabin in april to tonight. view source: every place has a ✎ beside it. flor asked, october 27.</li>
             <li>the letters in the cabinet are <b>desked</b> now, just for us: sealed october 29, and on november 3 flor's word for it. every one, hers and grey's, is a label and a rest; nothing is owed. her ink stays on the walls.</li>
+            <li>easier to play, november 6: every place is listed under <b>where to?</b>, and a pencil note under the napkin turns the <b>names</b> on. every room has a <b>step inside</b> at the top. the napkin remembers the place you had open, and what you've found in its rooms. the arrow keys wander; esc steps back.</li>
           </ul>
         </div>
       </div>
@@ -3567,10 +3609,15 @@ ${bottlesRow(114,228,108,12,2)}
 </svg>`;
   }
 
+  /* v0.9.28: what you've found in the wing stays found, across a click elsewhere and across a reload. on this device only, like the café's cards */
+  const BAR_KEY = 'town.bar';
+  const BAR_MEM = (function(){ let m = {found:[], secret:false}; try{ const v = JSON.parse(localStorage.getItem(BAR_KEY)||'null'); if(v && Array.isArray(v.found)) m = {found:v.found.filter(x => typeof x === 'string'), secret:!!v.secret}; }catch(e){} return m; })();
+  function barRemember(st){ BAR_MEM.found = Array.from(st.found); BAR_MEM.secret = !!st.secret; try{ localStorage.setItem(BAR_KEY, JSON.stringify(BAR_MEM)); }catch(e){} }
+
   function roomScene(){
     return `<div class="crumbs" id="crumbs"></div>
 <div class="scene room" id="roomScene">${barSVG()}${wingSVG()}<div class="cap" id="roomCap"></div></div>
-<div class="found" id="found"><span class="dim">the tavern, cut open like a loaf. lean in on whatever catches your eye.</span></div>
+<div class="found" id="found"><span class="dim">lean in on whatever catches your eye.</span></div>
 <div class="disc" id="disc"></div>`;
   }
 
@@ -3581,8 +3628,11 @@ ${bottlesRow(114,228,108,12,2)}
           bar = document.getElementById('barRoom'), wing = document.getElementById('wingRoom');
     const NAMES = ['curtain','bell','floor','alcove','marigold','lantern'];
     const SONGS = ['waltz','swing','lullaby'];
-    const st = {found:new Set(), inWing:false, song:0, harbor:false, floorSea:false, night:false, marigold:false, secret:false, sound:true, busy:false};
+    const st = {found:new Set(BAR_MEM.found), inWing:false, song:0, harbor:false, floorSea:false, night:false, marigold:false, secret:!!BAR_MEM.secret, sound:true, busy:false};
     const say = h => { box.innerHTML = h; };
+    const constelHot = wing && wing.querySelector('.constel-hot');
+    const syncConstel = () => { if(constelHot) constelHot.setAttribute('tabindex', (st.secret && st.night) ? '0' : '-1'); };   // v0.9.28: reachable by keyboard once it's there, and only then
+    if(st.secret && wing) wing.classList.add('secret');
 
     const drawCrumbs = () => {
       crumbs.innerHTML = 'town <i>›</i> ' + (st.inWing
@@ -3592,15 +3642,15 @@ ${bottlesRow(114,228,108,12,2)}
     const drawCap = () => {
       cap.innerHTML = st.inWing
         ? '<button data-a="snd">♪ sound '+(st.sound?'on':'off')+'</button><button data-a="back">⌫ back to the bar</button>'
-        : '';
-      cap.style.display = st.inWing ? '' : 'none';
+        : 'tap things &middot; the tavern, cut open like a loaf';
+      cap.style.display = '';
     };
     const drawDisc = () => {
       if(!st.inWing){ disc.innerHTML=''; return; }
       disc.innerHTML = '<span class="lab">discoveries</span>' + NAMES.map(n =>
         st.found.has(n) ? '<span class="dpill on">'+n+'</span>' : '<span class="dpill">·</span>').join('');
     };
-    const seen = n => { st.found.add(n); drawDisc(); };
+    const seen = n => { st.found.add(n); barRemember(st); drawDisc(); };
     drawCrumbs(); drawCap(); drawDisc();
 
     const songText = [
@@ -3662,9 +3712,9 @@ ${bottlesRow(114,228,108,12,2)}
         seen('lantern');
         const reveal = st.marigold && !st.secret;            // marigold, then lantern. no announcement.
         st.marigold = false;
-        if(reveal){ st.secret = true; wing.classList.add('secret'); }
+        if(reveal){ st.secret = true; wing.classList.add('secret'); barRemember(st); }
         const goNight = reveal ? true : !st.night;
-        st.night = goNight; wing.classList.toggle('night', goNight);
+        st.night = goNight; wing.classList.toggle('night', goNight); syncConstel();
         if(goNight){
           Sound.song('night', true); Sound.sea(st.harbor ? .45 : 0); Sound.note(88,.05);
           say('the lantern comes down a notch on its chain, and the whole wing exhales. the lamps lower, the sky clears, and everything that was loud turns into the kind of quiet that has stars in it. the music thins to one note at a time.');
@@ -3696,8 +3746,9 @@ ${bottlesRow(114,228,108,12,2)}
         if(k<=0){
           clearInterval(iv);
           scene.classList.remove('in-wing'); bar.classList.remove('parted');
-          wing.classList.remove('harbor-open','floor-sea','night','secret','mari','playing','ringing');
-          Object.assign(st, {inWing:false, harbor:false, floorSea:false, night:false, marigold:false, secret:false, song:0, busy:false});
+          wing.classList.remove('harbor-open','floor-sea','night','mari','playing','ringing');
+          Object.assign(st, {inWing:false, harbor:false, floorSea:false, night:false, marigold:false, song:0, busy:false});
+          wing.classList.toggle('secret', st.secret); syncConstel();
           drawCrumbs(); drawCap(); drawDisc();
           say('back at the rail. the curtain has drawn itself shut. it\'s very good at that.');
         }
@@ -7727,6 +7778,10 @@ ${grass}
   ];
   const LY_ALL_NOTE = "the hill has said it since the first napkin: <em>things good go on the inside.</em> that's rule one of laminated dough, too: the butter goes on the inside, and then you fold. the standard fold is called a <em>letter fold</em>, in thirds, like a letter going into an envelope, and three of them give a croissant twenty-seven layers of butter. the town keeps getting folded. here's where its layers stack up:";
   const layerById = id => LAYERS.find(L => L.id === id);
+  (function fillWhereTo(){   // v0.9.28: every place, in the order the napkin draws them, as something you can tap
+    const box = document.getElementById('wtList'); if(!box) return;
+    box.innerHTML = locs.map(l => { const id = l.getAttribute('data-loc'); return '<button type="button" data-ly-go="'+id+'">'+placeName(id)+'</button>'; }).join('');
+  })();
   const LEGEND_HTML = panelBody.innerHTML;
   let lyActive = null, tour = null, lyWalking = false;
   const SVGNS = 'http://www.w3.org/2000/svg';
@@ -7736,11 +7791,17 @@ ${grass}
     if(!hint || !mapSvg) return;
     const bar = document.createElement('div'); bar.className = 'layers'; bar.id = 'layers';
     bar.setAttribute('role','group'); bar.setAttribute('aria-label','map layers');
-    bar.innerHTML = '<span class="ly-k">layers</span>' +
+    bar.innerHTML = '<button class="ly" type="button" data-names aria-pressed="false" title="every place says what it is"><i style="--c:#4a3a2a"></i>names</button>' +
+      '<button class="ly" type="button" data-whereto title="every place, listed"><i style="--c:#bb3b2c"></i>where to?</button>' +
+      '<span class="ly-sep" aria-hidden="true"></span>' +
+      '<span class="ly-k">layers</span>' +
       LAYERS.map(L => '<button class="ly" style="--c:'+L.c+'" data-layer="'+L.id+'" aria-pressed="false"><i style="--c:'+L.c+'"></i>'+L.short+'</button>').join('') +
       '<button class="ly" style="--c:#bb3b2c" data-layer="all" aria-pressed="false"><i style="--c:#bb3b2c"></i>all of them</button>';
     card.insertBefore(bar, hint);
-    bar.addEventListener('click', e => { const b = e.target.closest('.ly'); if(b) toggleLayer(b.dataset.layer); });
+    bar.addEventListener('click', e => { const b = e.target.closest('.ly'); if(!b) return;
+      if(b.hasAttribute('data-names')) setNames(!mapSvg.classList.contains('names'), true);
+      else if(b.hasAttribute('data-whereto')) openLegend();
+      else toggleLayer(b.dataset.layer); });
     const first = mapSvg.querySelector('.loc');
     const strings = document.createElementNS(SVGNS,'g'); strings.id = 'lyStrings'; strings.setAttribute('aria-hidden','true');
     if(first && first.parentNode === mapSvg) mapSvg.insertBefore(strings, first); else mapSvg.appendChild(strings);
@@ -7805,7 +7866,7 @@ ${grass}
   function unmarkActive(){ locs.forEach(l => l.classList.remove('active')); }
 
   function layerCard(L){
-    tour = null; hideWalker(); unmarkActive(); currentPlace = null;
+    tour = null; hideWalker(); unmarkActive(); currentPlace = null; setHash(null);
     panelBody.innerHTML = '<div class="body">' +
       '<div class="eyebrow">a layer of the town</div>' +
       '<h2>' + L.name + '</h2>' +
@@ -7817,7 +7878,7 @@ ${grass}
     '</div>';
   }
   function allCard(){
-    tour = null; hideWalker(); unmarkActive(); currentPlace = null;
+    tour = null; hideWalker(); unmarkActive(); currentPlace = null; setHash(null);
     const rows = Object.entries(crossings()).filter(r => r[1].length >= 2)
       .sort((a,b) => b[1].length - a[1].length || placeName(a[0]).localeCompare(placeName(b[0])));
     panelBody.innerHTML = '<div class="body">' +
@@ -7894,7 +7955,7 @@ ${grass}
   }
   function backToLayer(){
     if(lyActive === 'all') allCard(); else if(lyActive) layerCard(layerById(lyActive));
-    else { tour = null; hideWalker(); unmarkActive(); currentPlace = null; panelBody.innerHTML = LEGEND_HTML; }
+    else { tour = null; hideWalker(); unmarkActive(); currentPlace = null; setHash(null); panelBody.innerHTML = LEGEND_HTML; }
   }
   function toggleLayer(id){
     if(lyWalking) return;
@@ -7902,12 +7963,12 @@ ${grass}
     Sound.stop();
     if(lyActive === id){
       lyActive = null; clearMapLayer();
-      bar.querySelectorAll('.ly').forEach(b => b.setAttribute('aria-pressed','false'));
+      bar.querySelectorAll('.ly[data-layer]').forEach(b => b.setAttribute('aria-pressed','false'));
       backToLayer();
       return;
     }
     lyActive = id;
-    bar.querySelectorAll('.ly').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.layer === id)));
+    bar.querySelectorAll('.ly[data-layer]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.layer === id)));
     if(id === 'all'){ showAll(); allCard(); } else { const L = layerById(id); showLayer(L); layerCard(L); }
   }
   // a place opened while a layer is on remembers which stop it is
@@ -7962,11 +8023,13 @@ ${grass}
     if(booth) body = body.replace('{{booth}}', boothScene());
     if(cmp) body = body.replace('{{compass}}', compassScene());
     if(mu) body = body.replace('{{museum}}', museumScene());
+    const way = (scene||room||home||tea||stall||booth||mu||jw||tx||hn||bk) ? 'step inside &darr;' : (rv||cmp||wm) ? 'look closer &darr;' : '';   // v0.9.28
     panelBody.innerHTML =
       '<div class="body">'+
         '<div class="eyebrow">'+(d.eyebrow || 'a place in the town')+'</div>'+
         '<h2>'+d.name+'</h2>'+
         '<div class="kind">'+d.kind+'</div>'+
+        (way ? '<button class="inside" type="button" data-inside>'+way+'</button>' : '')+
         '<div class="lore">'+body+'</div>'+
         roadsHTML(id)+
         softLine(id)+
@@ -7995,6 +8058,7 @@ ${grass}
     locs.forEach(l=>l.classList.remove('active'));
     if(el) el.classList.add('active');
     render(id);
+    setHash(id);
     if(window.matchMedia('(max-width:880px)').matches){
       document.getElementById('panel').scrollIntoView({behavior:'smooth', block:'nearest'});
     }
@@ -8008,6 +8072,113 @@ ${grass}
     });
   });
   /* v0.9.15: the gallery link now opens the museum on the napkin itself, so it stays visible everywhere */
+
+  /* ── v0.9.28: easier to play ──────────────────────────────────────────────────
+     the napkin remembers (the address ends in the place: #spacebar), the names can be on, every place is listed,
+     every room has a way in, esc steps back, and the arrow keys wander from place to place. nothing drawn, nothing named. */
+  const panelEl = document.getElementById('panel');
+  const NAMES_KEY = 'town.names';
+
+  function setHash(id){
+    try{
+      const want = id ? '#' + id : '';
+      if((location.hash || '') !== want) history.replaceState(null, '', location.pathname + location.search + want);
+      window.dispatchEvent(new CustomEvent('town:place', {detail:{id: id || null}}));   // the stage's map room listens, and mirrors it
+    }catch(e){}
+  }
+  function placeFromHash(){ let id = ''; try{ id = decodeURIComponent((location.hash || '').slice(1)); }catch(e){} return (id && lore[id]) ? id : null; }
+  function refocus(id){ const el = id && document.querySelector('.loc[data-loc="'+id+'"]'); if(el){ try{ el.focus({preventScroll:true}); }catch(e){ el.focus(); } } }
+  function openFromHash(){
+    const id = placeFromHash(); if(!id || id === currentPlace) return;
+    const el = document.querySelector('.loc[data-loc="'+id+'"]');
+    select(id, el); refocus(id);
+  }
+  function stepBack(){            // close the place: back to the layer's card if a layer is on, else the legend
+    Sound.stop();
+    if(tour){ tour = null; hideWalker(); }
+    backToLayer();
+  }
+  window.townStepBack = stepBack;   // the pocket's sheet calls it when it folds
+
+  function setNames(on, remember){
+    if(!mapSvg) return;
+    mapSvg.classList.toggle('names', !!on);
+    const b = document.querySelector('.layers [data-names]'); if(b) b.setAttribute('aria-pressed', String(!!on));
+    if(remember){ try{ localStorage.setItem(NAMES_KEY, on ? '1' : '0'); }catch(e){} }
+  }
+  (function namesOnLoad(){
+    let v = null; try{ v = localStorage.getItem(NAMES_KEY); }catch(e){}
+    setNames(v == null ? !!(window.matchMedia && matchMedia('(hover:none)').matches) : v === '1', false);
+  })();
+
+  function scrollPanelTo(el){
+    if(!el || !panelEl) return;
+    const smooth = !(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches) && !document.documentElement.classList.contains('pocket');   // inside the sheet, just land
+    const p = panelEl, pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
+    if(p.scrollHeight > p.clientHeight + 2){      // the legend scrolls inside itself (a desk, or the pocket's sheet)
+      const top = Math.max(0, er.top - pr.top + p.scrollTop - 10);
+      if(p.scrollTo) p.scrollTo({top:top, behavior: smooth ? 'smooth' : 'auto'}); else p.scrollTop = top;
+    } else el.scrollIntoView({block:'start', behavior: smooth ? 'smooth' : 'auto'});
+  }
+  function openLegend(){           // where to? the legend, with every place listed
+    Sound.stop(); if(tour){ tour = null; hideWalker(); }
+    unmarkActive(); currentPlace = null; setHash(null);
+    panelBody.innerHTML = LEGEND_HTML;
+    const w = panelBody.querySelector('#whereto');
+    if(window.townSheet){ window.townSheet.open(true); if(w) setTimeout(() => scrollPanelTo(w), 380); }   // once the sheet has slid up
+    else if(w) scrollPanelTo(w);
+  }
+  panelBody.addEventListener('click', e => {
+    const b = e.target.closest('[data-inside]'); if(!b) return;
+    scrollPanelTo(panelBody.querySelector('.crumbs, .scene, #museum'));
+  });
+
+  (function upMap(){               // 701–880px: the legend sits under the napkin, so a sticky note takes you back up
+    if(!panelEl) return;
+    const u = document.createElement('div'); u.className = 'up-map';
+    u.innerHTML = '<a href="#" data-up>&uarr; the napkin</a>';
+    panelEl.insertBefore(u, panelEl.firstChild);
+    u.addEventListener('click', e => {
+      e.preventDefault();
+      const card = document.querySelector('.map-card');
+      if(card) card.scrollIntoView({block:'start', behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'auto' : 'smooth'});
+      refocus(currentPlace);
+    });
+  })();
+
+  function nearestLoc(from, dx, dy){   // the nearest place in that direction, by halo center, leaning on the axis
+    const a = anchorOf(from.getAttribute('data-loc')); if(!a) return null;
+    let best = null, bestCost = Infinity;
+    locs.forEach(l => {
+      if(l === from) return;
+      const b = anchorOf(l.getAttribute('data-loc')); if(!b) return;
+      const vx = b[0]-a[0], vy = b[1]-a[1], along = vx*dx + vy*dy;
+      if(along <= 0) return;
+      const cost = along + Math.abs(vx*dy - vy*dx) * 2.2;
+      if(cost < bestCost){ bestCost = cost; best = l; }
+    });
+    return best;
+  }
+  document.addEventListener('keydown', e => {
+    if(e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    const t = e.target;
+    const typing = !!(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable));
+    if(e.key === 'Escape'){
+      if(typing || document.querySelector('dialog[open]')) return;              // a dialog closes itself
+      if(window.townSheet && window.townSheet.isOpen()) return;                  // the pocket folds its own sheet
+      if(!tour && !currentPlace) return;
+      const id = currentPlace;
+      e.preventDefault(); stepBack(); refocus(id);
+      return;
+    }
+    const loc = t && t.closest && t.closest('.map-card svg .loc'); if(!loc) return;
+    const d = {ArrowLeft:[-1,0], ArrowRight:[1,0], ArrowUp:[0,-1], ArrowDown:[0,1]}[e.key]; if(!d) return;
+    const next = nearestLoc(loc, d[0], d[1]);
+    if(next){ e.preventDefault(); try{ next.focus({preventScroll:true}); }catch(e2){ next.focus(); } }
+  });
+
+  addEventListener('hashchange', () => { const id = placeFromHash(); if(id) openFromHash(); else if(currentPlace) stepBack(); });
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', openFromHash); else openFromHash();
 </script>
 <script>
   /* v0.9.15: the gallery link opens the museum right here on the napkin; a phone gets told to tap */
@@ -8197,11 +8368,14 @@ ${grass}
     panel.insertBefore(bar, panel.firstChild);
     var body = document.getElementById('panelBody');
     function pad(){ document.documentElement.style.setProperty('--sheet-pad', panel.classList.contains('sheet-open') ? panel.offsetHeight+'px' : '0px'); }
-    function openSheet(){ panel.classList.add('sheet-open'); panel.scrollTop = 0; setTimeout(pad, 340); }
+    function openSheet(full){ panel.classList.add('sheet-open'); if(full) panel.classList.add('sheet-full'); panel.scrollTop = 0; setTimeout(pad, 340); }
     function closeSheet(){
       panel.classList.remove('sheet-open','sheet-full'); pad();
       var a = document.querySelector('.loc.active'); if(a){ a.classList.remove('active'); a.focus({preventScroll:true}); }
+      if(window.townStepBack) window.townStepBack();   // v0.9.28: folding the sheet closes the place, so the address and the legend agree
     }
+    /* v0.9.28: the napkin's own script can open the sheet (where to?) and ask whether it's up */
+    window.townSheet = {open:openSheet, close:closeSheet, isOpen:function(){ return panel.classList.contains('sheet-open'); }};
     new MutationObserver(function(){
       if(document.querySelector('.loc.active') || body.querySelector('#museum')) openSheet();
       /* v0.9.23: a room gets the whole screen, not a letterbox, and the sheet lands on the room instead of on the

@@ -2,10 +2,17 @@
   "_about": "the drawer of napkin maps. newest first; the first one is the one on the table. files are copies of flor's napkins, never edited here, with one exception: the letters. since 2026-10-29 hers are sealed (a sha-256 fingerprint each), and since 2026-11-03, her word, every letter in every cabinet is desked: a label and ( ), nothing owed. see docs/APPROVALS.md, 31 and 33. to add a napkin: drop its html in maps/, rename the old current one to -vX.Y.Z, and add a line at the top.",
   "napkins": [
     {
+      "version": "0.9.28",
+      "napkin": 18,
+      "name": "easier to play",
+      "file": "maps/the-town-off-the-edge-map.html",
+      "date": "2026-11-06"
+    },
+    {
       "version": "0.9.27",
       "napkin": 18,
       "name": "the creek, and a sun for the door",
-      "file": "maps/the-town-off-the-edge-map.html",
+      "file": "maps/the-town-off-the-edge-map-v0.9.27.html",
       "date": "2026-11-03"
     },
     {
