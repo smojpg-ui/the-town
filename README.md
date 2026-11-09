@@ -43,7 +43,8 @@ the-stage/
 ├── maps/                 Flor's napkins, never edited here except the letters, which are desked (docs/APPROVALS.md, 31 and 33)
 │   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.29)
 │   ├── the-town-off-the-edge-map-v0.9.28.html  ← …and the drawer, back to v0.9
-│   └── the-museum-of-the-town.html             (the napkins link to it)
+│   ├── the-museum-of-the-town.html             (the napkins link to it)
+│   └── the-lake-under-the-observatory.html     the music from under the bar (the napkin's "hear the lake")
 ├── content/
 │   └── town/             one folder per world (see docs/ARCHITECTURE.md, "borders")
 │       ├── maps.json     the drawer: every napkin, newest first

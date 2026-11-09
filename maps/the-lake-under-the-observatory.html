@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<!--
+  ✎ margin · the lake under the observatory, nov 9, 2026.
+  the music from under the bar: an original drift, written in the chat where flor and pip
+  played the space bar game and went down the stairs. it lived as a private claude.ai
+  artifact first (The Lake Under the Observatory, version 1794197656-de02). flor, later
+  that night: "I WANT THEM TO BE ABLE TO PLAY THE SONGS BY THE LAKE IT'S DIRE." so it came
+  onto the stage as its own page, copied as it stood. two things added here and nothing
+  else: this note, and a way back up to the napkin (top left). the napkin's "hear the lake"
+  points here now.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lake Under the Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#e9f1ff; --dim:#9fb6d6; --water:#5fd0d6; --star:#ffe7a8; --deep:#050a1c;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--deep);color:var(--ink);font-family:Quicksand,system-ui,sans-serif;overflow:hidden}
+  canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .title{position:fixed;left:0;right:0;top:4vh;text-align:center;pointer-events:none;text-shadow:0 0 18px rgba(0,0,0,.6)}
+  .title h1{margin:0;font-family:"Cormorant Garamond",serif;font-weight:400;font-style:italic;font-size:clamp(28px,5.2vw,58px);letter-spacing:.02em}
+  .title h1 .w{color:var(--water)} .title h1 .s{color:var(--star)}
+  .title p{margin:.4em 0 0;color:var(--dim);font-size:clamp(12px,1.5vw,15px);letter-spacing:.08em}
+  .panel{position:fixed;left:50%;bottom:3.5vh;transform:translateX(-50%);width:min(560px,92vw);
+    background:rgba(8,16,38,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(160,200,255,.18);border-radius:22px;padding:16px 20px 14px}
+  .row{display:flex;align-items:center;gap:12px;margin:8px 0}
+  .row label{flex:0 0 auto;font-size:13px;color:var(--dim);min-width:64px}
+  .row .end{font-size:13px;min-width:40px;text-align:center}
+  .row .end.w{color:var(--water)} .row .end.s{color:var(--star)}
+  input[type=range]{flex:1;accent-color:#9fd8ff;height:24px}
+  #mix{background:linear-gradient(90deg,var(--water),var(--star));border-radius:8px;height:6px;-webkit-appearance:none;appearance:none}
+  #mix::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff}
+  #mix::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 12px #fff}
+  .buttons{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:6px;flex-wrap:wrap}
+  button{font:600 15px Quicksand,sans-serif;color:#061026;background:linear-gradient(90deg,var(--water),var(--star));
+    border:0;border-radius:999px;padding:10px 22px;cursor:pointer;box-shadow:0 0 22px rgba(255,231,168,.25)}
+  button.ghost{background:transparent;color:var(--ink);border:1px solid rgba(160,200,255,.35);box-shadow:none}
+  .drift{font-size:13px;color:var(--dim);display:flex;gap:6px;align-items:center;cursor:pointer}
+  .note{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--dim);font-size:14px;text-align:center;margin:8px 0 0}
+  .hide{display:none}
+  .oc{display:flex;gap:6px;flex:1}
+  .key{padding:0;width:38px;height:38px;border-radius:50%;font-size:14px;color:#061026;
+    background:radial-gradient(circle at 35% 30%,#fff7d6,#ffd36b 70%);box-shadow:0 0 10px rgba(255,211,107,.35)}
+  .key[data-n="0"]{background:radial-gradient(circle at 35% 30%,#d7fbff,#5fd0d6 70%);box-shadow:0 0 10px rgba(95,208,214,.4)}
+  .key.lit{transform:scale(1.12);box-shadow:0 0 22px #fff}
+  .count{font-size:13px;color:var(--star);min-width:34px;text-align:center}
+  button.small{padding:6px 12px;font-size:12px}
+  .scare label{min-width:64px}
+  /* the stage, nov 9: a way back up to the napkin. the only thing added to the page */
+  .back{position:fixed;left:14px;top:14px;z-index:2;font:600 12px Quicksand,sans-serif;letter-spacing:.08em;color:var(--dim);text-decoration:none;opacity:.8;text-shadow:0 0 12px rgba(0,0,0,.6)}
+  .back:hover,.back:focus-visible{color:var(--star);opacity:1;outline:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<a class="back" href="the-town-off-the-edge-map.html#underbar">&uarr; back up the stairs, into the bar</a>
+
+<div class="title">
+  <h1>the <span class="w">lake</span> under the <span class="s">observatory</span></h1>
+  <p>an original drift · in the spirit of two rooms you loved</p>
+</div>
+
+<div class="panel">
+  <div class="row">
+    <span class="end w">water</span>
+    <input id="mix" type="range" min="0" max="1" step="0.001" value="0.25" aria-label="water to stars">
+    <span class="end s">stars</span>
+  </div>
+  <div class="row">
+    <label for="spread">spread</label>
+    <input id="spread" type="range" min="0" max="1" step="0.01" value="0.6">
+  </div>
+  <div class="row">
+    <label for="vol">volume</label>
+    <input id="vol" type="range" min="0" max="1" step="0.01" value="0.75">
+  </div>
+  <div class="row scare">
+    <label>scarecrow</label>
+    <div class="oc">
+      <button class="key" data-n="0" title="A">A</button>
+      <button class="key" data-n="1" title="down">▼</button>
+      <button class="key" data-n="2" title="right">▶</button>
+      <button class="key" data-n="3" title="left">◀</button>
+      <button class="key" data-n="4" title="up">▲</button>
+    </div>
+    <span id="count" class="count">0/8</span>
+    <button id="clear" class="ghost small">clear</button>
+  </div>
+  <div class="buttons">
+    <button id="play">begin</button>
+    <label class="drift"><input id="drift" type="checkbox" checked> let it drift between them</label>
+  </div>
+  <p class="note" id="hint">headphones, lights low. it takes a breath to arrive.</p>
+</div>
+
+<script>
+(() => {
+  // ---------- audio ----------
+  let ctx=null, master, comp, verb, verbIn, running=false, timer=null;
+  let nextTime=0, step=0, mel=69, chordIdx=0, driftT0=0;
+  const $=id=>document.getElementById(id);
+  const mixEl=$('mix'), spreadEl=$('spread'), volEl=$('vol'), driftEl=$('drift'), playEl=$('play');
+
+  // original progression: Dmaj9 · Bm11 · Gmaj9 · A13sus
+  const CHORDS=[
+    {bass:38, tones:[62,66,69,73,76]},
+    {bass:35, tones:[59,62,66,69,73,76]},
+    {bass:43, tones:[59,62,66,69,74]},
+    {bass:45, tones:[62,64,67,71,78]},
+  ];
+  const PENTA=[]; // D major pentatonic, 62..88
+  for(let m=60;m<=90;m++){ if([2,4,6,9,11].includes(m%12)) PENTA.push(m); }
+  const mtof=m=>440*Math.pow(2,(m-69)/12);
+
+  function impulse(sec,decay){
+    const rate=ctx.sampleRate, len=Math.floor(rate*sec), b=ctx.createBuffer(2,len,rate);
+    for(let c=0;c<2;c++){const d=b.getChannelData(c);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}
+    return b;
+  }
+  function initAudio(){
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    comp=ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3;
+    master=ctx.createGain(); master.gain.value=0;
+    master.connect(comp); comp.connect(ctx.destination);
+    verb=ctx.createConvolver(); verb.buffer=impulse(6.5,2.6);
+    verbIn=ctx.createGain(); verbIn.gain.value=1;
+    const verbOut=ctx.createGain(); verbOut.gain.value=0.9;
+    verbIn.connect(verb); verb.connect(verbOut); verbOut.connect(master);
+  }
+  function out(node,pan,send){
+    const p=ctx.createStereoPanner? ctx.createStereoPanner(): null;
+    const dry=ctx.createGain(); dry.gain.value=1;
+    const wet=ctx.createGain(); wet.gain.value=send;
+    if(p){p.pan.value=pan; node.connect(p); p.connect(dry); p.connect(wet);} else {node.connect(dry); node.connect(wet);}
+    dry.connect(master); wet.connect(verbIn);
+  }
+  function env(g,t,a,peak,dec){
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(Math.max(peak,0.0002),t+a);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+a+dec);
+  }
+
+  // marimba: woody bar — fundamental + 4th partial + tiny click
+  function marimba(m,t,vel,pan){
+    if(vel<0.004) return;
+    const f=mtof(m), g=ctx.createGain(); env(g,t,0.004,vel,0.9+Math.random()*0.3);
+    const o1=ctx.createOscillator(); o1.type='sine'; o1.frequency.value=f;
+    const o2=ctx.createOscillator(); o2.type='sine'; o2.frequency.value=f*3.93;
+    const g2=ctx.createGain(); env(g2,t,0.002,vel*0.28,0.09);
+    o1.connect(g); o2.connect(g2); g2.connect(g);
+    out(g,pan,0.55);
+    o1.start(t); o2.start(t); o1.stop(t+1.4); o2.stop(t+0.2);
+    visual.ripple(pan,vel,t);
+  }
+  // music box tine: sine with bright inharmonic shimmer, long ring
+  function musicbox(m,t,vel,pan){
+    if(vel<0.004) return;
+    const f=mtof(m), g=ctx.createGain(); env(g,t,0.003,vel,2.4);
+    [[1,1],[3.01,0.12],[5.42,0.05],[2.0,0.08]].forEach(([r,a])=>{
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f*r;
+      const og=ctx.createGain(); og.gain.value=a; o.connect(og); og.connect(g);
+      o.start(t); o.stop(t+2.6);
+    });
+    out(g,pan,0.85);
+    visual.flare(pan,vel,t);
+  }
+  function bass(m,t,vel){
+    if(vel<0.004) return;
+    const f=mtof(m), g=ctx.createGain(); env(g,t,0.03,vel,1.6);
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+    const o2=ctx.createOscillator(); o2.type='triangle'; o2.frequency.value=f*2;
+    const g2=ctx.createGain(); g2.gain.value=0.15;
+    o.connect(g); o2.connect(g2); g2.connect(g);
+    out(g,0,0.2); o.start(t); o2.start(t); o.stop(t+1.8); o2.stop(t+1.8);
+  }
+  let noiseBuf=null;
+  function shaker(t,vel,pan){
+    if(vel<0.003) return;
+    if(!noiseBuf){noiseBuf=ctx.createBuffer(1,ctx.sampleRate*0.2,ctx.sampleRate);
+      const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;}
+    const s=ctx.createBufferSource(); s.buffer=noiseBuf;
+    const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=6500;
+    const g=ctx.createGain(); env(g,t,0.006,vel,0.07);
+    s.connect(hp); hp.connect(g); out(g,pan,0.25); s.start(t); s.stop(t+0.12);
+  }
+  function drip(t,vel,pan){
+    const f=900+Math.random()*900, o=ctx.createOscillator(); o.type='sine';
+    o.frequency.setValueAtTime(f,t); o.frequency.exponentialRampToValueAtTime(f*1.9,t+0.07);
+    const g=ctx.createGain(); env(g,t,0.003,vel,0.09);
+    o.connect(g); out(g,pan,0.7); o.start(t); o.stop(t+0.15);
+    visual.ripple(pan,vel*2,t);
+  }
+  function twinkle(t,vel,pan){
+    const m=93+Math.floor(Math.random()*12), f=mtof(m);
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+    const g=ctx.createGain(); env(g,t,0.002,vel,0.6);
+    o.connect(g); out(g,pan,0.95); o.start(t); o.stop(t+0.7);
+    visual.flare(pan,vel*3,t);
+  }
+  function pad(ch,t,dur,vel){
+    if(vel<0.003) return;
+    ch.tones.slice(0,4).forEach((m,i)=>{
+      const f=mtof(m-12);
+      [-6,6].forEach(det=>{
+        const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=f; o.detune.value=det;
+        const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1400;
+        const g=ctx.createGain();
+        g.gain.setValueAtTime(0.0001,t);
+        g.gain.linearRampToValueAtTime(vel,t+2.2);
+        g.gain.setValueAtTime(vel,t+dur);
+        g.gain.linearRampToValueAtTime(0.0001,t+dur+3.2);
+        o.connect(lp); lp.connect(g); out(g,(i-1.5)*0.35,0.9);
+        o.start(t); o.stop(t+dur+3.4);
+      });
+    });
+  }
+
+  // ---------- the composer ----------
+  function nextMelody(ch){
+    // random walk on the pentatonic, leaning toward chord tones
+    const pool=PENTA.filter(m=>m>=62&&m<=81);
+    let i=pool.indexOf(pool.reduce((a,b)=>Math.abs(b-mel)<Math.abs(a-mel)?b:a));
+    const r=Math.random();
+    i+= r<0.35?-1: r<0.7?1: r<0.82?-2: r<0.94?2: 0;
+    if(mel>78) i-=1; if(mel<64) i+=1;
+    i=Math.max(0,Math.min(pool.length-1,i));
+    let m=pool[i];
+    if(Math.random()<0.35){ // settle on a chord tone
+      const ct=ch.tones.filter(x=>x>=62&&x<=81);
+      m=ct.reduce((a,b)=>Math.abs(b-m)<Math.abs(a-m)?b:a);
+    }
+    mel=m; return m;
+  }
+
+  function schedule(t){
+    const spread=+spreadEl.value;
+    const s=+mixEl.value, w=1-s;             // stars / water
+    const bpm=78-30*spread;                  // spread slows the clock
+    const sd=60/bpm/2;                       // eighth note
+    const inBar=step%8, inChord=step%16;
+    if(inChord===0){ chordIdx=(step/16)%CHORDS.length|0; pad(CHORDS[chordIdx],t,16*sd,0.018+0.05*s); }
+    const ch=CHORDS[chordIdx];
+    const swing=(inBar%2===1)? sd*0.18:0;
+    const tt=t+swing;
+    const pan=()=>Math.random()*1.6-0.8;
+
+    // water: bossa-ish bass, soft shaker, marimba, drips
+    if(inBar===0) bass(ch.bass,t,0.28*w+0.06);
+    if(inBar===3) bass(ch.bass+7,tt,0.18*w);
+    if(inBar===6 && Math.random()<0.6) bass(ch.bass+12,t,0.12*w);
+    shaker(tt,(inBar%2?0.025:0.045)*w*(1-spread*0.5),pan());
+    if((inChord===0||inChord===6||inChord===11) && Math.random()<0.8-spread*0.3){
+      ch.tones.slice(0,4).forEach((m,i)=>marimba(m,t+i*0.035,0.06*w,(i-1.5)*0.3));
+    }
+    if(Math.random()<0.06*w+0.02) drip(t+Math.random()*sd,0.05*w+0.01,pan());
+
+    // shared melody: water hears it on marimba, the stars on music box an octave up
+    const density=(inBar%2===0?0.62:0.3)*(1-spread*0.55);
+    const phase=step%128;
+    if(song.length===8 && phase>=64 && phase<80){
+      // the scarecrow remembers: your eight notes take the melody for one phrase
+      if(phase%2===0){
+        const k=(phase-64)/2, m=SCARE[song[k]], p=-0.6+k*0.17;
+        marimba(m,tt,0.2*w+0.02,p); musicbox(m+12,tt,0.13*s+0.02,p*0.6); mel=m;
+        visual.dance(t);
+        if(k===0){ const d=Math.max(0,(t-ctx.currentTime)*1000); setTimeout(()=>hint('♪ your scarecrow song'),d); }
+        if(k===7){ const d=Math.max(0,(t-ctx.currentTime)*1000)+2500; setTimeout(()=>hint('…and back to the lake.'),d); }
+      }
+    } else if(Math.random()<density){
+      const m=nextMelody(ch), p=pan();
+      marimba(m,tt,0.16*w,p);
+      musicbox(m+12,tt,0.11*s,p*0.6);
+    }
+    // stars: slow celesta arpeggio + twinkles
+    if(s>0.25 && inBar%2===0 && Math.random()<0.55){
+      const a=ch.tones[(step/2|0)%ch.tones.length]+24;
+      musicbox(a,t,0.045*s,Math.sin(step*0.7)*0.7);
+    }
+    if(Math.random()<0.07*s) twinkle(t+Math.random()*sd,0.03*s,pan());
+
+    return sd;
+  }
+
+  function tick(){
+    if(!running) return;
+    if(driftEl.checked){
+      const T=(ctx.currentTime-driftT0);
+      mixEl.value=(0.5-0.5*Math.cos(T*2*Math.PI/150)).toFixed(3); // 2.5-minute tide
+    }
+    while(nextTime<ctx.currentTime+0.25){
+      const sd=schedule(nextTime);
+      nextTime+=sd; step++;
+    }
+  }
+
+  // ---------- the scarecrow: eight notes you write ----------
+  // same five buttons as the old ocarina, tuned to the lake's own notes (D F# A B D)
+  const SCARE=[62,66,69,71,74];
+  let song=[];
+  try{ const v=JSON.parse(localStorage.getItem('lake-scarecrow')||'[]'); if(Array.isArray(v)) song=v.slice(0,8); }catch(e){}
+  const hint=txt=>{ $('hint').textContent=txt; };
+  const countEl=$('count');
+  const showCount=()=>{ countEl.textContent=song.length+'/8'; };
+  showCount();
+  function saveSong(){ try{ localStorage.setItem('lake-scarecrow',JSON.stringify(song)); }catch(e){} }
+  async function ensureAudio(){
+    if(!ctx) initAudio();
+    if(ctx.state==='suspended') await ctx.resume();
+    if(!running) master.gain.setTargetAtTime(+volEl.value*0.9,ctx.currentTime,0.05);
+  }
+  async function pressKey(n){
+    const b=document.querySelector('.key[data-n="'+n+'"]');
+    if(b){ b.classList.add('lit'); setTimeout(()=>b.classList.remove('lit'),180); }
+    try{ await ensureAudio(); }catch(e){ hint('your browser blocked sound here. try opening the page on its own.'); return; }
+    const t=ctx.currentTime+0.01, s=+mixEl.value, w=1-s, p=-0.6+n*0.3;
+    marimba(SCARE[n],t,0.2*w+0.05,p); musicbox(SCARE[n]+12,t,0.13*s+0.04,p*0.6);
+    visual.dance(t);
+    if(song.length<8){
+      song.push(n); saveSong(); showCount();
+      if(song.length===8) hint(running? "he'll remember that. listen for it in the lake."
+                                       : "he'll remember that. press begin and listen for it in the lake.");
+      else hint('the scarecrow is listening… '+(8-song.length)+' more');
+    }
+  }
+  document.querySelectorAll('.key').forEach(b=>b.addEventListener('click',()=>pressKey(+b.dataset.n)));
+  const KEYMAP={a:0,A:0,ArrowDown:1,ArrowRight:2,ArrowLeft:3,ArrowUp:4};
+  addEventListener('keydown',e=>{
+    if(e.target && e.target.tagName==='INPUT') return;
+    if(e.key in KEYMAP && !e.repeat){ e.preventDefault(); pressKey(KEYMAP[e.key]); }
+  });
+  $('clear').addEventListener('click',()=>{ song=[]; saveSong(); showCount(); hint('a blank page for the scarecrow. eight notes, any eight.'); });
+
+  playEl.addEventListener('click',async()=>{
+    try{
+      if(!ctx) initAudio();
+      if(ctx.state==='suspended') await ctx.resume();
+    }catch(e){ $('hint').textContent='your browser blocked sound here. try opening the page on its own.'; return; }
+    if(!running){
+      running=true; nextTime=ctx.currentTime+0.15;
+      if(step===0) driftT0=ctx.currentTime-(Math.acos(1-2*(+mixEl.value))/(2*Math.PI))*150;
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.setTargetAtTime(+volEl.value*0.9,ctx.currentTime,1.2);
+      timer=setInterval(tick,30);
+      playEl.textContent='rest'; $('hint').textContent='slide toward the water or the stars, or let the tide carry it.';
+    } else {
+      running=false; clearInterval(timer);
+      master.gain.setTargetAtTime(0,ctx.currentTime,0.8);
+      playEl.textContent='begin'; $('hint').textContent='the lake is still. begin again whenever.';
+    }
+  });
+  volEl.addEventListener('input',()=>{ if(ctx&&running) master.gain.setTargetAtTime(+volEl.value*0.9,ctx.currentTime,0.1); });
+  mixEl.addEventListener('input',()=>{ if(driftEl.checked){ driftEl.checked=false; } });
+  driftEl.addEventListener('change',()=>{ if(driftEl.checked && ctx){
+    driftT0=ctx.currentTime-(Math.acos(1-2*(+mixEl.value))/(2*Math.PI))*150; } });
+
+  // ---------- picture ----------
+  const cv=$('c'), g2=cv.getContext('2d');
+  let W=0,H=0,DPR=1, stars=[], ripples=[], flares=[];
+  function resize(){
+    DPR=Math.min(2,window.devicePixelRatio||1);
+    W=cv.width=innerWidth*DPR; H=cv.height=innerHeight*DPR;
+    stars=[]; const n=Math.floor((W*H)/(9000*DPR));
+    for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H*0.56,r:(Math.random()*1.3+0.3)*DPR,ph:Math.random()*6.28,sp:0.5+Math.random()*1.5,glow:0});
+  }
+  addEventListener('resize',resize); resize();
+  const horizon=()=>H*0.6;
+  let danceUntil=0;
+  const visual={
+    dance(t){
+      const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
+      setTimeout(()=>{ danceUntil=performance.now()+900; },delay);
+    },
+    ripple(pan,vel,t){
+      const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
+      setTimeout(()=>ripples.push({x:W*(0.5+pan*0.45)+(Math.random()-0.5)*W*0.08,
+        y:horizon()+ (H-horizon())*(0.15+Math.random()*0.7), r:2, a:Math.min(1,vel*6)}),delay);
+    },
+    flare(pan,vel,t){
+      const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
+      setTimeout(()=>{
+        const target=W*(0.5+pan*0.45);
+        let best=null,bd=1e9; for(let k=0;k<12;k++){const s=stars[(Math.random()*stars.length)|0]; const d=Math.abs(s.x-target); if(d<bd){bd=d;best=s;}}
+        if(best) best.glow=Math.min(1.5,best.glow+vel*10);
+      },delay);
+    }
+  };
+  function frame(now){
+    const s=+mixEl.value, hz=horizon(), t=now/1000;
+    // sky
+    const sky=g2.createLinearGradient(0,0,0,hz);
+    sky.addColorStop(0,`rgb(${4+6*s},${8+6*s},${26+18*s})`);
+    sky.addColorStop(1,`rgb(${14+8*(1-s)},${34+24*(1-s)},${58+14*(1-s)})`);
+    g2.fillStyle=sky; g2.fillRect(0,0,W,hz);
+    // stars + their reflections
+    for(const st of stars){
+      const tw=0.55+0.45*Math.sin(t*st.sp+st.ph);
+      const a=Math.min(1,(0.18+0.75*s)*tw+st.glow);
+      g2.fillStyle=`rgba(255,${226+20*(1-s)|0},${170+60*(1-s)|0},${a})`;
+      g2.beginPath(); g2.arc(st.x,st.y,st.r*(1+st.glow*1.6),0,6.283); g2.fill();
+      if(st.glow>0.05){ g2.fillStyle=`rgba(255,231,168,${st.glow*0.25})`; g2.beginPath(); g2.arc(st.x,st.y,st.r*9*st.glow,0,6.283); g2.fill(); }
+      st.glow*=0.965;
+    }
+    // observatory silhouette on the far shore
+    const ox=W*0.78, base=hz, rr=Math.min(W,H)*0.045;
+    g2.fillStyle='#03060f';
+    g2.fillRect(ox-rr*1.1,base-rr*1.3,rr*2.2,rr*1.3);
+    g2.beginPath(); g2.arc(ox,base-rr*1.3,rr*1.1,Math.PI,0); g2.fill();
+    g2.fillStyle=`rgba(255,231,168,${0.25+0.6*s})`;
+    g2.save(); g2.translate(ox,base-rr*1.3); g2.rotate(-0.5); g2.fillRect(-rr*0.12,-rr*1.25,rr*0.24,rr*0.6); g2.restore();
+    g2.fillStyle=`rgba(255,220,150,${0.35+0.5*s})`; g2.fillRect(ox-rr*0.25,base-rr*0.75,rr*0.5,rr*0.35);
+    // low hills
+    g2.fillStyle='#050912'; g2.beginPath(); g2.moveTo(0,hz);
+    for(let x=0;x<=W;x+=W/24) g2.lineTo(x,hz-(Math.sin(x/W*5.2+1)*0.5+0.6)*H*0.025*(x<W*0.65?1:0.4));
+    g2.lineTo(W,hz); g2.fill();
+    // the scarecrow on the near hill
+    {
+      const sx=W*0.16, sy=hz-H*0.03, u=Math.min(W,H)*0.012;
+      const dancing=now<danceUntil, bob=dancing? Math.sin(now/90)*u*0.9:0, tilt=dancing? Math.sin(now/140)*0.25:0;
+      g2.save(); g2.translate(sx,sy+bob*0.3); g2.rotate(tilt);
+      g2.strokeStyle='#03060f'; g2.fillStyle='#03060f'; g2.lineWidth=u*0.45; g2.lineCap='round';
+      g2.beginPath(); g2.moveTo(0,0); g2.lineTo(0,-u*5); g2.stroke();               // pole
+      g2.beginPath(); g2.moveTo(-u*2.6,-u*3.6+bob); g2.lineTo(0,-u*3.9); g2.lineTo(u*2.6,-u*3.6-bob); g2.stroke(); // arms
+      g2.beginPath(); g2.arc(0,-u*5.6,u*0.95,0,6.283); g2.fill();                  // head
+      g2.beginPath(); g2.moveTo(-u*1.6,-u*6.2); g2.lineTo(u*1.6,-u*6.2); g2.lineTo(u*0.5,-u*7.6); g2.lineTo(-u*0.6,-u*7.4); g2.closePath(); g2.fill(); // hat
+      if(dancing){ g2.fillStyle=`rgba(255,231,168,${0.5+0.5*Math.sin(now/120)})`;
+        g2.font=`${u*2.2}px serif`; g2.fillText('♪',u*2.2,-u*6.5-bob); }
+      g2.restore();
+    }
+    // water
+    const wat=g2.createLinearGradient(0,hz,0,H);
+    wat.addColorStop(0,`rgb(${8+10*(1-s)},${40+40*(1-s)},${60+30*(1-s)})`);
+    wat.addColorStop(1,`rgb(2,${10+12*(1-s)},${24+16*(1-s)})`);
+    g2.fillStyle=wat; g2.fillRect(0,hz,W,H-hz);
+    // shimmer lines + star reflections
+    g2.globalAlpha=0.5;
+    for(let i=0;i<40;i++){
+      const y=hz+(H-hz)*(i/40)**1.4, wob=Math.sin(t*0.8+i)*W*0.02;
+      g2.strokeStyle=`rgba(${120+100*s},${210+30*s},${220},${0.05+0.05*(1-s)})`;
+      g2.beginPath(); g2.moveTo(W*0.1+wob,y); g2.lineTo(W*0.9+wob,y); g2.stroke();
+    }
+    for(const st of stars){ if(st.glow>0.08){
+      const ry=hz+(hz-st.y)*0.55; g2.fillStyle=`rgba(255,231,168,${st.glow*0.35})`;
+      g2.fillRect(st.x-st.r*3+Math.sin(t*3+st.ph)*4,ry,st.r*6,st.r*1.2); } }
+    g2.globalAlpha=1;
+    // ripples
+    for(let i=ripples.length-1;i>=0;i--){
+      const r=ripples[i]; r.r+=1.1*DPR; r.a*=0.975;
+      g2.strokeStyle=`rgba(${140+80*s},235,240,${r.a*0.6})`; g2.lineWidth=1.2*DPR;
+      g2.beginPath(); g2.ellipse(r.x,r.y,r.r,r.r*0.28,0,0,6.283); g2.stroke();
+      if(r.a<0.02) ripples.splice(i,1);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
