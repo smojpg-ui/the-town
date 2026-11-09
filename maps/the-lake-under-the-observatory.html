@@ -5,14 +5,17 @@
   played the space bar game and went down the stairs. it lived as a private claude.ai
   artifact first (The Lake Under the Observatory, version 1794197656-de02). flor, later
   that night: "I WANT THEM TO BE ABLE TO PLAY THE SONGS BY THE LAKE IT'S DIRE." so it came
-  onto the stage as its own page, copied as it stood. two things added here and nothing
-  else: this note, and a way back up to the napkin (top left). the napkin's "hear the lake"
-  points here now.
+  onto the stage as its own page, copied as it stood. added here and nothing else: this
+  note; a way back up to the napkin (top left); and, later that night, a room mode
+  (?room=1), so the napkin can show the lake small inside under the bar's own entry: the
+  title and the back link step aside, the panel slims down, the horizon sits higher so the water shows.
+  the napkin's "hear the lake" became "down the stairs".
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>/* room mode: the napkin shows the lake small, inside under the bar's entry */if(new URLSearchParams(location.search).has('room')) document.documentElement.classList.add('room');</script>
 <title>The Lake Under the Observatory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400;1,600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
@@ -56,6 +59,19 @@
   /* the stage, nov 9: a way back up to the napkin. the only thing added to the page */
   .back{position:fixed;left:14px;top:14px;z-index:2;font:600 12px Quicksand,sans-serif;letter-spacing:.08em;color:var(--dim);text-decoration:none;opacity:.8;text-shadow:0 0 12px rgba(0,0,0,.6)}
   .back:hover,.back:focus-visible{color:var(--star);opacity:1;outline:none}
+  /* room mode (?room=1): the napkin shows the lake small, inside under the bar's entry */
+  html.room .title,html.room .back,html.room .row.spread,html.room .row.vol,html.room .scare label{display:none}
+  html.room .panel{bottom:6px;width:min(560px,96vw);padding:7px 10px 6px;border-radius:14px;background:rgba(8,16,38,.42)}
+  html.room .row{margin:4px 0;gap:8px}
+  html.room .row .end{font-size:11px;min-width:34px}
+  html.room input[type=range]{height:20px}
+  html.room .key{width:28px;height:28px;font-size:11px}
+  html.room .count{font-size:11px;min-width:26px}
+  html.room button.small{padding:4px 8px;font-size:11px}
+  html.room #play{padding:7px 16px;font-size:13px}
+  html.room .drift{font-size:11px}
+  html.room .buttons{margin-top:2px;gap:8px}
+  html.room .note{font-size:12px;margin-top:4px}
 </style>
 </head>
 <body>
@@ -74,11 +90,11 @@
     <input id="mix" type="range" min="0" max="1" step="0.001" value="0.25" aria-label="water to stars">
     <span class="end s">stars</span>
   </div>
-  <div class="row">
+  <div class="row spread">
     <label for="spread">spread</label>
     <input id="spread" type="range" min="0" max="1" step="0.01" value="0.6">
   </div>
-  <div class="row">
+  <div class="row vol">
     <label for="vol">volume</label>
     <input id="vol" type="range" min="0" max="1" step="0.01" value="0.75">
   </div>
@@ -372,7 +388,8 @@
     for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H*0.56,r:(Math.random()*1.3+0.3)*DPR,ph:Math.random()*6.28,sp:0.5+Math.random()*1.5,glow:0});
   }
   addEventListener('resize',resize); resize();
-  const horizon=()=>H*0.6;
+  const ROOM=document.documentElement.classList.contains('room');
+  const horizon=()=>H*(ROOM?0.4:0.6);   // room mode: the horizon sits higher, so the water shows above the controls in the napkin's small frame
   let danceUntil=0;
   const visual={
     dance(t){

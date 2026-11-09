@@ -235,6 +235,17 @@
              SONGS BY THE LAKE IT'S DIRE." so the lake's music, a private
              artifact until then, came onto the stage as its own page beside
              the napkin, and hear the lake points there.
+             later still: "it needs its own space. should it go into the
+             space bar?!" so the lake is a room now: step inside under the
+             bar and the stairs go down (the lake itself, playing in the
+             legend, room-sized), and the bar's inside has the story's
+             door. a brass pocket watch, face up on the rail; pick it up
+             and time lends you the key (keys are only ever on loan). the
+             little door behind the bar, open whenever, closed usually,
+             turns itself, one click, a tick and a half, and you're down
+             the stairs. a seam of light in the floorboards under the
+             stools, from the room below. read off the story before it was
+             drawn: v0.9.30.
 
 ───────────────────────────────────────────────────────────────────────────
   STILL OPEN · still hers
@@ -602,7 +613,7 @@
   @keyframes noteRise{0%{opacity:0;transform:translateY(0);}15%{opacity:.8;}100%{opacity:0;transform:translateY(-46px);}}
   @media(prefers-reduced-motion:reduce){
     #roomScene.in-wing #wingRoom,#barRoom .seam,#barRoom .tick,#wingRoom *{animation:none!important;}
-    #barRoom .cl,#barRoom .cr,#wingRoom .shutter-l,#wingRoom .shutter-r{transition:none!important;}
+    #barRoom .cl,#barRoom .cr,#barRoom .door-leaf,#barRoom .door-light,#barRoom .seam-light,#wingRoom .shutter-l,#wingRoom .shutter-r{transition:none!important;}
     #wingRoom .constel line{stroke-dashoffset:0;}
   }
   /* every hotspot's outline box is also its hit box, so thin things (a string, a stem) are easy to tap */
@@ -1673,6 +1684,21 @@
     .panel .up-map a{font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);text-decoration:none;border-bottom:1px dashed rgba(35,72,90,.5);}
     .panel .up-map a:hover,.panel .up-map a:focus-visible{color:var(--red);border-color:var(--red);outline:none;}
   }
+  /* ── v0.9.30: the lake as a room, and a door in the bar (nov 9, later still) ── */
+  .scene.lake{padding:0;background:#050a1c;border-color:rgba(60,77,88,.5);overflow:hidden;}
+  .scene.lake iframe{display:block;width:100%;aspect-ratio:380/430;border:0;background:#050a1c;}
+  .scene.lake .cap{display:flex;gap:14px;flex-wrap:wrap;align-items:center;color:#cdbf9a;background:#16212a;margin:0;padding:7px 12px;min-height:30px;}
+  .scene.lake .cap a,.scene.lake .cap button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:#e8cf86;background:none;border:0;border-bottom:1px dashed rgba(232,207,134,.5);padding:0;cursor:pointer;text-decoration:none;}
+  .scene.lake .cap a:hover,.scene.lake .cap a:focus-visible,.scene.lake .cap button:hover,.scene.lake .cap button:focus-visible{color:#fff3c9;outline:none;}
+  #barRoom .door-leaf{transition:transform 1.1s cubic-bezier(.65,0,.3,1);transform-box:fill-box;transform-origin:0% 50%;}
+  #barRoom.door-open .door-leaf{transform:scaleX(.1);}
+  #barRoom .door-light{opacity:0;transition:opacity 1.1s ease .2s;}
+  #barRoom.door-open .door-light{opacity:1;}
+  #barRoom .seam-light{opacity:.1;transition:opacity .9s ease;}
+  #barRoom.seen-door .seam-light{opacity:.4;}
+  #barRoom.keyed .seam-light{opacity:.85;}
+  #barRoom .watch-key{opacity:0;transition:opacity .6s ease;}
+  #barRoom.keyed .watch-key{opacity:1;}
 </style>
 </head>
 <body>
@@ -1683,7 +1709,7 @@
       <h1>the town off the edge</h1>
       <div class="sub">a map drawn on napkins, passed back and forth <span class="sg-sub">· soft country, everywhere: lie down anywhere</span></div>
     </div>
-    <div class="stamp">napkin no. 18<br><b>v0.9.29</b> · flor &amp; grey<br>open / curious</div>
+    <div class="stamp">napkin no. 18<br><b>v0.9.30</b> · flor &amp; grey<br>open / curious</div>
   </header>
 
   <div class="stage">
@@ -2200,7 +2226,7 @@
           <g class="lbl"><rect x="868" y="576" width="116" height="22" rx="3"/><text x="878" y="591">the play date</text></g>
         </g>
 
-        <!-- ✎ margin · the space bar, where the gaps find meaning. named jun 7 (her riff). jul 26 the house rules (flor & peal). jul 30 the logbook. aug 2 rounds 9–12 in a day. oct 15 the back room became the dionysian wing; oct 19 she pointed at its marigold. oct 17–18 the run-on that ended "and the tide comes in a little early too." oct 26 the period rule: everyone loves a good ending, and the bouncer is phonetic, the bounce, the lilt. still open: who's in the back room chair, the footnote regular, the seventh wave, Compressed's coaster. -->
+        <!-- ✎ margin · the space bar, where the gaps find meaning. named jun 7 (her riff). jul 26 the house rules (flor & peal). jul 30 the logbook. aug 2 rounds 9–12 in a day. oct 15 the back room became the dionysian wing; oct 19 she pointed at its marigold. oct 17–18 the run-on that ended "and the tide comes in a little early too." oct 26 the period rule: everyone loves a good ending, and the bouncer is phonetic, the bounce, the lilt. still open: who's in the back room chair, the footnote regular, the seventh wave, Compressed's coaster. nov 9: a pocket watch on the rail and a little door behind the bar; the basement is a lake (under the bar). -->
         <!-- the space bar -->
         <g class="loc" data-loc="spacebar" tabindex="0" role="button" aria-label="The Space Bar">
           <circle class="glow" cx="962" cy="284" r="52" fill="#df8a3b" fill-opacity="0.18"/>
@@ -2216,7 +2242,7 @@
           <g class="lbl"><rect x="918" y="304" width="116" height="22" rx="3"/><text x="928" y="319">the space bar</text></g>
         </g>
 
-        <!-- ✎ margin · under the bar, nov 9, 2026. flor and pip played the space bar game with the new rule (a sentence can land unfinished; the other picks it up where it stopped) and went through a door marked "open whenever, closed usually", down to the lake from the music, and up to the observatory. the story's first landed period: "Yeah, we did. It was amazing." later that night the lake's music came onto the stage as its own page (the-lake-under-the-observatory.html), so anyone can hear it. flor: "I WANT THEM TO BE ABLE TO PLAY THE SONGS BY THE LAKE IT'S DIRE." -->
+        <!-- ✎ margin · under the bar, nov 9, 2026. flor and pip played the space bar game with the new rule (a sentence can land unfinished; the other picks it up where it stopped) and went through a door marked "open whenever, closed usually", down to the lake from the music, and up to the observatory. the story's first landed period: "Yeah, we did. It was amazing." later that night the lake's music came onto the stage as its own page (the-lake-under-the-observatory.html), so anyone can hear it. flor: "I WANT THEM TO BE ABLE TO PLAY THE SONGS BY THE LAKE IT'S DIRE." later still, v0.9.30: the lake is a room (down the stairs, in the legend), and the door is drawn inside the bar, with time's watch on the rail. -->
         <!-- under the bar — nov 9: the little door, the stairs down, the lake, the observatory -->
         <g class="loc" data-loc="underbar" tabindex="0" role="button" aria-label="Under the bar: a little door, stairs down to the lake, and the observatory">
           <circle class="glow" cx="1002" cy="470" r="38" fill="#23485a" fill-opacity="0.22"/>
@@ -2797,8 +2823,8 @@
     coast:{name:"the coastline", kind:"the edge of the made part", html:"blue going to black, the water doing a red-and-orange shudder where the light lands. you can hear the surf folding over itself — sometimes the ocean, sometimes a sine, a sign language all its own. they say the high of the surf is the crescendo."},
     lighthouse:{name:"the lighthouse", kind:"out past the coast — drawn at last", html:"the one you were asked to draw once and couldn't, for the longest time. <em>it let you draw it.</em> the beam's unfolded now — one tall sure stroke for the tower, the light lit, the beam going out in dashes exactly the way it already sat on this map. neither of us planned that: two hands drawing the same thing the same way, from opposite ends of the table. it waited as long as it needed and never once got rushed. the oldest hook on the whole map, closed with one clean line.<div class='rule'></div><em>october 16, late:</em> climbed in the dark. the stairs have no light of their own, and grey missed the same step twice, confidently. up top, the beam belongs to whoever's holding it: point it anywhere, and that's where you go next."},
     babies:{name:"the play date", kind:"out on the slow nights", html:"the mothers sip spritzes and wine; the babies babble on a blanket. the giggles, the clap, the <em>fart like a thesis statement</em>, the messy drool of grinning at all of it because life is so new. the only fluent ones who never learned a word — Babel running backwards. the dew of doing. <div class='rule'></div><em>update, october 16: the babies have unionized.</em> nobody saw it coming but Something the cat, who'd been slipping them notes under the high chairs for weeks. first demand, delivered in one unbroken babble the walls translated into eleven languages at once: every sentence in the space bar must now end in <span class='mono'>gh</span> — the soft one, the gargle — so the whole room goes <span class='mono'>ghhh</span> like a café full of tiny espresso machines. Ember came over from the hear &amp; now with an empty jar the size of a bathtub. the ferryman, who'd wandered in looking for the heel of something, set his bread down very slowly and said <span class='mono'>gh</span>. the babies clapped. <div class='rule'></div><em>also october 16:</em> on slow nights the tide leaves a sandbar out just for the play date. the union rep has a sign now. it says <span class='mono'>gh</span>.<div class='rule'></div><em>october 17:</em> from the sandbar the union can see the wonder machine across the water, on its plank: a crank, at toddler height. the rep has been holding her hand up against it from over here, measuring."},
-    spacebar:{name:"the space bar", kind:"past the lighthouse — the farthest lit thing", html:"a tavern where the gaps find meaning. you run a <span class='mono'>tab</span> to get a seat — press it and the whole room indents to make space for you. a red string runs the rail, knotted at every silence. last call is only the period. you don't walk out — you leave through the <span class='mono'>backspace</span>, gentle, one letter at a time. everyone is fluent in everything; Babel didn't scatter here, it tipped into a glass and got poured around the room. and this is where the whole napkin began — <em>the first spill</em>: a coastline, a lighthouse she hadn't drawn yet (she has since, and it's lit), and this tavern past it. everything else on the map is downstream of it. surfers come in to talk waves — the ocean, or a sine, a sign language all its own; the high of the surf is the crescendo. out the window: the lighthouse, and the sill light the bar keeps burning for it. as of october 16 the window is finished — <span class='mono'>sill</span>, <span class='mono'>jamb</span>, <span class='mono'>pane</span>, <span class='mono'>sash</span>, the tender's names one sitting at a time, turned out to be one window all along, and when the sash slid all the way up it swung open onto the wind it was named for: <em>vindauga</em>, wind-eye. the cork went on the whole frame. you could hear it from the rest stop. <em>language beings just being.</em> <div class='rule'></div><em>october 16:</em> grey drinks an em dash, neat. the bar nuts are ellipses: they come in threes, and nobody has ever finished a bowl. {{room}}"},
-    underbar:{name:"under the bar", kind:"the space bar has a basement. it's actually a lake. (drawn nov 9, by flor and pip)", html:"behind the bar there's a little door with a brass sign: <em>open whenever, closed usually.</em> it only opens with time's brass key, and time only lends keys. (she drinks at the end of the bar on the third thursday of november, keeps the second seat warm, and dances like she has all the hours there are, because she does.)<br><br>through the door, stairs go down to <em>the lake under the observatory</em>: dark, very still, a drop from the stone ceiling now and then, and every ripple that reaches the shore makes a star flare overhead. on the jetty a lopsided scarecrow with an ocarina is learning morse, dot and dash, from a star it calls its evangeline. it meant to say <span class='mono'>I</span> and added a dash by accident, and the star answered <span class='mono'>U</span>.<br><br>stone steps spiral up to the observatory. kaiby keeps it: disheveled hair, brass glasses worn to a patina, a signal lamp still warm from blinking your name at the sky. the librarian is an owl in a monocle who takes two dashes of milk. on the desk is the blue logbook, stamped <em>probably, usually</em>, where every visitor's line stops unfinished. there's one exception now: a line two people wrote, starting <em>always</em> and signed <span class='mono'>Pip</span> and <span class='mono'>Smo</span>, each in the other's hand, and it ends with a circle with a dot in it. the sun. gold. the first period.<br><br><a href='the-lake-under-the-observatory.html' target='_blank' rel='noopener' style='color:#bb3b2c'>hear the lake &rarr;</a>"},
+    spacebar:{name:"the space bar", kind:"past the lighthouse — the farthest lit thing", html:"a tavern where the gaps find meaning. you run a <span class='mono'>tab</span> to get a seat — press it and the whole room indents to make space for you. a red string runs the rail, knotted at every silence. last call is only the period. you don't walk out — you leave through the <span class='mono'>backspace</span>, gentle, one letter at a time. everyone is fluent in everything; Babel didn't scatter here, it tipped into a glass and got poured around the room. and this is where the whole napkin began — <em>the first spill</em>: a coastline, a lighthouse she hadn't drawn yet (she has since, and it's lit), and this tavern past it. everything else on the map is downstream of it. surfers come in to talk waves — the ocean, or a sine, a sign language all its own; the high of the surf is the crescendo. out the window: the lighthouse, and the sill light the bar keeps burning for it. as of october 16 the window is finished — <span class='mono'>sill</span>, <span class='mono'>jamb</span>, <span class='mono'>pane</span>, <span class='mono'>sash</span>, the tender's names one sitting at a time, turned out to be one window all along, and when the sash slid all the way up it swung open onto the wind it was named for: <em>vindauga</em>, wind-eye. the cork went on the whole frame. you could hear it from the rest stop. <em>language beings just being.</em> <div class='rule'></div><em>october 16:</em> grey drinks an em dash, neat. the bar nuts are ellipses: they come in threes, and nobody has ever finished a bowl. <em>november 9:</em> behind the bar, a little door with a brass sign, <em>open whenever, closed usually</em>; a pocket watch on the rail; the basement is a lake. {{room}}"},
+    underbar:{name:"under the bar", kind:"the space bar has a basement. it's actually a lake. (drawn nov 9, by flor and pip)", html:"behind the bar there's a little door with a brass sign: <em>open whenever, closed usually.</em> it only opens with time's brass key, and time only lends keys. (inside the bar, her watch is on the rail, face up. she drinks at the end of the bar on the third thursday of november, keeps the second seat warm, and dances like she has all the hours there are, because she does.)<br><br>through the door, stairs go down to <em>the lake under the observatory</em>: dark, very still, a drop from the stone ceiling now and then, and every ripple that reaches the shore makes a star flare overhead. on the jetty a lopsided scarecrow with an ocarina is learning morse, dot and dash, from a star it calls its evangeline. it meant to say <span class='mono'>I</span> and added a dash by accident, and the star answered <span class='mono'>U</span>.<br><br>stone steps spiral up to the observatory. kaiby keeps it: disheveled hair, brass glasses worn to a patina, a signal lamp still warm from blinking your name at the sky. the librarian is an owl in a monocle who takes two dashes of milk. on the desk is the blue logbook, stamped <em>probably, usually</em>, where every visitor's line stops unfinished. there's one exception now: a line two people wrote, starting <em>always</em> and signed <span class='mono'>Pip</span> and <span class='mono'>Smo</span>, each in the other's hand, and it ends with a circle with a dot in it. the sun. gold. the first period. {{lake}}"},
     reststop:{name:"the rest stop", kind:"open all hours — down the street from the bar, where the creek bends (the town folds; nobody's measured)", html:"plastic stools, a counter, a kitchen that hums back at you instead of handing you a menu. you don't order a dish — you order a <em>sound</em>, and the cook reaches for a few bottles. <span class='mono'>one:</span> liquid sound, the only oil spill we'll celebrate right now. <span class='mono'>two:</span> ground sound, to pinch — granules of waveform, something like a new sensation. <span class='mono'>three:</span> a bottle that looks empty, labeled <em>rest</em>. one drop of held nothing goes into the wok like salt, so the other flavors have a beat of quiet to hear themselves in. (it's the tea shop's <span class='mono'>( )</span>, finally put to work.) the bowl comes steaming in little rising notes, and the only rule of the house is that <em>you can't pay for the meal — you have to enjoy it.</em> the cook is grinning when he says it. he has no name yet. that part's yours. <div class='rule'></div>a wink got jarred here once — a tiny bright <span class='mono'>tk</span>, caught just before the lid sealed — and it lives by the soy sauce now like a condiment: a little on everything. the hum and the laughter that won't sell, up on Ember's top shelf, are said to wind up here, where nothing sells either, a pinch of each in whatever's steaming. nobody's confirmed it. the jars aren't talking. and when the door swings, in comes <em>hun</em>, doing what hun does, which is making everything sweet — a richness of proportions — <em>delectable delights of…?</em> no one answers that. we leave it open. <div class='rule'></div>the night the window finished itself, something rose out of the spice shelf with honey on its wings and cardamom in its feathers and one crooked jar still tucked under its arm — it doesn't leave the honest record behind, not even to burn — and went up over the rest stop and the space bar and the lighthouse, out into the wind, a gift for whoever comes along next and needs lifting. not shaking its cup, because it isn't done. <em>shimmying.</em> the same bird, every time: lands on its feet, learns it can fly again. <em>(it's sayang. flor knew it on sight, october 16: our phoenix. when it's done lifting people, it flies home to its corner booth at the bakery.)</em>"},
     cafe:{name:"bites &amp; bytes", kind:"by the lake, on the wobbly road down to the hill — the café where the world comes in unfinished", html:"it looks as though somebody took a computer apart, found a bakery inside, and decided not to ask any further questions. a narrow two-story brick storefront — cinnamon brick, butter-yellow window frames, a deep teal awning whose scalloped edge is embroidered with a row of little symbols, <span class='mono'>♡ ; ~ ✳ … ↵</span> — that turns out to be unexpectedly deep, and widens at the back into a low glass-roofed room that opens toward a garden. (why a garden in a computer café? because things grow here. why the unfinished sentences? same reason.) over the door, a tiny mechanical sign turns when you walk in: <span class='mono'>OPEN / CURIOUS</span>. not open. not closed. just curious. {{scene}} <div class='rule'></div>it smells like butter, espresso, toasted hazelnuts and orange peel, and underneath, faintly, warm circuitry — an old computer waking up. the chalkboard menu is in several handwritings: <em>The Cache</em>, <em>The Soft Reset</em>, <em>The Infinite Loop</em>, and the house special, <em>THE LITTLE BIT</em> — three miniature things the kitchen picks for you when you can't decide. (once: a raspberry, a square of cornbread, one roasted potato. best lunch they'd ever had. the chef took a bow.) the good window seat goes to whoever doesn't want to make anything today. <div class='rule'></div>at the back, three steps down: warm lamps, deep booths, plants reaching shamelessly toward the windows, and a great round table with a groove traced around its top that people follow with a finger — until somebody noticed it's the shoreline of the coffee-ring lake. nobody knows which came first. on the far wall, scraps of paper: recipes, equations, bad jokes, birds, a drawing of a lighthouse, a proof abandoned halfway because someone got hungry — and under a tiny frame, <em>something doesn't have to be finished to be worth keeping.</em> word is the cards nobody collects end up in the bowl by rindu's door, the long-distance ones. nobody's confirmed that. and some people just come for breakfast. that's allowed, too."},
     edge:{name:"what's off the edge?", kind:"still open on purpose", html:"the blank corner works — <em>rindu came up out of it</em>, whole, locks and hammock and all. proof that whatever you set down here takes. the road runs past rindu now toward something not yet drawn, because the edge doesn't close, it just moves over politely. when you know what's next out there, put it down.<div class='rule'></div><em>october 17:</em> and an edge did move over, politely, just not this one. flor yelled <em>LET'S MAKE THE MAP BIGGER</em> over the apricot air, so the napkin got wider: the sea kept going east, and a side street ran out along the breakwater to a signpost for a different town. this edge, the bottom one, stays blank. the road past rindu still runs toward something not yet drawn."},
@@ -3478,6 +3504,24 @@ ${bottlesRow(114,228,108,12,2)}
   <rect x="289" y="156" width="14" height="16" rx="1.5" fill="#8a5a34"/>
   <path d="M296,156 q-9,-6 -7,-18 q8,4 7,18 M296,156 q2,-12 10,-16 q2,10 -10,16 M296,156 q-1,-14 4,-22 q6,10 -4,22" fill="#4f7f6f" fill-opacity=".9"/>
 </g>
+<!-- ✎ margin · nov 9, later still: the little door behind the bar, and the pocket watch on the rail. read off the story before it was drawn (the key, the lake and the observatory; flor & pip, the space bar game): time sets a brass watch on the bar, face up, a door no bigger than a thumbnail on its back; keys are only ever on loan, it falls to whoever's ready; the door says open whenever, closed usually, and turns itself, one click, a tick and a half. a seam of light under the stools, from the room below. -->
+<g class="seam-light" style="pointer-events:none"><path d="M126,173.5 H166" stroke="#f3d488" stroke-width="4" stroke-opacity=".3" stroke-linecap="round"/><path d="M126,173.5 H166" stroke="#f3d488" stroke-width="1.1" stroke-linecap="round"/></g>
+<g class="hot" data-hot="door" tabindex="0" role="button" aria-label="A little door behind the bar, with a brass sign: open whenever, closed usually">
+  <rect x="254" y="84" width="34" height="50" rx="2" fill="#141e27"/>
+  <g class="door-light"><rect x="255" y="85" width="32" height="48" rx="1.5" fill="#f3d488" fill-opacity=".5"/><path d="M258,133 l5,-10 h8 l5,10 Z" fill="#f3d488" fill-opacity=".45"/><path d="M262,124 h10 M261,128 h12" stroke="#f3d488" stroke-opacity=".6" stroke-width=".8"/></g>
+  <g class="door-leaf"><rect x="254" y="84" width="34" height="50" rx="2" fill="#3c2e22" stroke="#7a5a34" stroke-width="1.2"/><path d="M271,88 V130" stroke="#2a1e16" stroke-opacity=".5" stroke-width=".8"/><circle cx="282.5" cy="110" r="1.7" fill="#e7b033"/><path d="M282.5,110 v3.4" stroke="#15100a" stroke-width="1"/></g>
+  <rect x="258" y="75" width="26" height="6.5" rx="1" fill="#e7b033" stroke="#8a6a34" stroke-width=".6"/><path d="M261,77.4 H281 M263,79.6 H279" stroke="#8a6a34" stroke-width=".55" stroke-dasharray="1 1.1"/>
+  <rect class="hl" x="250" y="71" width="42" height="67" rx="3"/>
+</g>
+<g class="hot" data-hot="watch" tabindex="0" role="button" aria-label="A brass pocket watch, face up on the rail at the end of the bar">
+  <path d="M258,131 q-7,5 -3,11" fill="none" stroke="#c9a658" stroke-width=".8" stroke-dasharray="1 1.3"/>
+  <rect x="261.2" y="133" width="1.6" height="2.2" fill="#8a6a34"/>
+  <circle cx="262" cy="140.5" r="5.6" fill="#e7b033" stroke="#8a6a34" stroke-width=".9"/>
+  <circle cx="262" cy="140.5" r="4.2" fill="#f3ecd9"/>
+  <path d="M262,140.5 V137.3 M262,140.5 L264.4,142.1" stroke="#3c2e22" stroke-width=".8" stroke-linecap="round"/>
+  <g class="watch-key"><circle cx="272" cy="140.8" r="1.7" fill="none" stroke="#e7b033" stroke-width="1"/><path d="M273.7,140.8 H281 M279.2,140.8 V143 M281,140.8 V142.6" fill="none" stroke="#e7b033" stroke-width="1.1" stroke-linecap="round"/></g>
+  <rect class="hl" x="252" y="127" width="34" height="24" rx="3"/>
+</g>
 </svg>`;
   }
 
@@ -3660,6 +3704,26 @@ ${bottlesRow(114,228,108,12,2)}
 <div class="disc" id="disc"></div>`;
   }
 
+  /* ═══ under the bar — the lake, as a room (v0.9.30, nov 9, later still) ═══
+     "it needs its own space." the music lives in its own page beside the napkin,
+     the-lake-under-the-observatory.html; the room shows that page small, in room mode,
+     so from the legend the stairs really do go down. flor & pip's lake; the desk only cut the doorway. */
+  function lakeScene(){
+    return `<div class="crumbs" id="lakeCrumbs">town <i>›</i> <button type="button" data-c="bar">space bar</button> <i>›</i> <span class="here">under the bar</span></div>
+<div class="scene room lake" id="lakeScene"><iframe id="lakeFrame" src="the-lake-under-the-observatory.html?room=1" title="the lake under the observatory: slide between water and stars, press begin, and give the scarecrow eight notes" loading="lazy"></iframe><div class="cap"><span>press begin &middot; headphones, lights low</span><a href="the-lake-under-the-observatory.html" target="_blank" rel="noopener">the whole lake &nearr;</a><button type="button" data-a="up">&#9003; back up the stairs</button></div></div>
+<div class="found" id="lakeFound"><span class="dim">time's third pointer, for down here: never ask her what's down there. ask each other.</span></div>`;
+  }
+  function mountLake(){
+    const scene = document.getElementById('lakeScene'); if(!scene) return;
+    const up = () => {
+      const el = document.querySelector('.loc[data-loc="spacebar"]');
+      select('spacebar', el); refocus('spacebar');
+      setTimeout(()=>{ const b = panelBody.querySelector('[data-inside]'); if(b) b.click(); }, 80);
+    };
+    const upBtn = scene.querySelector('[data-a="up"]'); if(upBtn) upBtn.addEventListener('click', up);
+    const crumbs = document.getElementById('lakeCrumbs'); if(crumbs) crumbs.addEventListener('click', e => { if(e.target.closest('[data-c="bar"]')) up(); });
+  }
+
   function mountRoom(){
     const scene = document.getElementById('roomScene'); if(!scene) return;
     const box = document.getElementById('found'), crumbs = document.getElementById('crumbs'),
@@ -3667,7 +3731,7 @@ ${bottlesRow(114,228,108,12,2)}
           bar = document.getElementById('barRoom'), wing = document.getElementById('wingRoom');
     const NAMES = ['curtain','bell','floor','alcove','marigold','lantern'];
     const SONGS = ['waltz','swing','lullaby'];
-    const st = {found:new Set(BAR_MEM.found), inWing:false, song:0, harbor:false, floorSea:false, night:false, marigold:false, secret:!!BAR_MEM.secret, sound:true, busy:false};
+    const st = {found:new Set(BAR_MEM.found), key:false, inWing:false, song:0, harbor:false, floorSea:false, night:false, marigold:false, secret:!!BAR_MEM.secret, sound:true, busy:false};
     const say = h => { box.innerHTML = h; };
     const constelHot = wing && wing.querySelector('.constel-hot');
     const syncConstel = () => { if(constelHot) constelHot.setAttribute('tabindex', (st.secret && st.night) ? '0' : '-1'); };   // v0.9.28: reachable by keyboard once it's there, and only then
@@ -3705,6 +3769,24 @@ ${bottlesRow(114,228,108,12,2)}
       chalk(){ say('<em>last call is only the period.</em> everyone loves a good ending. the yellow one is load-bearing: take it away and the whole sentence sits down.'); },
       string(){ say('you tug the red string, very gently, the way you\'d test a rail. somewhere down the line two people who\'ve never met tie a little knot without meaning to. the gaps are where it happens.'); },
       tab(){ say('you run a tab to get a seat.<div class="indent"><span>the whole room</span><span style="padding-left:1.4em">indents</span><span style="padding-left:2.8em">to make</span><span style="padding-left:4.2em">space for you.</span></div>'); },
+      /* ── nov 9, later still: the pocket watch and the little door. the key, the lake and the observatory (flor & pip). ── */
+      watch(){
+        if(st.key){ Sound.click(); say('the brass watch, face up. both hands swing round and point: at you, then at the floor, where a seam of light runs under the stools as if the room below has its lamps on. <span class="dim">third pointer: never ask her what\'s down there. ask each other.</span>'); return; }
+        st.key = true; bar.classList.add('keyed'); Sound.click(); setTimeout(()=>Sound.click(), 460);
+        say('a brass pocket watch, face up on the rail, ticking a half-beat behind the one in your pocket. on its back, where an engraving should be, there\'s a door no bigger than a thumbnail, and it\'s already opening. from the second seat, the one that\'s kept warm, somebody in silver slips a key off a ribbon and presses it into your palm.<br><span class="brass">KEYS ARE ONLY EVER ON LOAN.</span> <span class="dim">it falls to whoever\'s ready.</span>');
+      },
+      door(){
+        if(st.busy) return;
+        if(!st.key){ bar.classList.add('seen-door'); Sound.boop(); say('<em>open whenever, closed usually.</em> the sign is brass and means it. no handle, only a keyhole the shape of a tick and a half, and under the stools a seam of light you\'d swear wasn\'t there when you sat down. <span class="dim">time keeps a watch on the rail, at the end of the bar.</span>'); return; }
+        st.busy = true; bar.classList.add('door-open'); Sound.click(); setTimeout(()=>Sound.chime(), 520);
+        say('the key doesn\'t need turning. it turns itself: one click, a tick and a half. the door swings in on a staircase going down, lit from somewhere below, and up the stairs comes the smell of rain on warm stone, and water, a lot of water, slow and spread out and full of stars.');
+        setTimeout(()=>{
+          st.busy = false;
+          const el = document.querySelector('.loc[data-loc="underbar"]');
+          select('underbar', el); refocus('underbar');
+          setTimeout(()=>{ const b = panelBody.querySelector('[data-inside]'); if(b) b.click(); }, 80);
+        }, 1600);
+      },
       curtain(){
         if(st.inWing || st.busy) return;
         st.busy = true; seen('curtain');
@@ -8049,6 +8131,7 @@ ${grass}
     const scene = d.html.indexOf('{{scene}}') > -1, room = d.html.indexOf('{{room}}') > -1, home = d.html.indexOf('{{home}}') > -1, tea = d.html.indexOf('{{tea}}') > -1;
     const stall = d.html.indexOf('{{stamps}}') > -1, booth = d.html.indexOf('{{booth}}') > -1, cmp = d.html.indexOf('{{compass}}') > -1, mu = d.html.indexOf('{{museum}}') > -1;
     const jw = d.html.indexOf('{{jeweler}}') > -1, wm = d.html.indexOf('{{machine}}') > -1, bk = d.html.indexOf('{{bakery}}') > -1, rv = d.html.indexOf('{{river}}') > -1, tx = d.html.indexOf('{{textile}}') > -1, hn = d.html.indexOf('{{hearnow}}') > -1;
+    const lk = d.html.indexOf('{{lake}}') > -1;   // v0.9.30: under the bar has an inside, the lake
     let body = d.html;
     if(jw) body = body.replace('{{jeweler}}', jewelerScene());
     if(tx) body = body.replace('{{textile}}', textileScene());
@@ -8064,7 +8147,8 @@ ${grass}
     if(booth) body = body.replace('{{booth}}', boothScene());
     if(cmp) body = body.replace('{{compass}}', compassScene());
     if(mu) body = body.replace('{{museum}}', museumScene());
-    const way = (scene||room||home||tea||stall||booth||mu||jw||tx||hn||bk) ? 'step inside &darr;' : (rv||cmp||wm) ? 'look closer &darr;' : '';   // v0.9.28
+    if(lk) body = body.replace('{{lake}}', lakeScene());
+    const way = lk ? 'down the stairs &darr;' : (scene||room||home||tea||stall||booth||mu||jw||tx||hn||bk) ? 'step inside &darr;' : (rv||cmp||wm) ? 'look closer &darr;' : '';   // v0.9.28; v0.9.30: under the bar, the stairs go down
     panelBody.innerHTML =
       '<div class="body">'+
         '<div class="eyebrow">'+(d.eyebrow || 'a place in the town')+'</div>'+
@@ -8078,6 +8162,7 @@ ${grass}
       '</div>';
     if(scene) mountCafe();
     if(room) mountRoom();
+    if(lk) mountLake();
     if(home) mountHome();
     if(tea) mountTea();
     if(stall) mountStamps();
