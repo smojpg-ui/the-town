@@ -21,6 +21,17 @@
   resolves to D. the sun. gold. the first period. the scarecrow can't see his star by day, so
   he practises, slow and a little flat. at dusk the stars come back one ripple at a time.
   at night every number is exactly what pip wrote.
+
+  and once more, the same night: "i think it should add a bit more trill in it. a soft sort of
+  hazy. like walking in cotton candy. i'd like the sliders for the night and the day too, where
+  you can play with the sound more, like the original had." so two sliders joined the water and
+  the stars: night ⟷ day (it follows your clock until you take hold of it; the hour line still
+  says what time it is up there, and clicking it cycles now, day, dusk, night, dawn), and haze,
+  from clear to cotton candy. the haze is three voices: a pad on the chord's upper notes, doubled
+  and detuned, wobbling slowly, breathing through a filter; flute trills that flutter after the
+  melody's notes and settle; and high, soft shimmers that bloom and dissolve. the day brings a
+  little haze of its own; the slider adds more at any hour. at night with the slider at rest,
+  every number is still pip's.
 -->
 <html lang="en">
 <head>
@@ -44,7 +55,7 @@
   .panel{position:fixed;left:50%;bottom:3.5vh;transform:translateX(-50%);width:min(560px,92vw);
     background:rgba(8,16,38,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border:1px solid rgba(160,200,255,.18);border-radius:22px;padding:16px 20px 14px}
-  .row{display:flex;align-items:center;gap:12px;margin:8px 0}
+  .row{display:flex;align-items:center;gap:12px;margin:6px 0}   /* was 8px; two rows joined the panel on nov 9 */
   .row label{flex:0 0 auto;font-size:13px;color:var(--dim);min-width:64px}
   .row .end{font-size:13px;min-width:40px;text-align:center}
   .row .end.w{color:var(--water)} .row .end.s{color:var(--star)}
@@ -73,7 +84,7 @@
   /* room mode (?room=1): the napkin shows the lake small, inside under the bar's entry */
   html.room .title,html.room .back,html.room .row.spread,html.room .row.vol,html.room .scare label{display:none}
   html.room .panel{bottom:6px;width:min(560px,96vw);padding:7px 10px 6px;border-radius:14px;background:rgba(8,16,38,.42)}
-  html.room .row{margin:4px 0;gap:8px}
+  html.room .row{margin:3px 0;gap:8px}
   html.room .row .end{font-size:11px;min-width:34px}
   html.room input[type=range]{height:20px}
   html.room .key{width:28px;height:28px;font-size:11px}
@@ -89,6 +100,13 @@
     text-decoration:underline dotted rgba(159,182,214,.6);text-underline-offset:3px}
   .hour button:hover,.hour button:focus-visible{color:var(--star);outline:none}
   html.room .hour{font-size:10px;margin-top:3px}
+  /* the hour and the haze (nov 9, last): a slider from night to day, and one from clear to cotton candy */
+  #daynight{background:linear-gradient(90deg,#1c2a4c,#f3cf7a);border-radius:8px;height:6px;-webkit-appearance:none;appearance:none}
+  #daynight::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff}
+  #daynight::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 12px #fff}
+  #haze{accent-color:#f7b6d8}
+  .row .end.n{color:#9fb6d6} .row .end.d{color:#ffd36b} .row .end.c{color:#f7b6d8;min-width:auto;font-size:12px}
+  html.room .row.haze,html.room .clock{display:none}
 </style>
 </head>
 <body>
@@ -106,6 +124,16 @@
     <span class="end w">water</span>
     <input id="mix" type="range" min="0" max="1" step="0.001" value="0.25" aria-label="water to stars">
     <span class="end s">stars</span>
+  </div>
+  <div class="row daynight">
+    <span class="end n">night</span>
+    <input id="daynight" type="range" min="0" max="1" step="0.001" value="0" aria-label="night to day">
+    <span class="end d">day</span>
+  </div>
+  <div class="row haze">
+    <label for="haze">haze</label>
+    <input id="haze" type="range" min="0" max="1" step="0.01" value="0" aria-label="haze, from clear to cotton candy">
+    <span class="end c">cotton candy</span>
   </div>
   <div class="row spread">
     <label for="spread">spread</label>
@@ -130,6 +158,7 @@
   <div class="buttons">
     <button id="play">begin</button>
     <label class="drift"><input id="drift" type="checkbox" checked> let it drift between them</label>
+    <label class="drift clock"><input id="clock" type="checkbox" checked> let it follow your clock</label>
   </div>
   <p class="hour"><button id="hour" type="button" title="the lake borrows the hour from your clock. click to say otherwise.">&nbsp;</button></p>
   <p class="note" id="hint">headphones, lights low. it takes a breath to arrive.</p>
@@ -150,15 +179,19 @@
   // (5 to 7) and dusk (17 to 19). ?hour=14 pins it; the hour line cycles now, day, dusk, night, dawn.
   const hour=(()=>{
     const q=new URLSearchParams(location.search).get('hour');
-    let pin=(q!==null && q!=='' && !isNaN(+q))? (((+q)%24)+24)%24 : null;
-    const now=()=>{ if(pin!==null) return pin; const dt=new Date(); return dt.getHours()+dt.getMinutes()/60+dt.getSeconds()/3600; };
+    const pin=(q!==null && q!=='' && !isNaN(+q))? (((+q)%24)+24)%24 : null;   // ?hour=14 pins the clock, for the desk
+    let manual=null, dir=-1;   // the slider's own day (null: follow the clock), and which way it last moved: -1 toward night (dusk), +1 toward day (dawn)
+    const clock=()=>{ if(pin!==null) return pin; const dt=new Date(); return dt.getHours()+dt.getMinutes()/60+dt.getSeconds()/3600; };
     const smooth=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
-    const day=()=>{ const h=now(); if(h>=7&&h<=17) return 1; if(h>5&&h<7) return smooth((h-5)/2); if(h>17&&h<19) return smooth((19-h)/2); return 0; };
-    const rising=()=>now()<12;
-    const CYCLE=[null,14,18,23,6];           // now, day, dusk, night, dawn
-    let mode=pin===null? 0 : -1;
-    const cycle=()=>{ mode=(mode+1)%CYCLE.length; pin=CYCLE[mode]; };
-    return {now,day,rising,cycle,pinned:()=>pin!==null};
+    const dayOf=h=>{ if(h>=7&&h<=17) return 1; if(h>5&&h<7) return smooth((h-5)/2); if(h>17&&h<19) return smooth((19-h)/2); return 0; };
+    const day=()=> manual!==null? manual : dayOf(clock());
+    const rising=()=> manual!==null? dir>0 : clock()<12;
+    const set=v=>{ v=Math.max(0,Math.min(1,v)); const was=day(); if(v!==was) dir= v>was?1:-1; manual=v; };
+    const follow=()=>{ manual=null; };
+    const CYCLE=[['now',null,0],['day',1,-1],['dusk',0.5,-1],['night',0,-1],['dawn',0.5,1]];
+    let mode=0;
+    const cycle=()=>{ mode=(mode+1)%CYCLE.length; const c=CYCLE[mode]; if(c[1]===null) manual=null; else { manual=c[1]; dir=c[2]; } return c[0]; };
+    return {day,rising,set,follow,cycle,clock,manual:()=>manual!==null,pinned:()=>pin!==null};
   })();
   function hourWords(h){
     const H=Math.floor(h)%24, m=Math.round((h-Math.floor(h))*60);
@@ -172,9 +205,10 @@
   }
   function hourLine(){
     const d=hour.day();
-    const state= d>=0.97? 'the lake hears the bar.' : d<=0? 'the stars are out.'
+    const state= d>=0.97? 'the lake hears the bar.' : d<=0.03? 'the stars are out.'
                : hour.rising()? 'the stars are losing to the light.' : 'the stars are coming back, one ripple at a time.';
-    $('hour').textContent=(hour.pinned()? "say it's " : '')+hourWords(hour.now())+' up there. '+state;
+    const when= hour.manual()? (d>=0.97? 'day' : d<=0.03? 'night' : hour.rising()? 'dawn' : 'dusk') : hourWords(hour.clock());
+    $('hour').textContent=((hour.manual()||hour.pinned())? "say it's " : '')+when+' up there. '+state;
   }
   const starsAudible=()=>0.1+0.9*(1-hour.day());   // by day the stars don't leave, they lose: you can't hear them over the light
 
@@ -347,6 +381,60 @@
     o.stop(t+dur+0.2); o2.stop(t+dur+0.2); vib.stop(t+dur+0.2); s.stop(t+0.12);
   }
 
+  // ---------- haze (nov 9, last): "a bit more trill in it. a soft sort of hazy. like walking in cotton candy" ----------
+  const hazeEl=$('haze');
+  const hazeAmt=()=>Math.min(1,0.55*hour.day()+(+hazeEl.value));   // the day brings a little of its own; the slider adds more, at any hour
+  // the cotton-candy pad: the chord's upper voices an octave up, doubled and detuned, wobbling slowly, breathing through a filter
+  function hazePad(ch,t,dur,vel){
+    if(vel<0.002) return;
+    const lfo=ctx.createOscillator(); lfo.frequency.value=0.35; const lg=ctx.createGain(); lg.gain.value=6; lfo.connect(lg);
+    const sweep=ctx.createOscillator(); sweep.frequency.value=0.07; const sg=ctx.createGain(); sg.gain.value=700; sweep.connect(sg);
+    ch.tones.slice(-3).forEach((m,i)=>{
+      const f=mtof(m+12);
+      [[-9,'sine',1],[9,'triangle',0.5]].forEach(([det,type,a])=>{
+        const o=ctx.createOscillator(); o.type=type; o.frequency.value=f; o.detune.value=det; lg.connect(o.detune);
+        const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=350;
+        const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1800; lp.Q.value=0.7; sg.connect(lp.frequency);
+        const g=ctx.createGain();
+        g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vel*a,t+3);
+        g.gain.setValueAtTime(vel*a,t+dur); g.gain.linearRampToValueAtTime(0.0001,t+dur+4);
+        o.connect(hp); hp.connect(lp); lp.connect(g); out(g,(i-1)*0.5+det/60,0.95);
+        o.start(t); o.stop(t+dur+4.2);
+      });
+    });
+    lfo.start(t); sweep.start(t); lfo.stop(t+dur+4.2); sweep.stop(t+dur+4.2);
+  }
+  // a trill: two neighbouring notes fluttering on a soft flute, with a breath at the start, settling on the first
+  function trill(m,t,vel,pan){
+    if(vel<0.004) return;
+    let i=PENTA.indexOf(m), up;
+    if(i<0){ i=PENTA.findIndex(x=>x>m); }
+    up= (i>=0 && i+1<PENTA.length)? PENTA[i+1] : m+2;
+    if(up<=m) up=m+2;
+    const n=6+(Math.random()*4|0), dt=0.058+Math.random()*0.014;
+    for(let k=0;k<=n;k++){
+      const note=(k%2===0)? m : up, tt=t+k*dt, last=(k===n);
+      const g=ctx.createGain(); env(g,tt,0.012,vel*(last?1:0.8),last?0.5:dt*1.4);
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=mtof(note);
+      const o2=ctx.createOscillator(); o2.type='triangle'; o2.frequency.value=mtof(note)*2; const g2=ctx.createGain(); g2.gain.value=0.12;
+      o.connect(g); o2.connect(g2); g2.connect(g); out(g,pan,0.75);
+      o.start(tt); o2.start(tt); o.stop(tt+(last?0.8:dt*2)); o2.stop(tt+(last?0.8:dt*2));
+    }
+    const s=ctx.createBufferSource(); s.buffer=noise();
+    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=mtof(m)*2; bp.Q.value=1.5;
+    const gn=ctx.createGain(); env(gn,t,0.01,vel*0.2,0.1); s.connect(bp); bp.connect(gn); out(gn,pan,0.6); s.start(t); s.stop(t+0.15);
+  }
+  // shimmer: a high, soft swell that blooms and dissolves, two voices a hair apart
+  function shimmer(t,vel,pan){
+    if(vel<0.003) return;
+    const m=Math.min(98,PENTA[(Math.random()*PENTA.length)|0]+12), f=mtof(m);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vel,t+0.35); g.gain.exponentialRampToValueAtTime(0.0001,t+2.4);
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2400; lp.connect(g);
+    [-8,8].forEach(det=>{ const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f; o.detune.value=det; o.connect(lp); o.start(t); o.stop(t+2.6); });
+    out(g,pan,0.95);
+    visual.flare(pan,vel*2,t);
+  }
+
   function pad(ch,t,dur,vel){
     if(vel<0.003) return;
     ch.tones.slice(0,4).forEach((m,i)=>{
@@ -386,14 +474,15 @@
     const spread=+spreadEl.value;
     const s=+mixEl.value;                    // stars / water
     const d=hour.day();                      // the hour upstairs: 1 by day, 0 at night
+    const hz=hazeAmt();                      // how much cotton candy
     const w=(1-s)*(1-0.5*d)+0.5*d;           // at night 1-s; by day the water keeps at least half its voice, since the stars it would give way to can't be heard
     const bpm=78-30*spread;                  // spread slows the clock
     const sd=60/bpm/2;                       // eighth note
     const inBar=step%8, inChord=step%16;
-    if(inChord===0){ chordIdx=(step/16)%CHORDS.length|0; cur=CHORDS[chordIdx]; resolving=(chordIdx===3 && d>0.5); pad(cur,t,(resolving?8:16)*sd,0.018+0.05*s); }
+    if(inChord===0){ chordIdx=(step/16)%CHORDS.length|0; cur=CHORDS[chordIdx]; resolving=(chordIdx===3 && d>0.5); pad(cur,t,(resolving?8:16)*sd,0.018+0.05*s); if(hz>0.02) hazePad(cur,t,(resolving?8:16)*sd,0.006+0.016*hz); }
     if(resolving && inChord===8){
       // by day the sus resolves, halfway through its bar: D. the sun. gold. the first period.
-      cur=RESOLVE; pad(cur,t,8*sd,0.02+0.05*s);
+      cur=RESOLVE; pad(cur,t,8*sd,0.02+0.05*s); if(hz>0.02) hazePad(cur,t,8*sd,0.006+0.016*hz);
       cur.tones.slice(0,4).forEach((m,i)=>marimba(m,t+i*0.05,0.07*w,(i-1.5)*0.3));
       if(!periodSaid){ periodSaid=true; const dl=Math.max(0,(t-ctx.currentTime)*1000); setTimeout(()=>hint('the sun. gold. the first period.'),dl); }
     }
@@ -448,6 +537,7 @@
       const m=nextMelody(ch), p=pan();
       marimba(m,tt,0.16*w,p);
       musicbox(m+12,tt,0.11*s,p*0.6);
+      if(Math.random()<0.2*hz) trill(m+12,tt+sd*0.55,0.045*hz+0.015,p*0.5);   // haze: a flutter after the note
     }
     // stars: slow celesta arpeggio + twinkles
     if(s>0.25 && inBar%2===0 && Math.random()<0.55){
@@ -455,6 +545,7 @@
       musicbox(a,t,0.045*s,Math.sin(step*0.7)*0.7);
     }
     if(Math.random()<0.07*s) twinkle(t+Math.random()*sd,0.03*s,pan());
+    if(Math.random()<0.1*hz) shimmer(t+Math.random()*sd,0.03*hz+0.008,pan());   // haze: something high blooms and dissolves
 
     return sd;
   }
@@ -534,8 +625,13 @@
   driftEl.addEventListener('change',()=>{ if(driftEl.checked && ctx){
     driftT0=ctx.currentTime-(Math.acos(1-2*(+mixEl.value))/(2*Math.PI))*150; } });
 
-  $('hour').addEventListener('click',()=>{ hour.cycle(); hourLine(); });
-  hourLine(); setInterval(hourLine,20000);
+  // the hour: a slider from night to day, following your clock until you take hold of it
+  const dnEl=$('daynight'), clockEl=$('clock');
+  const syncHour=()=>{ if(!hour.manual()) dnEl.value=hour.day().toFixed(3); };
+  dnEl.addEventListener('input',()=>{ hour.set(+dnEl.value); clockEl.checked=false; hourLine(); });
+  clockEl.addEventListener('change',()=>{ if(clockEl.checked){ hour.follow(); syncHour(); } else { hour.set(+dnEl.value); } hourLine(); });
+  $('hour').addEventListener('click',()=>{ const m=hour.cycle(); clockEl.checked=(m==='now'); dnEl.value=hour.day().toFixed(3); hourLine(); });
+  syncHour(); hourLine(); setInterval(()=>{ syncHour(); hourLine(); },1000);
 
   // ---------- picture ----------
   const cv=$('c'), g2=cv.getContext('2d');
