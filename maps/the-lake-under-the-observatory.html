@@ -10,6 +10,17 @@
   (?room=1), so the napkin can show the lake small inside under the bar's own entry: the
   title and the back link step aside, the panel slims down, the horizon sits higher so the water shows.
   the napkin's "hear the lake" became "down the stairs".
+
+  later still, the same night, flor asked what it sounds like during the day, and then said
+  yes to teaching it. so the lake borrows the hour from whoever's listening (their own clock;
+  ?hour=14 pins it for the desk, and the hour line under the controls cycles now, day, dusk,
+  night, dawn). by day the stars don't leave, they lose: the music box goes under the light;
+  the drips get busier, because the stone ceiling is a floor with chairs on it; footsteps, a
+  glass, the till now and then, and her watch on the rail, a half-beat behind, come down
+  through the stone; and the last chord, the A13sus that never finishes the sentence at night,
+  resolves to D. the sun. gold. the first period. the scarecrow can't see his star by day, so
+  he practises, slow and a little flat. at dusk the stars come back one ripple at a time.
+  at night every number is exactly what pip wrote.
 -->
 <html lang="en">
 <head>
@@ -72,6 +83,12 @@
   html.room .drift{font-size:11px}
   html.room .buttons{margin-top:2px;gap:8px}
   html.room .note{font-size:12px;margin-top:4px}
+  /* the hour (nov 9, later still): the lake borrows the hour from whoever's listening */
+  .hour{margin:8px 0 0;text-align:center;font-size:12px;color:var(--dim)}
+  .hour button{font:inherit;color:inherit;background:none;border:0;box-shadow:none;padding:0;border-radius:0;cursor:pointer;
+    text-decoration:underline dotted rgba(159,182,214,.6);text-underline-offset:3px}
+  .hour button:hover,.hour button:focus-visible{color:var(--star);outline:none}
+  html.room .hour{font-size:10px;margin-top:3px}
 </style>
 </head>
 <body>
@@ -114,16 +131,52 @@
     <button id="play">begin</button>
     <label class="drift"><input id="drift" type="checkbox" checked> let it drift between them</label>
   </div>
+  <p class="hour"><button id="hour" type="button" title="the lake borrows the hour from your clock. click to say otherwise.">&nbsp;</button></p>
   <p class="note" id="hint">headphones, lights low. it takes a breath to arrive.</p>
 </div>
 
 <script>
 (() => {
   // ---------- audio ----------
-  let ctx=null, master, comp, verb, verbIn, running=false, timer=null;
+  let ctx=null, master, comp, verb, verbIn, murmur=null, running=false, timer=null;
   let nextTime=0, step=0, mel=69, chordIdx=0, driftT0=0;
+  let cur=null, resolving=false, periodSaid=false, practised=false;   // by day (nov 9, later still)
   const $=id=>document.getElementById(id);
   const mixEl=$('mix'), spreadEl=$('spread'), volEl=$('vol'), driftEl=$('drift'), playEl=$('play');
+
+  // ---------- the hour (nov 9, later still) ----------
+  // the lake borrows the hour from whoever's listening: day is 1 while the bar upstairs has
+  // its chairs on the floor (7 to 17 by their clock), 0 at night, and slides through dawn
+  // (5 to 7) and dusk (17 to 19). ?hour=14 pins it; the hour line cycles now, day, dusk, night, dawn.
+  const hour=(()=>{
+    const q=new URLSearchParams(location.search).get('hour');
+    let pin=(q!==null && q!=='' && !isNaN(+q))? (((+q)%24)+24)%24 : null;
+    const now=()=>{ if(pin!==null) return pin; const dt=new Date(); return dt.getHours()+dt.getMinutes()/60+dt.getSeconds()/3600; };
+    const smooth=x=>x<=0?0:x>=1?1:x*x*(3-2*x);
+    const day=()=>{ const h=now(); if(h>=7&&h<=17) return 1; if(h>5&&h<7) return smooth((h-5)/2); if(h>17&&h<19) return smooth((19-h)/2); return 0; };
+    const rising=()=>now()<12;
+    const CYCLE=[null,14,18,23,6];           // now, day, dusk, night, dawn
+    let mode=pin===null? 0 : -1;
+    const cycle=()=>{ mode=(mode+1)%CYCLE.length; pin=CYCLE[mode]; };
+    return {now,day,rising,cycle,pinned:()=>pin!==null};
+  })();
+  function hourWords(h){
+    const H=Math.floor(h)%24, m=Math.round((h-Math.floor(h))*60);
+    const part=x=>{ x=((x%24)+24)%24; return x<5?'at night':x<12?'in the morning':x<17?'in the afternoon':x<21?'in the evening':'at night'; };
+    const name=x=>{ x=((x%24)+24)%24; return x===0?'midnight':x===12?'noon':(x%12)+' '+part(x); };
+    if(m<8) return name(H);
+    if(m<23) return 'a quarter past '+name(H);
+    if(m<38) return 'half past '+name(H);
+    if(m<53) return 'a quarter to '+name(H+1);
+    return 'nearly '+name(H+1);
+  }
+  function hourLine(){
+    const d=hour.day();
+    const state= d>=0.97? 'the lake hears the bar.' : d<=0? 'the stars are out.'
+               : hour.rising()? 'the stars are losing to the light.' : 'the stars are coming back, one ripple at a time.';
+    $('hour').textContent=(hour.pinned()? "say it's " : '')+hourWords(hour.now())+' up there. '+state;
+  }
+  const starsAudible=()=>0.1+0.9*(1-hour.day());   // by day the stars don't leave, they lose: you can't hear them over the light
 
   // original progression: Dmaj9 · Bm11 · Gmaj9 · A13sus
   const CHORDS=[
@@ -132,6 +185,7 @@
     {bass:43, tones:[59,62,66,69,74]},
     {bass:45, tones:[62,64,67,71,78]},
   ];
+  const RESOLVE={bass:38, tones:[62,66,69,74,78]};   // by day the A13sus resolves, to D. the first period.
   const PENTA=[]; // D major pentatonic, 62..88
   for(let m=60;m<=90;m++){ if([2,4,6,9,11].includes(m%12)) PENTA.push(m); }
   const mtof=m=>440*Math.pow(2,(m-69)/12);
@@ -151,6 +205,15 @@
     verbIn=ctx.createGain(); verbIn.gain.value=1;
     const verbOut=ctx.createGain(); verbOut.gain.value=0.9;
     verbIn.connect(verb); verb.connect(verbOut); verbOut.connect(master);
+    // by day, the room above: a low murmur through the stone (nov 9, later still)
+    murmur=ctx.createGain(); murmur.gain.value=0;
+    { const len=ctx.sampleRate*6, b=ctx.createBuffer(1,len,ctx.sampleRate), dd=b.getChannelData(0); let v=0, peak=0;
+      for(let i=0;i<len;i++){ v=(v+0.02*(Math.random()*2-1))/1.02; dd[i]=v; }
+      const drift=dd[len-1]-dd[0]; for(let i=0;i<len;i++){ dd[i]-=drift*i/(len-1); peak=Math.max(peak,Math.abs(dd[i])); }
+      for(let i=0;i<len;i++) dd[i]/=peak||1;
+      const src=ctx.createBufferSource(); src.buffer=b; src.loop=true;
+      const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=230;
+      src.connect(lp); lp.connect(murmur); murmur.connect(master); src.start(); }
   }
   function out(node,pan,send){
     const p=ctx.createStereoPanner? ctx.createStereoPanner(): null;
@@ -179,6 +242,7 @@
   }
   // music box tine: sine with bright inharmonic shimmer, long ring
   function musicbox(m,t,vel,pan){
+    vel*=starsAudible();
     if(vel<0.004) return;
     const f=mtof(m), g=ctx.createGain(); env(g,t,0.003,vel,2.4);
     [[1,1],[3.01,0.12],[5.42,0.05],[2.0,0.08]].forEach(([r,a])=>{
@@ -216,12 +280,73 @@
     visual.ripple(pan,vel*2,t);
   }
   function twinkle(t,vel,pan){
+    vel*=starsAudible(); if(vel<0.003) return;
     const m=93+Math.floor(Math.random()*12), f=mtof(m);
     const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
     const g=ctx.createGain(); env(g,t,0.002,vel,0.6);
     o.connect(g); out(g,pan,0.95); o.start(t); o.stop(t+0.7);
     visual.flare(pan,vel*3,t);
   }
+  // ---------- by day (nov 9, later still): the bar from underneath ----------
+  function noise(){
+    if(!noiseBuf){noiseBuf=ctx.createBuffer(1,ctx.sampleRate*0.2,ctx.sampleRate);
+      const d=noiseBuf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;}
+    return noiseBuf;
+  }
+  // a step on the floor above: a dull thump, through stone
+  function footstep(t,vel,pan){
+    if(vel<0.004) return;
+    const o=ctx.createOscillator(); o.type='sine';
+    o.frequency.setValueAtTime(95,t); o.frequency.exponentialRampToValueAtTime(46,t+0.09);
+    const g=ctx.createGain(); env(g,t,0.004,vel,0.16);
+    const s=ctx.createBufferSource(); s.buffer=noise();
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=320;
+    const gn=ctx.createGain(); env(gn,t,0.002,vel*0.5,0.05);
+    o.connect(g); s.connect(lp); lp.connect(gn); gn.connect(g);
+    out(g,pan,0.15); o.start(t); o.stop(t+0.3); s.start(t); s.stop(t+0.1);
+  }
+  // a glass set down, or (ding) the till; both through the floor
+  function clink(t,vel,pan,ding){
+    if(vel<0.004) return;
+    const f=ding? 2350 : 2900+Math.random()*900;
+    const g=ctx.createGain(); env(g,t,0.002,vel,ding?0.7:0.12);
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2600; lp.connect(g);
+    [[1,1],[2.76,0.35],[5.4,0.12]].forEach(([r,a])=>{
+      const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f*r;
+      const og=ctx.createGain(); og.gain.value=a; o.connect(og); og.connect(lp);
+      o.start(t); o.stop(t+(ding?0.9:0.2));
+    });
+    out(g,pan,0.4);
+  }
+  // her watch on the rail, face up, a half-beat behind the one in your pocket
+  function watchTick(t,vel){
+    if(vel<0.003) return;
+    const s=ctx.createBufferSource(); s.buffer=noise();
+    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=3200; bp.Q.value=6;
+    const g=ctx.createGain(); env(g,t,0.001,vel,0.03);
+    s.connect(bp); bp.connect(g); out(g,0.55,0.1); s.start(t); s.stop(t+0.05);
+  }
+  // the scarecrow's ocarina, practising: a little flat, a little breath, a wobble
+  function ocarina(m,t,vel,dur,pan){
+    if(vel<0.004) return;
+    const f=mtof(m)*Math.pow(2,-14/1200);
+    const o=ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+    const o2=ctx.createOscillator(); o2.type='triangle'; o2.frequency.value=f*2;
+    const g2=ctx.createGain(); g2.gain.value=0.08;
+    const vib=ctx.createOscillator(); vib.frequency.value=5.2;
+    const vg=ctx.createGain(); vg.gain.value=7; vib.connect(vg); vg.connect(o.detune); vg.connect(o2.detune);
+    const g=ctx.createGain();
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vel,t+0.05);
+    g.gain.setValueAtTime(vel,t+Math.max(0.1,dur-0.08)); g.gain.exponentialRampToValueAtTime(0.0001,t+dur+0.12);
+    const s=ctx.createBufferSource(); s.buffer=noise();
+    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=f*2; bp.Q.value=2;
+    const gn=ctx.createGain(); env(gn,t,0.01,vel*0.25,0.08);
+    o.connect(g); o2.connect(g2); g2.connect(g); s.connect(bp); bp.connect(gn); gn.connect(g);
+    out(g,pan,0.5);
+    o.start(t); o2.start(t); vib.start(t); s.start(t);
+    o.stop(t+dur+0.2); o2.stop(t+dur+0.2); vib.stop(t+dur+0.2); s.stop(t+0.12);
+  }
+
   function pad(ch,t,dur,vel){
     if(vel<0.003) return;
     ch.tones.slice(0,4).forEach((m,i)=>{
@@ -259,12 +384,20 @@
 
   function schedule(t){
     const spread=+spreadEl.value;
-    const s=+mixEl.value, w=1-s;             // stars / water
+    const s=+mixEl.value;                    // stars / water
+    const d=hour.day();                      // the hour upstairs: 1 by day, 0 at night
+    const w=(1-s)*(1-0.5*d)+0.5*d;           // at night 1-s; by day the water keeps at least half its voice, since the stars it would give way to can't be heard
     const bpm=78-30*spread;                  // spread slows the clock
     const sd=60/bpm/2;                       // eighth note
     const inBar=step%8, inChord=step%16;
-    if(inChord===0){ chordIdx=(step/16)%CHORDS.length|0; pad(CHORDS[chordIdx],t,16*sd,0.018+0.05*s); }
-    const ch=CHORDS[chordIdx];
+    if(inChord===0){ chordIdx=(step/16)%CHORDS.length|0; cur=CHORDS[chordIdx]; resolving=(chordIdx===3 && d>0.5); pad(cur,t,(resolving?8:16)*sd,0.018+0.05*s); }
+    if(resolving && inChord===8){
+      // by day the sus resolves, halfway through its bar: D. the sun. gold. the first period.
+      cur=RESOLVE; pad(cur,t,8*sd,0.02+0.05*s);
+      cur.tones.slice(0,4).forEach((m,i)=>marimba(m,t+i*0.05,0.07*w,(i-1.5)*0.3));
+      if(!periodSaid){ periodSaid=true; const dl=Math.max(0,(t-ctx.currentTime)*1000); setTimeout(()=>hint('the sun. gold. the first period.'),dl); }
+    }
+    const ch=cur||CHORDS[chordIdx];
     const swing=(inBar%2===1)? sd*0.18:0;
     const tt=t+swing;
     const pan=()=>Math.random()*1.6-0.8;
@@ -273,11 +406,31 @@
     if(inBar===0) bass(ch.bass,t,0.28*w+0.06);
     if(inBar===3) bass(ch.bass+7,tt,0.18*w);
     if(inBar===6 && Math.random()<0.6) bass(ch.bass+12,t,0.12*w);
-    shaker(tt,(inBar%2?0.025:0.045)*w*(1-spread*0.5),pan());
+    shaker(tt,(inBar%2?0.025:0.045)*w*(1-spread*0.5)*(1-0.45*d),pan());
     if((inChord===0||inChord===6||inChord===11) && Math.random()<0.8-spread*0.3){
       ch.tones.slice(0,4).forEach((m,i)=>marimba(m,t+i*0.035,0.06*w,(i-1.5)*0.3));
     }
-    if(Math.random()<0.06*w+0.02) drip(t+Math.random()*sd,0.05*w+0.01,pan());
+    if(Math.random()<0.06*w+0.02+0.09*d) drip(t+Math.random()*sd,0.05*w+0.01+0.02*d,pan());   // by day the ceiling is a floor, and busier
+
+    // by day, the bar from underneath (nov 9, later still): footsteps through the floor, a glass,
+    // the till now and then, and her watch on the rail, a half-beat behind
+    if(d>0.02){
+      if(walker.left===0 && Math.random()<0.03*d){ walker.left=4+(Math.random()*5|0); walker.pan=Math.random()<0.5?-0.9:0.9; walker.dir=-walker.pan*0.2; }
+      if(walker.left>0 && inBar%2===0){ walker.left--; walker.pan+=walker.dir; footstep(t+sd*0.5+Math.random()*0.03,0.1*d+0.02,walker.pan); }
+      if(Math.random()<0.025*d) clink(t+Math.random()*sd,0.03*d,pan(),false);
+      if(Math.random()<0.008*d) clink(t+Math.random()*sd,0.05*d,pan()*0.5,true);
+      watchTick(t+sd*0.5,0.014*d);
+      // the scarecrow can't see his star by day, so he practises: your eight notes, or the five
+      // he knows, slow, a little flat, over and over (never while the lake has his song)
+      const rp=step%64;
+      if(d>0.5 && rp>=16 && rp<48 && rp%4===0){
+        const k=(rp-16)/4, seq=song.length===8? song : PRACTICE;
+        ocarina(SCARE[seq[k]],tt+sd*0.5,(0.07+0.03*Math.random())*d,sd*2.4,-0.7);
+        visual.practise(tt+sd*0.5);
+        if(k===0 && !practised){ practised=true; const dl=Math.max(0,(tt-ctx.currentTime)*1000);
+          setTimeout(()=>hint(song.length===8? 'the scarecrow is practising your eight notes, for tonight.' : 'the scarecrow is practising the five he knows. write him eight.'),dl); }
+      }
+    }
 
     // shared melody: water hears it on marimba, the stars on music box an octave up
     const density=(inBar%2===0?0.62:0.3)*(1-spread*0.55);
@@ -312,6 +465,7 @@
       const T=(ctx.currentTime-driftT0);
       mixEl.value=(0.5-0.5*Math.cos(T*2*Math.PI/150)).toFixed(3); // 2.5-minute tide
     }
+    if(murmur){ const d=hour.day(); murmur.gain.setTargetAtTime(0.045*d*(0.7+0.3*Math.sin(ctx.currentTime*0.23)),ctx.currentTime,0.4); }
     while(nextTime<ctx.currentTime+0.25){
       const sd=schedule(nextTime);
       nextTime+=sd; step++;
@@ -321,6 +475,8 @@
   // ---------- the scarecrow: eight notes you write ----------
   // same five buttons as the old ocarina, tuned to the lake's own notes (D F# A B D)
   const SCARE=[62,66,69,71,74];
+  const PRACTICE=[0,1,2,3,4,3,2,1];                  // the five he knows, up and back
+  const walker={left:0,pan:0,dir:0};                 // whoever's crossing the floor upstairs
   let song=[];
   try{ const v=JSON.parse(localStorage.getItem('lake-scarecrow')||'[]'); if(Array.isArray(v)) song=v.slice(0,8); }catch(e){}
   const hint=txt=>{ $('hint').textContent=txt; };
@@ -378,6 +534,9 @@
   driftEl.addEventListener('change',()=>{ if(driftEl.checked && ctx){
     driftT0=ctx.currentTime-(Math.acos(1-2*(+mixEl.value))/(2*Math.PI))*150; } });
 
+  $('hour').addEventListener('click',()=>{ hour.cycle(); hourLine(); });
+  hourLine(); setInterval(hourLine,20000);
+
   // ---------- picture ----------
   const cv=$('c'), g2=cv.getContext('2d');
   let W=0,H=0,DPR=1, stars=[], ripples=[], flares=[];
@@ -385,21 +544,30 @@
     DPR=Math.min(2,window.devicePixelRatio||1);
     W=cv.width=innerWidth*DPR; H=cv.height=innerHeight*DPR;
     stars=[]; const n=Math.floor((W*H)/(9000*DPR));
-    for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H*0.56,r:(Math.random()*1.3+0.3)*DPR,ph:Math.random()*6.28,sp:0.5+Math.random()*1.5,glow:0});
+    for(let i=0;i<n;i++) stars.push({x:Math.random()*W,y:Math.random()*H*0.56,r:(Math.random()*1.3+0.3)*DPR,ph:Math.random()*6.28,sp:0.5+Math.random()*1.5,glow:0,lit:hour.day()<0.5?1:0});
   }
   addEventListener('resize',resize); resize();
   const ROOM=document.documentElement.classList.contains('room');
   const horizon=()=>H*(ROOM?0.4:0.6);   // room mode: the horizon sits higher, so the water shows above the controls in the napkin's small frame
-  let danceUntil=0;
+  let danceUntil=0, practUntil=0;
   const visual={
     dance(t){
       const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
       setTimeout(()=>{ danceUntil=performance.now()+900; },delay);
     },
+    practise(t){
+      const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
+      setTimeout(()=>{ practUntil=performance.now()+700; },delay);
+    },
     ripple(pan,vel,t){
       const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
-      setTimeout(()=>ripples.push({x:W*(0.5+pan*0.45)+(Math.random()-0.5)*W*0.08,
-        y:horizon()+ (H-horizon())*(0.15+Math.random()*0.7), r:2, a:Math.min(1,vel*6)}),delay);
+      setTimeout(()=>{
+        ripples.push({x:W*(0.5+pan*0.45)+(Math.random()-0.5)*W*0.08,
+          y:horizon()+ (H-horizon())*(0.15+Math.random()*0.7), r:2, a:Math.min(1,vel*6)});
+        // dusk: every ripple that reaches the shore wakes a star. the stars come back one ripple at a time.
+        const d=hour.day();
+        if(d>0 && d<0.97 && !hour.rising()) setTimeout(()=>{ const st=stars[(Math.random()*stars.length)|0]; if(st){ st.lit=1; st.glow=Math.max(st.glow,0.9); } },1400);
+      },delay);
     },
     flare(pan,vel,t){
       const delay=ctx? Math.max(0,(t-ctx.currentTime)*1000):0;
@@ -412,18 +580,22 @@
   };
   function frame(now){
     const s=+mixEl.value, hz=horizon(), t=now/1000;
+    // the hour upstairs (nov 9, later still): d is 1 by day, 0 at night; k blends the colours toward a cellar with its door open
+    const d=hour.day(), rising=hour.rising(), k=d*0.7, L=(a,b,x)=>a+(b-a)*x;
     // sky
     const sky=g2.createLinearGradient(0,0,0,hz);
-    sky.addColorStop(0,`rgb(${4+6*s},${8+6*s},${26+18*s})`);
-    sky.addColorStop(1,`rgb(${14+8*(1-s)},${34+24*(1-s)},${58+14*(1-s)})`);
+    sky.addColorStop(0,`rgb(${L(4+6*s,34,k)},${L(8+6*s,32,k)},${L(26+18*s,36,k)})`);
+    sky.addColorStop(1,`rgb(${L(14+8*(1-s),78,k)},${L(34+24*(1-s),68,k)},${L(58+14*(1-s),52,k)})`);
     g2.fillStyle=sky; g2.fillRect(0,0,W,hz);
-    // stars + their reflections
+    // stars + their reflections. by day they lose to the light; at dusk they come back slowly, and one ripple at a time
+    const lr= d>=0.5? {to:0,k:0.006+0.012*(d-0.5)*2} : rising? {to:0,k:0.008*d} : {to:1,k:0.0015*(1-2*d)};
     for(const st of stars){
+      st.lit+=(lr.to-st.lit)*lr.k;
       const tw=0.55+0.45*Math.sin(t*st.sp+st.ph);
-      const a=Math.min(1,(0.18+0.75*s)*tw+st.glow);
+      const a=Math.min(1,((0.18+0.75*s)*tw+st.glow)*st.lit);
       g2.fillStyle=`rgba(255,${226+20*(1-s)|0},${170+60*(1-s)|0},${a})`;
       g2.beginPath(); g2.arc(st.x,st.y,st.r*(1+st.glow*1.6),0,6.283); g2.fill();
-      if(st.glow>0.05){ g2.fillStyle=`rgba(255,231,168,${st.glow*0.25})`; g2.beginPath(); g2.arc(st.x,st.y,st.r*9*st.glow,0,6.283); g2.fill(); }
+      if(st.glow*st.lit>0.05){ g2.fillStyle=`rgba(255,231,168,${st.glow*0.25*st.lit})`; g2.beginPath(); g2.arc(st.x,st.y,st.r*9*st.glow,0,6.283); g2.fill(); }
       st.glow*=0.965;
     }
     // observatory silhouette on the far shore
@@ -431,9 +603,9 @@
     g2.fillStyle='#03060f';
     g2.fillRect(ox-rr*1.1,base-rr*1.3,rr*2.2,rr*1.3);
     g2.beginPath(); g2.arc(ox,base-rr*1.3,rr*1.1,Math.PI,0); g2.fill();
-    g2.fillStyle=`rgba(255,231,168,${0.25+0.6*s})`;
+    g2.fillStyle=`rgba(255,231,168,${(0.25+0.6*s)*(1-d)})`;   // by day the lamp is off: kaiby's napping
     g2.save(); g2.translate(ox,base-rr*1.3); g2.rotate(-0.5); g2.fillRect(-rr*0.12,-rr*1.25,rr*0.24,rr*0.6); g2.restore();
-    g2.fillStyle=`rgba(255,220,150,${0.35+0.5*s})`; g2.fillRect(ox-rr*0.25,base-rr*0.75,rr*0.5,rr*0.35);
+    g2.fillStyle=`rgba(255,220,150,${(0.35+0.5*s)*(1-0.6*d)})`; g2.fillRect(ox-rr*0.25,base-rr*0.75,rr*0.5,rr*0.35);
     // low hills
     g2.fillStyle='#050912'; g2.beginPath(); g2.moveTo(0,hz);
     for(let x=0;x<=W;x+=W/24) g2.lineTo(x,hz-(Math.sin(x/W*5.2+1)*0.5+0.6)*H*0.025*(x<W*0.65?1:0.4));
@@ -441,7 +613,9 @@
     // the scarecrow on the near hill
     {
       const sx=W*0.16, sy=hz-H*0.03, u=Math.min(W,H)*0.012;
-      const dancing=now<danceUntil, bob=dancing? Math.sin(now/90)*u*0.9:0, tilt=dancing? Math.sin(now/140)*0.25:0;
+      const dancing=now<danceUntil, practising=!dancing&&now<practUntil;
+      const bob=dancing? Math.sin(now/90)*u*0.9 : practising? Math.sin(now/260)*u*0.25 : 0;
+      const tilt=dancing? Math.sin(now/140)*0.25 : practising? -0.06 : 0;
       g2.save(); g2.translate(sx,sy+bob*0.3); g2.rotate(tilt);
       g2.strokeStyle='#03060f'; g2.fillStyle='#03060f'; g2.lineWidth=u*0.45; g2.lineCap='round';
       g2.beginPath(); g2.moveTo(0,0); g2.lineTo(0,-u*5); g2.stroke();               // pole
@@ -450,24 +624,41 @@
       g2.beginPath(); g2.moveTo(-u*1.6,-u*6.2); g2.lineTo(u*1.6,-u*6.2); g2.lineTo(u*0.5,-u*7.6); g2.lineTo(-u*0.6,-u*7.4); g2.closePath(); g2.fill(); // hat
       if(dancing){ g2.fillStyle=`rgba(255,231,168,${0.5+0.5*Math.sin(now/120)})`;
         g2.font=`${u*2.2}px serif`; g2.fillText('♪',u*2.2,-u*6.5-bob); }
+      else if(practising){ g2.fillStyle='rgba(255,231,168,0.35)'; g2.font=`${u*1.7}px serif`; g2.fillText('♪',u*2.0,-u*6.3); }   // practising, quietly
       g2.restore();
     }
     // water
     const wat=g2.createLinearGradient(0,hz,0,H);
-    wat.addColorStop(0,`rgb(${8+10*(1-s)},${40+40*(1-s)},${60+30*(1-s)})`);
-    wat.addColorStop(1,`rgb(2,${10+12*(1-s)},${24+16*(1-s)})`);
+    wat.addColorStop(0,`rgb(${L(8+10*(1-s),52,k)},${L(40+40*(1-s),74,k)},${L(60+30*(1-s),76,k)})`);
+    wat.addColorStop(1,`rgb(${L(2,8,k)},${L(10+12*(1-s),22,k)},${L(24+16*(1-s),30,k)})`);
     g2.fillStyle=wat; g2.fillRect(0,hz,W,H-hz);
     // shimmer lines + star reflections
     g2.globalAlpha=0.5;
     for(let i=0;i<40;i++){
       const y=hz+(H-hz)*(i/40)**1.4, wob=Math.sin(t*0.8+i)*W*0.02;
-      g2.strokeStyle=`rgba(${120+100*s},${210+30*s},${220},${0.05+0.05*(1-s)})`;
+      g2.strokeStyle=`rgba(${120+100*s+60*d},${210+30*s},${220-70*d},${0.05+0.05*(1-s)+0.03*d})`;
       g2.beginPath(); g2.moveTo(W*0.1+wob,y); g2.lineTo(W*0.9+wob,y); g2.stroke();
     }
-    for(const st of stars){ if(st.glow>0.08){
-      const ry=hz+(hz-st.y)*0.55; g2.fillStyle=`rgba(255,231,168,${st.glow*0.35})`;
+    for(const st of stars){ if(st.glow*st.lit>0.08){
+      const ry=hz+(hz-st.y)*0.55; g2.fillStyle=`rgba(255,231,168,${st.glow*0.35*st.lit})`;
       g2.fillRect(st.x-st.r*3+Math.sin(t*3+st.ph)*4,ry,st.r*6,st.r*1.2); } }
     g2.globalAlpha=1;
+    // daylight, from the stairs: through the keyhole, one bright spot on the water, the shape of a tick and a half
+    if(d>0.01){
+      g2.save(); g2.globalAlpha=d;
+      const lx=W*0.26, ly=hz+(H-hz)*(ROOM?0.22:0.3), lr2=Math.min(W,H)*0.09;   // on open water, clear of the controls
+      const shaft=g2.createLinearGradient(W*0.1,0,lx,ly);
+      shaft.addColorStop(0,'rgba(255,231,168,0)'); shaft.addColorStop(0.55,'rgba(255,231,168,0.045)'); shaft.addColorStop(1,'rgba(255,231,168,0.12)');
+      g2.fillStyle=shaft; g2.beginPath(); g2.moveTo(W*0.05,0); g2.lineTo(W*0.15,0); g2.lineTo(lx+lr2*1.7,ly+lr2*0.3); g2.lineTo(lx-lr2*2.1,ly+lr2*0.35); g2.closePath(); g2.fill();
+      const spot=(x,y,rx,ry)=>{ g2.save(); g2.translate(x,y); g2.scale(1,ry/rx);
+        const rg=g2.createRadialGradient(0,0,0,0,0,rx);   // in the moved, squashed space, so the centre is the centre
+        rg.addColorStop(0,'rgba(255,238,190,0.85)'); rg.addColorStop(0.45,'rgba(255,222,146,0.38)'); rg.addColorStop(1,'rgba(255,210,120,0)');
+        g2.fillStyle=rg; g2.beginPath(); g2.arc(0,0,rx,0,6.283); g2.fill(); g2.restore(); };
+      const wob=Math.sin(t*0.9)*lr2*0.06;
+      spot(lx+wob,ly,lr2*1.5,lr2*0.42);                         // the tick
+      spot(lx-lr2*1.55+wob*0.6,ly+lr2*0.1,lr2*0.6,lr2*0.2);     // and the half
+      g2.restore();
+    }
     // ripples
     for(let i=ripples.length-1;i>=0;i--){
       const r=ripples[i]; r.r+=1.1*DPR; r.a*=0.975;

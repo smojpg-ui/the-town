@@ -44,7 +44,7 @@ the-stage/
 │   ├── the-town-off-the-edge-map.html          ← the one on the table (v0.9.30)
 │   ├── the-town-off-the-edge-map-v0.9.29.html  ← …and the drawer, back to v0.9
 │   ├── the-museum-of-the-town.html             (the napkins link to it)
-│   └── the-lake-under-the-observatory.html     the music from under the bar; the napkin shows it as a room (?room=1)
+│   └── the-lake-under-the-observatory.html     the music from under the bar; the napkin shows it as a room (?room=1); it knows the hour (?hour=14 pins it)
 ├── content/
 │   └── town/             one folder per world (see docs/ARCHITECTURE.md, "borders")
 │       ├── maps.json     the drawer: every napkin, newest first
