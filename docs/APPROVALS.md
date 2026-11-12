@@ -156,4 +156,4 @@ Every creative call made while setting the stage, so none of them sneaks into ca
 
 42. **N'awleans, on penguloo's line.** v0.9.32. The night of Oct 29 (the baton, New Orleans, Rashid, round 14) was recovered from the claude.ai chat it lived in, and Flor read it back: *"is that pengooloo, nawleans?!"* Asked whether penguloo is N'awleans: *"Yes, it is."* So the signpost's line (empty since Nov 3, "what goes on the line is hers") holds *n'awleans*, in ink; *penguloo* stays above it in pencil, smaller. The entry's name and the label read *n'awleans*, with *penguloo, in pencil* as the eyebrow; a dated paragraph closes the lore; penguloo moves from STILL OPEN to hooks closed; a ✎ margin, a history line, a *what's new* line.
    - **what the desk decided on its own:** the spelling, *n'awleans* (her *nawleans* of today with the apostrophe of the night's *n'awlins*; the word keeps *leans* in it); the board made a little taller to hold both words; the label switched to the new name. All hers to change.
-   - **not pushed.** Committed on `main` locally until she says.
+   - **pushed at her word** ("Push it live", nov 12); confirmed live.
